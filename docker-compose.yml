@@ -1,0 +1,62 @@
+version: '2.4'
+services:
+  api:
+    image: registry.cn-hangzhou.aliyuncs.com/xyd-2020/ubuntu
+    ports:
+      - "8000:8000"
+    command: python3 /www/api/manage.py runserver 0.0.0.0:8000
+    working_dir: /www/api
+    volumes:
+      - ./spug_api:/www/api
+    links:
+      - "db:database"
+    environment:
+      GIT_PYTHON_REFRESH: quiet
+    networks:
+      app_net:
+        ipv4_address: 172.168.1.114
+
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/redis
+    command: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      app_net:
+        ipv4_address: 172.168.1.113
+
+  web:
+    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/web
+    command: npm start
+    working_dir: /www/web
+    volumes:
+      - ./spug_web:/www/web
+    ports:
+      - '3000:3000'
+    networks:
+      app_net:
+        ipv4_address: 172.168.1.112
+
+
+  db:
+    image: registry.cn-hangzhou.aliyuncs.com/xyd-2020/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin@12345
+    networks:
+      app_net:
+        ipv4_address: 172.168.1.111
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.168.1.0/24
+          gateway: 172.168.1.1
