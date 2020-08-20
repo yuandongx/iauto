@@ -1,4 +1,4 @@
-<h1 align="center">Spug</h1>
+<h1 align="center">Iauto</h1>
 
 <div align="center">
 
@@ -32,36 +32,5 @@ I-auto是面向中小型企业设计的轻量级无Agent的自动化运维平台
 ## 安装
 docker-compose up 一键启动服务
 
-
-## 预览
-
-#### 主机批量执行
-![image](http://image.qbangmang.com/host-exec-2.0.png
-)
-
-#### 主机在线终端
-![image](http://image.qbangmang.com/host-console-2.0.png)
-
-#### 文件在线上传下载
-![文件管理](http://image.qbangmang.com/spug-host-file.png)
-
-#### 应用管理
-![image](http://image.qbangmang.com/app-2.0.png)
-![image](http://image.qbangmang.com/app-apply-2.0.png)
-
-#### 任务管理
-![image](http://image.qbangmang.com/task-2.0.png)
-![image](http://image.qbangmang.com/task-detail-2.0.png)
-#### 配置管理(支持KV,txt,json等格式)
-![image](http://image.qbangmang.com/service-conf-2.0.png)
-![image](http://image.qbangmang.com/service-conf-json-2.0.png)
-![image](http://image.qbangmang.com/conf-history-2.0.png)
-
-#### 监控报警
-![image](http://image.qbangmang.com/monitor-alarm-2.0.png)
-![image](http://image.qbangmang.com/monitor-add-2.0.png)
-
-#### 角色权限
-![image](http://image.qbangmang.com/role-2.0.png)
 
 
