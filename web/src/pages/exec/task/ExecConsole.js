@@ -31,7 +31,9 @@ class ExecConsole extends React.Component {
         item['system'].push('### Waiting for schedule\n')
       }
     };
+
     this.socket.onmessage = e => {
+      console.log(e.data);
       if (e.data === 'pong') {
         this.socket.send('ping')
       } else {

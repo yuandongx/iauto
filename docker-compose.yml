@@ -41,7 +41,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/xyd-2020/ubuntu
     ports:
       - "8000:8000"
-    command: python3 /www/api/manage.py runserver 0.0.0.0:8000
+    command: sh /iauto-service.sh
     working_dir: /www/api
     volumes:
       - ./api:/www/api

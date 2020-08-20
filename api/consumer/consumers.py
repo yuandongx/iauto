@@ -7,8 +7,6 @@ from apps.host.models import Host
 from threading import Thread
 import json
 import time
-
-
 class ExecConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -7,14 +7,11 @@ import threading
 import socket
 import json
 
-
 class SSHExecutor(SyncConsumer):
     def exec(self, job):
         pkey = AppSetting.get('private_key')
         job = Job(pkey=pkey, **job)
         threading.Thread(target=job.run).start()
-
-
 class Job:
     def __init__(self, hostname, port, username, pkey, command, token=None, **kwargs):
         self.ssh_cli = SSH(hostname, port, username, pkey)
