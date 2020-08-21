@@ -5,6 +5,7 @@ import { Modal, Form, Input, Upload, Icon, Button, Tooltip, Alert } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
+
 @observer
 class ComImport extends React.Component {
   constructor(props) {
@@ -14,7 +15,11 @@ class ComImport extends React.Component {
       fileList: [],
     }
   }
-
+   attrs = {
+      action: '/api/exec/template/import/',
+      onChange: this.handleChange,
+      multiple: true,
+    };
   handleChange = info => {
     let fileList = [...info.fileList];
 
@@ -51,7 +56,7 @@ class ComImport extends React.Component {
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
 
           <Form.Item required label="导入数据">
-            <Upload action="/api/exec/import/" onChange={this.handleChange} multiple="true">
+            <Upload {...this.attrs} >
               <Button>
                 <Icon type="upload"/> 点击上传
               </Button>

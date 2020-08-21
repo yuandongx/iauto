@@ -63,7 +63,8 @@ def handle_uploaded_file(f):
     pass
 
 def upload_file(request):
-    error = {}
+    print(request)
+    data = {"msg": ""}
     if request.method == 'POST':
         # form = UploadFileForm(request.POST, request.FILES)
         # if form.is_valid():
@@ -71,4 +72,4 @@ def upload_file(request):
             # return HttpResponseRedirect('/success/url/')
     # else:
         # form = UploadFileForm()
-    return json_response(error=error)
+    return json_response(data=data)
