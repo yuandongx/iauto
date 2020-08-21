@@ -58,3 +58,17 @@ def do_task(request):
             )
         return json_response(token)
     return json_response(error=error)
+
+def handle_uploaded_file(f):
+    pass
+
+def upload_file(request):
+    error = {}
+    if request.method == 'POST':
+        # form = UploadFileForm(request.POST, request.FILES)
+        # if form.is_valid():
+        handle_uploaded_file(request.FILES['file'])
+            # return HttpResponseRedirect('/success/url/')
+    # else:
+        # form = UploadFileForm()
+    return json_response(error=error)

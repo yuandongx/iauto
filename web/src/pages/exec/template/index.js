@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Input, Select, Button } from 'antd';
@@ -30,6 +26,8 @@ export default observer(function () {
       </SearchForm>
       <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
         <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
+        <Button style={{marginLeft: 20}} type="primary" icon="import"
+                onClick={() => store.importVisible = true}>批量导入</Button>
       </AuthDiv>
       <ComTable/>
     </AuthCard>

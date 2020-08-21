@@ -1,4 +1,4 @@
-
+from django.conf import settings
 from django.db import models
 from libs import ModelMixin, human_datetime
 from apps.account.models import User
@@ -9,7 +9,7 @@ class ExecTemplate(models.Model, ModelMixin):
     type = models.CharField(max_length=50)
     body = models.TextField()
     desc = models.CharField(max_length=255, null=True)
-
+    flag = models.CharField(max_length=50)
     created_at = models.CharField(max_length=20, default=human_datetime)
     created_by = models.ForeignKey(User, models.PROTECT, related_name='+')
     updated_at = models.CharField(max_length=20, null=True)

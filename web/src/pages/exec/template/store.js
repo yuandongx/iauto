@@ -12,6 +12,7 @@ class Store {
   @observable record = {};
   @observable isFetching = false;
   @observable formVisible = false;
+  @observable importVisible = false;
 
   @observable f_name;
   @observable f_type;
