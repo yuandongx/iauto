@@ -70,6 +70,7 @@ class ComImport extends React.Component {
                 {res['fail'].length > 0 && <Alert message={`${res['fail'].join(', ')} 上传失败`} type="error" showIcon />}
                 </>
             });
+			store.fetchRecords()
           }
       ).finally(() => this.setState({loading: false}));
   }

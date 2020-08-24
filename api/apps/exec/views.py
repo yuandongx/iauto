@@ -85,12 +85,14 @@ def upload_submit(request):
     tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
     templates_path = os.path.join(settings.REPOS_DIR, "templates")
     if not os.path.exists(templates_path):
-        os.mkdir(templates_pahth)
+        os.mkdir(templates_path)
     if request.method == "POST":
         files_name = request.POST.get('files')
         names = files_name.split(',')
         for name in names:
             repeat = False
+            ttype = 'shell' if name.split('.')[-1] == 'sh' else 'ansible-playbook'
+            row = {'name': name, 'type': ttype}
             try:
                 if os.path.exists(os.path.join(templates_path, name)):
                     os.remove(os.path.join(templates_path, name))
@@ -99,8 +101,16 @@ def upload_submit(request):
             except:
                 fail.append(name)
             else:
+                try:
+                    with open(os.path.join(templates_path, name), 'r') as f:
+                        row['body'] = f.read()
+                except:
+                    row['body'] = os.path.join(templates_path, name)
+
                 if repeat:
                     override.append(name)
                 else:
                     ok.append(name)
+            row['created_by'] = request.user
+            ExecTemplate.objects.create(**row)
     return json_response(dict(ok=ok, fail=fail, override=override))
