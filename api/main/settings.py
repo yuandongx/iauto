@@ -110,7 +110,6 @@ SCHEDULE_KEY = 'main:schedule'
 MONITOR_KEY = 'main:monitor'
 REQUEST_KEY = 'main:request'
 REPOS_DIR = os.path.join(BASE_DIR, 'repos')
-LOCAL_FILE_DIR = os.path.join(BASE_DIR, 'locals')
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 

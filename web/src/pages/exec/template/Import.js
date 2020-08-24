@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Upload, Icon, Button, Tooltip, Alert } from 'antd';
+import { Modal, Form, Input, Upload, Icon, Button, Tooltip, Alert, message } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
@@ -19,6 +19,8 @@ class ComImport extends React.Component {
       action: '/api/exec/template/import/',
       onChange: this.handleChange,
       multiple: true,
+      headers: {'X-Token': localStorage.getItem('token')},
+      // beforeUpload: this.beforeUpload,
     };
   handleChange = info => {
     let fileList = [...info.fileList];
@@ -38,6 +40,20 @@ class ComImport extends React.Component {
 
     this.setState({ fileList });
   };
+  beforeUpload = file => {
+
+    var re = /ya?ml$/;
+    const isVaildFormat = (file.type === 'text/x-sh' || file.name.match(re)) ? true : false;
+    if (!isVaildFormat) {
+      message.error('You can only upload yml/yaml/sh file!');
+    }
+    const isLt3M = file.size / 1024 / 1024 < 3;
+    if (!isLt3M) {
+      message.error('File must smaller than 3MB!');
+    }
+    return isVaildFormat && isLt3M;
+  };
+  
   render() {
     return (
       <Modal
@@ -56,7 +72,7 @@ class ComImport extends React.Component {
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
 
           <Form.Item required label="导入数据">
-            <Upload {...this.attrs} >
+            <Upload {...this.attrs} beforeUpload={this.beforeUpload}>
               <Button>
                 <Icon type="upload"/> 点击上传
               </Button>

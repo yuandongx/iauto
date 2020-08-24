@@ -1,10 +1,10 @@
-
+import os
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from libs.channel import Channel
 from apps.exec.models import ExecTemplate
 from apps.host.models import Host
-
+from django.conf import settings
 
 class TemplateView(View):
     def get(self, request):
@@ -60,11 +60,15 @@ def do_task(request):
     return json_response(error=error)
 
 def handle_uploaded_file(f):
-    pass
+    tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
+    if not os.path.exists(tmp_path):
+        os.mkdir(tmp_path)
+    with open(os.path.join(tmp_path, f.name), 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 def upload_file(request):
-    print(request)
-    data = {"msg": ""}
+
     if request.method == 'POST':
         # form = UploadFileForm(request.POST, request.FILES)
         # if form.is_valid():
@@ -72,4 +76,4 @@ def upload_file(request):
             # return HttpResponseRedirect('/success/url/')
     # else:
         # form = UploadFileForm()
-    return json_response(data=data)
+    return json_response(data={"msg": "ok"})
