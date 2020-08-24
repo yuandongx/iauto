@@ -1,4 +1,5 @@
 import os
+from shutil import move
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from libs.channel import Channel
@@ -59,7 +60,9 @@ def do_task(request):
         return json_response(token)
     return json_response(error=error)
 
+
 def handle_uploaded_file(f):
+    # print(dir(f))
     tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
     if not os.path.exists(tmp_path):
         os.mkdir(tmp_path)
@@ -67,13 +70,37 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             destination.write(chunk)
 
-def upload_file(request):
 
+def upload_file(request):
     if request.method == 'POST':
-        # form = UploadFileForm(request.POST, request.FILES)
-        # if form.is_valid():
         handle_uploaded_file(request.FILES['file'])
-            # return HttpResponseRedirect('/success/url/')
-    # else:
-        # form = UploadFileForm()
     return json_response(data={"msg": "ok"})
+
+
+def upload_submit(request):
+    ok = []
+    override = []
+    fail = []
+    repeat = False
+    tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
+    templates_path = os.path.join(settings.REPOS_DIR, "templates")
+    if not os.path.exists(templates_path):
+        os.mkdir(templates_pahth)
+    if request.method == "POST":
+        files_name = request.POST.get('files')
+        names = files_name.split(',')
+        for name in names:
+            repeat = False
+            try:
+                if os.path.exists(os.path.join(templates_path, name)):
+                    os.remove(os.path.join(templates_path, name))
+                    repeat = True
+                move(os.path.join(tmp_path, name), templates_path)
+            except:
+                fail.append(name)
+            else:
+                if repeat:
+                    override.append(name)
+                else:
+                    ok.append(name)
+    return json_response(dict(ok=ok, fail=fail, override=override))

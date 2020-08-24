@@ -17,7 +17,7 @@ class ComImport extends React.Component {
   }
    attrs = {
       action: '/api/exec/template/import/',
-      onChange: this.handleChange,
+      // onChange: this.handleChange,
       multiple: true,
       headers: {'X-Token': localStorage.getItem('token')},
       // beforeUpload: this.beforeUpload,
@@ -27,7 +27,7 @@ class ComImport extends React.Component {
 
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
-    fileList = fileList.slice(-2);
+    // fileList = fileList.slice(-2);
 
     // 2. Read from response and show file link
     fileList = fileList.map(file => {
@@ -53,7 +53,26 @@ class ComImport extends React.Component {
     }
     return isVaildFormat && isLt3M;
   };
-  
+  handleSubmit = (e) => {
+      this.setState({loading: true});
+      var formData = new FormData();
+      console.log(this.state.fileList);
+      formData.append('files', this.state.fileList.map(file => {return file.name}));
+      http.post('/api/exec/template/submit/', formData, {timeout: 120000})
+        .then(
+          res => {
+            Modal.info({
+                title: '导入结果',
+                onOk: () => {store.importVisible = false},
+                content:<> 
+                {res['ok'].length > 0 && <Alert message={`${res['ok'].join(', ')} 上传成功`} type="success" showIcon />}
+                {res['override'].length > 0 && <Alert message={`${res['override'].join(', ')} 已存在，覆盖上传成功`} type="warning" showIcon />}
+                {res['fail'].length > 0 && <Alert message={`${res['fail'].join(', ')} 上传失败`} type="error" showIcon />}
+                </>
+            });
+          }
+      ).finally(() => this.setState({loading: false}));
+  }
   render() {
     return (
       <Modal
@@ -72,7 +91,7 @@ class ComImport extends React.Component {
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
 
           <Form.Item required label="导入数据">
-            <Upload {...this.attrs} beforeUpload={this.beforeUpload}>
+            <Upload {...this.attrs} beforeUpload={this.beforeUpload} onChange={this.handleChange}>
               <Button>
                 <Icon type="upload"/> 点击上传
               </Button>
