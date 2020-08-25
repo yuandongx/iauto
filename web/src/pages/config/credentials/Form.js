@@ -1,11 +1,8 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Form, Input, message } from 'antd';
+// import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import http from 'libs/http';
 import store from './store';
 
@@ -22,7 +19,7 @@ class ComForm extends React.Component {
     this.setState({loading: true});
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
-    http.post('/api/config/environment/', formData)
+    http.post('/api/config/credentials/', formData)
       .then(res => {
         message.success('操作成功');
         store.formVisible = false;
@@ -38,19 +35,19 @@ class ComForm extends React.Component {
         visible
         width={800}
         maskClosable={false}
-        title={store.record.id ? '编辑环境' : '新建环境'}
+        title={store.record.id ? '编辑访问凭证' : '新建访问凭证'}
         onCancel={() => store.formVisible = false}
         confirmLoading={this.state.loading}
         onOk={this.handleSubmit}>
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
-          <Form.Item required label="环境名称">
+          <Form.Item required label="访问凭证名称">
             {getFieldDecorator('name', {initialValue: info['name']})(
-              <Input placeholder="请输入环境名称，例如：开发环境"/>
+              <Input placeholder="请输入访问凭证名称，例如：web.pwd"/>
             )}
           </Form.Item>
-          <Form.Item required label="唯一标识符">
+          <Form.Item required label="请输入密码">
             {getFieldDecorator('key', {initialValue: info['key']})(
-              <Input placeholder="请输入唯一标识符，例如：dev"/>
+              <Input.Password placeholder="请输入密码"  />
             )}
           </Form.Item>
           <Form.Item label="备注信息">

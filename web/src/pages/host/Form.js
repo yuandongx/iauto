@@ -78,7 +78,7 @@ class ComForm extends React.Component {
           </Form>
       </TabPane>
       <TabPane tab="已有访问凭证" key="2">
-        // <Table rowSelection={{type: "radio"}} columns={this.columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />,
+        <Table rowSelection={{type: "radio"}} columns={this.columns} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />,
       </TabPane>
     </Tabs>
     );

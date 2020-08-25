@@ -17,7 +17,7 @@ class Store {
 
   fetchRecords = () => {
     this.isFetching = true;
-    return http.get('/api/config/environment/')
+    return http.get('/api/config/credentials/')
       .then(res => {
         this.records = res;
         for (let item of res) {

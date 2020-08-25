@@ -7,6 +7,47 @@ from apps.config.models import *
 import json
 
 
+class CredentialView(View):
+    def get(self, request):
+        query = {}
+        if not request.user.is_supper:
+            query['id__in'] = request.user.deploy_perms['envs']
+        envs = Credential.objects.filter(**query)
+        return json_response(envs)
+
+    def post(self, request):
+        form, error = JsonParser(
+            Argument('id', type=int, required=False),
+            Argument('name', help='请输入访问凭证名称'),
+            Argument('pwd', help='请输入访问密码'),
+            Argument('desc', required=False)
+        ).parse(request.body)
+        if error is None:
+            form.name = form.name.replace("'", '')
+            cred = Credential.objects.filter(name=form.name).first()
+            if cred and cred.id != form.id:
+                return json_response(error=f'访问凭证名称 {form.name} 已存在，请更改后重试')
+            if form.id:
+                Credential.objects.filter(pk=form.id).update(**form)
+            else:
+                cred = Credential.objects.create(created_by=request.user, **form)
+                if request.user.role:
+                    request.user.role.add_deploy_perm('cred', cred.id)
+        return json_response(error=error)
+
+    def delete(self, request):
+        form, error = JsonParser(
+            Argument('id', type=int, help='请指定操作对象')
+        ).parse(request.GET)
+        if error is None:
+            if Config.objects.filter(env_id=form.id).exists():
+                return json_response(error='该环境已存在关联的配置信息，请删除相关配置后再尝试删除')
+            if Deploy.objects.filter(env_id=form.id).exists():
+                return json_response(error='该环境已关联了发布配置，请删除相关发布配置后再尝试删除')
+            Credential.objects.filter(pk=form.id).delete()
+        return json_response(error=error)
+
+
 class EnvironmentView(View):
     def get(self, request):
         query = {}

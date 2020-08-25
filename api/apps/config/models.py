@@ -4,6 +4,20 @@ from libs import ModelMixin, human_datetime
 from apps.account.models import User
 
 
+class Credential(models.Model, ModelMixin):
+    name = models.CharField(max_length=50)
+    pwd = models.CharField(max_length=50)
+    desc = models.CharField(max_length=255, null=True)
+    created_at = models.CharField(max_length=20, default=human_datetime)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    def __repr__(self):
+        return f'<Credential {self.name!r}>'
+
+    class Meta:
+        db_table = 'Credential'
+        ordering = ('-id',)
+
 class Environment(models.Model, ModelMixin):
     name = models.CharField(max_length=50)
     key = models.CharField(max_length=50)

@@ -8,6 +8,7 @@ urlpatterns = [
     path('parse/json/', parse_json),
     path('parse/text/', parse_text),
     path('diff/', post_diff),
+    path('credentials/', CredentialView.as_view()),
     path('environment/', EnvironmentView.as_view()),
     path('service/', ServiceView.as_view()),
     path('history/', HistoryView.as_view()),
