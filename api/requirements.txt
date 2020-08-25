@@ -68,7 +68,6 @@ simplejson == 3.16.0
 six == 1.14.0
 sqlparse == 0.3.1
 ssh-import-id == 5.10
-systemd-python == 234
 texttable == 1.6.2
 Twisted == 18.9.0
 txaio == 20.4.1
