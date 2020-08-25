@@ -23,11 +23,8 @@ class ComTable extends React.Component {
     render: (_, __, index) => index + 1,
     width: 80,
   }, {
-    title: '环境名称',
+    title: '访问凭证名称',
     dataIndex: 'name',
-  }, {
-    title: '标识符',
-    dataIndex: 'key',
   }, {
     title: '描述信息',
     dataIndex: 'desc',
