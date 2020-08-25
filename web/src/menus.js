@@ -3,20 +3,22 @@ export default [
   {icon: 'desktop', title: '工作台', auth: 'home.home.view', path: '/home'},
   {icon: 'cloud-server', title: '主机管理', auth: 'host.host.view', path: '/host'},
   {
-    icon: 'code', title: '批量执行', auth: 'exec.task.do|exec.template.view', child: [
-      {title: '执行任务', auth: 'exec.task.do', path: '/exec/task'},
-      {title: '模板管理', auth: 'exec.template.view', path: '/exec/template'},
+    icon: 'code', title: '任务执行', auth: 'exec.task.do|exec.template.view', child: [
+      {title: '实时任务', auth: 'exec.task.do', path: '/exec/task'},
+      // {title: '模板任务', auth: 'exec.template.view', path: '/exec/tpl_task'},
+      {title: '计划任务', auth: 'exec.template.view', path: '/exec/schedule'},
     ]
   },
+  {icon: 'schedule', title: '任务模板', auth: 'schedule.schedule.view', path: '/template'},
   {
     icon: 'flag', title: '应用发布', auth: 'deploy.app.view|deploy.request.view', child: [
       {title: '应用管理', auth: 'deploy.app.view', path: '/deploy/app'},
       {title: '发布申请', auth: 'deploy.request.view', path: '/deploy/request'},
     ]
   },
-  {icon: 'schedule', title: '任务计划', auth: 'schedule.schedule.view', path: '/schedule'},
   {
     icon: 'deployment-unit', title: '配置中心', auth: 'config.env.view|config.src.view|config.app.view', child: [
+      {title: '访问凭证', auth: 'config.env.view', path: '/config/credentials'},
       {title: '环境管理', auth: 'config.env.view', path: '/config/environment'},
       {title: '服务配置', auth: 'config.src.view', path: '/config/service'},
       {title: '应用配置', auth: 'config.app.view', path: '/config/app'},

@@ -1,10 +1,12 @@
 
 import { makeRoute } from "../../libs/router";
-import Template from './template';
+import Schedule from './schedule';
 import Task from './task';
+import Tpltask from './tpl_task';
 
 
 export default [
-  makeRoute('/template', Template),
+  makeRoute('/schedule', Schedule),
   makeRoute('/task', Task),
+  makeRoute('/tpl_task', Tpltask),
 ]

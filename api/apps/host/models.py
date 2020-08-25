@@ -14,6 +14,7 @@ class Host(models.Model, ModelMixin):
     username = models.CharField(max_length=50)
     desc = models.CharField(max_length=255, null=True)
 
+    access_credentials = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
     created_by = models.ForeignKey(User, models.PROTECT, related_name='+')
     deleted_at = models.CharField(max_length=20, null=True)
