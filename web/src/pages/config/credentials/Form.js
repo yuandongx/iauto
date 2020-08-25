@@ -46,7 +46,7 @@ class ComForm extends React.Component {
             )}
           </Form.Item>
           <Form.Item required label="请输入密码">
-            {getFieldDecorator('key', {initialValue: info['key']})(
+            {getFieldDecorator('pwd', {initialValue: info['pwd']})(
               <Input.Password placeholder="请输入密码"  />
             )}
           </Form.Item>
