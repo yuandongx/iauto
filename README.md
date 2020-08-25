@@ -25,9 +25,10 @@ I-auto是面向中小型企业设计的轻量级无Agent的自动化运维平台
 ## 环境
 
 * Python 3.6+
-* Django 2.2
+* Django 3.0+
 * Node 12.14
 * React 16.11
+* Redis
 
 ## 安装
 docker-compose up 一键启动服务
