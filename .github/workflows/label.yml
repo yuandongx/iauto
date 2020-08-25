@@ -19,5 +19,6 @@ jobs:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
     - api:
       - 'api/*'
+
     - web:
       - 'web'
