@@ -45,16 +45,12 @@ services:
     working_dir: /www/api
     volumes:
       - ./api:/www/api
-    links:
-      - "db:database"
     environment:
       GIT_PYTHON_REFRESH: quiet
     networks:
       app_net:
         ipv4_address: 172.168.1.114
     depends_on:
-      - redis
-      - web
       - db
 
 networks:
