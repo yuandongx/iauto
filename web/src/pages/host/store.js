@@ -4,6 +4,7 @@ import http from 'libs/http';
 
 class Store {
   @observable records = [];
+  @observable pwdRecords = [];
   @observable zones = [];
   @observable permRecords = [];
   @observable record = {};
@@ -29,7 +30,14 @@ class Store {
       })
       .finally(() => this.isFetching = false)
   };
-
+  fetchPwdRecords = () => {
+    this.isFetching = true;
+    return http.get('/api/config/credentials/')
+      .then(res => {
+        this.pwdRecords = res;
+      })
+      .finally(() => this.isFetching = false)
+  };
   showForm = (info = {}) => {
     this.formVisible = true;
     this.record = info

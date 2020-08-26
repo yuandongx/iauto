@@ -5,7 +5,7 @@ from apps.account.models import User
 
 
 class Credential(models.Model, ModelMixin):
-    name = models.CharField(max_length=50)
+    name = models.CharField(primary_key=True, max_length=50)
     pwd = models.CharField(max_length=50)
     desc = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
@@ -15,8 +15,8 @@ class Credential(models.Model, ModelMixin):
         return f'<Credential {self.name!r}>'
 
     class Meta:
-        db_table = 'Credential'
-        ordering = ('-id',)
+        db_table = 'credential'
+        ordering = ('-name',)
 
 class Environment(models.Model, ModelMixin):
     name = models.CharField(max_length=50)

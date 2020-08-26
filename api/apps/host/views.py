@@ -1,10 +1,11 @@
-
+import json
 from django.views.generic import View
 from django.db.models import F
 from libs import json_response, JsonParser, Argument
 from apps.setting.utils import AppSetting
 from apps.host.models import Host
 from apps.app.models import Deploy
+from apps.config.models import Credential
 from apps.schedule.models import Task
 from apps.monitor.models import Detection
 from apps.account.models import Role
@@ -36,12 +37,36 @@ class HostView(View):
             Argument('hostname', handler=str.strip, help='请输入主机名或IP'),
             Argument('port', type=int, help='请输入SSH端口'),
             Argument('desc', required=False),
-            Argument('password', required=False),
+            Argument('password',  type=dict, required=False),
         ).parse(request.body)
         if error is None:
-            if valid_ssh(form.hostname, form.port, form.username, form.pop('password')) is False:
+            param_pwd = form.pop('password')
+            passwd = None
+            cred = None
+            if param_pwd is not None:
+                if param_pwd.get("name") is not None:
+                    try:
+                        cred = Credential.objects.get(name=param_pwd['name'])
+                        passwd = cred.pwd
+                        form.access_credentials = cred.name
+                    except Credential.DoesNotExist:
+                        pass
+                elif param_pwd.get('password') is not None:
+                    passwd = param_pwd.get('password')
+            if passwd is None:
+                return json_response('Password is required')
+            elif valid_ssh(form.hostname, form.port, form.username, passwd) is False:
                 return json_response('auth fail')
 
+            if cred is None:
+                try:
+                    cred = Credential.objects.get(name=form.hostname)
+                    if cred.pwd != passwd:
+                        cred.pwd = passwd
+                        cred.save()
+                except Credential.DoesNotExist:
+                    Credential.objects.create(created_by=request.user, name=f'{form.username}@{form.hostname}', pwd=passwd, desc=f'【{form.name}】的访问凭证')
+                form.access_credentials = f'{form.hostname}@{form.username}'
             if form.id:
                 Host.objects.filter(pk=form.pop('id')).update(**form)
             elif Host.objects.filter(name=form.name, deleted_by_id__isnull=True).exists():
@@ -140,25 +165,15 @@ def post_import(request):
 
 
 def valid_ssh(hostname, port, username, password, with_expect=True):
-    try:
-        private_key = AppSetting.get('private_key')
-        public_key = AppSetting.get('public_key')
-    except KeyError:
-        private_key, public_key = SSH.generate_key()
-        AppSetting.set('private_key', private_key, 'ssh private key')
-        AppSetting.set('public_key', public_key, 'ssh public key')
-    cli = SSH(hostname, port, username, private_key)
-    if password:
-        _cli = SSH(hostname, port, username, password=str(password))
-        _cli.add_public_key(public_key)
+    cli = SSH(hostname, port=port, username=username, password=password)
     try:
         cli.ping()
     except BadAuthenticationType:
         if with_expect:
-            raise TypeError('该主机不支持密钥认证，请参考官方文档，错误代码：E01')
+            raise TypeError('该主机不支持密钥认证，错误代码：E01')
         return False
     except AuthenticationException:
         if password and with_expect:
-            raise ValueError('密钥认证失败，请参考官方文档，错误代码：E02')
+            raise ValueError('密钥认证失败，错误代码：E02')
         return False
     return True

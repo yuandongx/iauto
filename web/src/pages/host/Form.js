@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
+import { toJS } from "mobx";
 import { Modal, Form, Input, Select, Col, Button, message, Tabs, Table } from 'antd';
 import http from 'libs/http';
 import store from './store';
@@ -22,14 +23,15 @@ class ComForm extends React.Component {
     this.setState({loading: true});
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
+    store.fetchPwdRecords();
     http.post('/api/host/', formData)
       .then(res => {
-        if (res === 'auth fail') {
+        if (res === 'auth fail' || res == 'Password is required') {
           this.setState({loading: false});
           Modal.confirm({
             icon: 'exclamation-circle',
             title: '首次验证请输入密码',
-            content: this.confirmForm(formData.username),
+            content: this.confirmForm(),
             onOk: () => this.handleConfirm(formData),
           })
         } else {
@@ -38,6 +40,7 @@ class ComForm extends React.Component {
           store.fetchRecords()
         }
       }, () => this.setState({loading: false}))
+
   };
 
   handleConfirm = (formData) => {
@@ -52,36 +55,31 @@ class ComForm extends React.Component {
     message.error('请输入授权密码')
   };
 
-  // confirmForm = (username) => {
-    // return (
-      // <Form>
-        // <Form.Item required label="授权密码" help={`用户 ${username} 的密码， 该密码仅做首次验证使用，不会存储该密码。`}>
-          // <Input.Password onChange={val => this.setState({password: val.target.value})}/>
-        // </Form.Item>
-      // </Form>
-    // )
-  // };
-  callback = (key) => {
-      console.log(key);
-    };
+
   columns = [
+      {title: '序号', key: 'series', render: (_, __, index) => index + 1,},
       {title: "凭证名称", dataIndex: "name"},
       {title: "描述信息", dataIndex: "decription"},
     ];
-  confirmForm = (username) => (
-    <Tabs defaultActiveKey="1" onChange={this.callback}>
-      <TabPane tab="新输入密码" key="1">
-          <Form>
-            <Form.Item required label="授权密码" help={`用户 ${username} 的密码， 该密码仅做首次验证使用，不会存储该密码。`}>
-              <Input.Password onChange={val => this.setState({password: val.target.value})}/>
-            </Form.Item>
-          </Form>
-      </TabPane>
-      <TabPane tab="已有访问凭证" key="2">
-        <Table rowSelection={{type: "radio"}} columns={this.columns} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />,
-      </TabPane>
-    </Tabs>
-    );
+  onSelectChange = (record, selected, selectedRows) => {
+      this.setState({password: record});
+  };
+
+  confirmForm = () => {
+    let data = toJS(store.pwdRecords).map(item => {return {key: item.id, name: item.name, decription: item.desc}});
+    return (<Tabs defaultActiveKey="1" >
+              <TabPane tab="新输入密码" key="1">
+                  <Form>
+                    <Form.Item label="授权密码" help={`用户 `}>
+                      <Input.Password onChange={val => this.setState({password: {password: val.target.value}})}/>
+                    </Form.Item>
+                  </Form>
+              </TabPane>
+              <TabPane tab="已有访问凭证" key="2">
+                <Table rowSelection={{type: "radio", onSelect: this.onSelectChange}} dataSource={data} columns={this.columns} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />,
+              </TabPane>
+            </Tabs>);
+    };
   handleAddZone = () => {
     this.setState({zone: ''}, () => {
       Modal.confirm({

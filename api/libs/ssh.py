@@ -7,18 +7,15 @@ from io import StringIO
 
 
 class SSH:
-    def __init__(self, hostname, port=SSH_PORT, username='root', pkey=None, password=None, connect_timeout=10):
-        if pkey is None and password is None:
-            raise Exception('public key and password must have one is not None')
+    def __init__(self, hostname, port=SSH_PORT, username='root', password=None, connect_timeout=10):
+        if password is None:
+            raise Exception('password should not be None')
         self.client = None
-        self.arguments = {
-            'hostname': hostname,
-            'port': port,
-            'username': username,
-            'password': password,
-            'pkey': RSAKey.from_private_key(StringIO(pkey)) if isinstance(pkey, str) else pkey,
-            'timeout': connect_timeout,
-        }
+        self.hostname = hostname
+        self.port = port
+        self.username = username
+        self.password = password
+        self.timeout = connect_timeout
 
     @staticmethod
     def generate_key():
@@ -44,7 +41,11 @@ class SSH:
             return self.client
         self.client = SSHClient()
         self.client.set_missing_host_key_policy(AutoAddPolicy)
-        self.client.connect(**self.arguments)
+        self.client.connect(self.hostname,
+                            port=self.port,
+                            username=self.username,
+                            password=self.password,
+                            timeout=self.timeout)
         return self.client
 
     def put_file(self, local_path, remote_path):
