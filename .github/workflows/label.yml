@@ -14,11 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/labeler@v2
+    - name:  actions/labeler@v2
+      uses:  actions/labeler@v2
       with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-    - api:
-      - 'api/*'
-
-    - web:
-      - 'web'
+        # Github token
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
+        keywords: '["db", "database", "mysql", "pdo"]'
+        labels: '["web: web"]'
+    - name: actions/labeler@v2
+      uses: actions/labeler@v2
+      with:
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
+        keywords: '["api", "api"]'
+        labels: '["api: api"]'
+        labels: '["api: api"]'
