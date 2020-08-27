@@ -28,7 +28,7 @@ class Channel:
         message = {
             'type': 'ansible',
             'token': token,
-            'hostsinfo': hostname,
+            'hostsinfo': hostinfo,
             'playbooks': playbooks
         }
         async_to_sync(layer.send)('task_runner', message)
