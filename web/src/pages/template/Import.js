@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Upload, Icon, Button, Tooltip, Alert, message } from 'antd';
+import { Modal, Form, Upload, Icon, Button, Alert, message } from 'antd';
 import http from 'libs/http';
 import store from './store';
 

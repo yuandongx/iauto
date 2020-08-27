@@ -26,7 +26,7 @@ class ComForm extends React.Component {
     store.fetchPwdRecords();
     http.post('/api/host/', formData)
       .then(res => {
-        if (res === 'auth fail' || res == 'Password is required') {
+        if (res === 'auth fail' || res === 'Password is required') {
           this.setState({loading: false});
           Modal.confirm({
             icon: 'exclamation-circle',

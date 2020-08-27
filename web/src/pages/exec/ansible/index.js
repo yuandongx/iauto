@@ -12,7 +12,7 @@ import store from './store';
 
 export default observer(function () {
   return (
-    <AuthCard auth="schedule.schedule.view">
+    <AuthCard auth="exec.run_ansible.view">
       <SearchForm>
         <SearchForm.Item span={6} title="状态">
           <Select allowClear value={store.f_status} onChange={v => store.f_status = v} placeholder="请选择">
@@ -38,7 +38,7 @@ export default observer(function () {
           <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
         </SearchForm.Item>
       </SearchForm>
-      <AuthDiv auth="schedule.schedule.add" style={{marginBottom: 16}}>
+      <AuthDiv auth="exec.ansible.add" style={{marginBottom: 16}}>
         <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
       </AuthDiv>
       <ComTable/>

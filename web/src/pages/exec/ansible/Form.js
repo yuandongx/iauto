@@ -1,12 +1,8 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, Steps, Tabs, InputNumber, DatePicker, Icon, message } from 'antd';
-import { LinkButton, ACEditor } from 'components';
+import { LinkButton } from 'components';
 import TemplateSelector from '../task/TemplateSelector';
 import { http, cleanCommand, hasHostPermission } from 'libs';
 import store from './store';
@@ -190,17 +186,11 @@ class ComForm extends React.Component {
               required
               label="任务内容"
               extra={<LinkButton onClick={() => this.setState({showTmp: true})}>从模板添加</LinkButton>}>
-              <ACEditor
-                mode="sh"
-                value={this.state.command}
-                width="100%"
-                height="150px"
-                onChange={val => this.setState({command: val})}/>
+
             </Form.Item>
             <Form.Item label="失败通知" extra={<span>
               任务执行失败告警通知，
-              <a target="_blank" rel="noopener noreferrer"
-                 href="https://spug.dev/docs/install-error/#%E9%92%89%E9%92%89%E6%94%B6%E4%B8%8D%E5%88%B0%E9%80%9A%E7%9F%A5%EF%BC%9F">钉钉收不到通知？</a>
+              <a target="_blank" rel="noopener noreferrer" href="aaaa">钉钉收不到通知？</a>
             </span>}>
               {getFieldDecorator('rst_notify.value', {initialValue: info['rst_notify']['value']})(
                 <Input
