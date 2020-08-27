@@ -3,12 +3,17 @@ from channels.consumer import SyncConsumer
 from apps.setting.utils import AppSetting
 from django_redis import get_redis_connection
 from libs.ssh import SSH
+from libs.ansible_run import ansible_run
 import threading
 import socket
 import json
 
-class SSHExecutor(SyncConsumer):
-    def exec(self, job):
+class Executor(SyncConsumer):
+    def ssh(self, job):
+        pkey = AppSetting.get('private_key')
+        job = Job(pkey=pkey, **job)
+        threading.Thread(target=job.run).start()
+    def ansible(self, job):
         pkey = AppSetting.get('private_key')
         job = Job(pkey=pkey, **job)
         threading.Thread(target=job.run).start()

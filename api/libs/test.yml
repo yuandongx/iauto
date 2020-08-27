@@ -1,0 +1,7 @@
+---
+- name: test
+  hosts: all
+
+  tasks:
+    - name: test
+      shell: echo '111111'

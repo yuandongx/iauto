@@ -4,7 +4,7 @@ from consumer import routing, executors
 
 application = ProtocolTypeRouter({
     'channel': ChannelNameRouter({
-        'ssh_exec': executors.SSHExecutor,
+        'task_runner': executors.Executor,
     }),
     'websocket': URLRouter(
         routing.websocket_urlpatterns

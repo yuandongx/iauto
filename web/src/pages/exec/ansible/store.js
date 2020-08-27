@@ -4,42 +4,64 @@
  * Released under the AGPL-3.0 License.
  */
 import { observable } from "mobx";
+import http from 'libs/http';
+import moment from "moment";
 
 class Store {
-  @observable outputs = {};
-  @observable hosts = [];
-  @observable token = null;
-  @observable isFullscreen = false;
-  @observable showHost = false;
-  @observable showConsole = false;
-  @observable showTemplate = false;
+  @observable records = [];
+  @observable types = [];
+  @observable record = {};
+  @observable targets = [undefined];
+  @observable isFetching = false;
+  @observable formVisible = false;
+  @observable infoVisible = false;
+  @observable recordVisible = false;
 
-  switchHost = () => {
-    this.showHost = !this.showHost;
+  @observable f_status;
+  @observable f_name;
+  @observable f_type;
+
+  fetchRecords = () => {
+    this.isFetching = true;
+    http.get('/api/schedule/')
+      .then(({types, tasks}) => {
+        tasks.map(item => {
+          const value = item['latest_run_time'];
+          item['latest_run_time_alias'] = value ? moment(value).fromNow() : null;
+          return null
+        });
+        this.records = tasks;
+        this.types = types
+      })
+      .finally(() => this.isFetching = false)
   };
 
-  switchTemplate = () => {
-    this.showTemplate = !this.showTemplate
+  showForm = (info = {rst_notify: {mode: '0'}}) => {
+    this.formVisible = true;
+    this.record = info
   };
 
-  switchConsole = (token) => {
-    if (this.showConsole) {
-      this.showConsole = false;
-      this.outputs = {}
-    } else {
-      for (let item of this.hosts) {
-        const key = `${item.hostname}:${item.port}`;
-        this.outputs[key] = {
-          title: `${item.name}(${key})`,
-          system: ['### Establishing communication\n'],
-          info: [],
-          error: [],
-          status: -2
-        }
-      }
-      this.token = token;
-      this.showConsole = true
-    }
+  showInfo = (info, h_id = 'latest') => {
+    if (info) this.record = info;
+    this.record.h_id = h_id;
+    this.infoVisible = true
+  };
+
+  showRecord = (info) => {
+    this.recordVisible = true;
+    this.record = info
+  };
+
+  addTarget = () => {
+    this.targets.push(undefined)
+  };
+
+  editTarget = (index, v) => {
+    this.targets[index] = v
+  };
+
+  delTarget = (index) => {
+    this.targets.splice(index, 1)
   }
 }
 
