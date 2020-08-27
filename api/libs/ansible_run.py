@@ -65,7 +65,8 @@ class Runner(object):
             self.args.append(f'-f {forks}')
         limit = kwargs.get('subset')
         if limit is not None:
-            self.args.append(f'-l {subset}')
+            self.args.append('-l')
+            self.args.append(limit)
 
     def run_v1(self):
         exit_code = 0
