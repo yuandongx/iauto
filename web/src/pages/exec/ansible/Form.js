@@ -131,7 +131,7 @@ class ComForm extends React.Component {
 
   verifyButtonStatus = () => {
     const data = this.props.form.getFieldsValue();
-    let b1 = data['type'] && data['name'] && this.state.command;
+    let b1 = data['type'] && data['name'] && this.state.playbooks.length > 0;
     const b2 = store.targets.filter(x => x).length > 0;
     const b3 = this.state.args[data['trigger']];
     if (!b1 && this.isFirstRender && store.record.id) {
@@ -213,7 +213,7 @@ class ComForm extends React.Component {
             </Form.Item>
             <Form.Item label="失败通知" extra={<span>
               任务执行失败告警通知，
-              <a target="_blank" rel="noopener noreferrer" href="aaaa">钉钉收不到通知？</a>
+              <a target="_blank" rel="noopener noreferrer" href="help">钉钉收不到通知？</a>
             </span>}>
               {getFieldDecorator('rst_notify.value', {initialValue: info['rst_notify']['value']})(
                 <Input
