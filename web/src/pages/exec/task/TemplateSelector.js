@@ -52,6 +52,7 @@ class TemplateSelector extends React.Component {
   render() {
     const {selectedRows} = this.state;
     let data = store.records;
+    let row_select_type = this.props.row_select_type === undefined ? 'radio' : 'checkbox';
     if (store.f_name) {
       data = data.filter(item => item['name'].toLowerCase().includes(store.f_name.toLowerCase()))
     }
@@ -85,7 +86,7 @@ class TemplateSelector extends React.Component {
           rowKey="id"
           rowSelection={{
             selectedRowKeys: selectedRows.map(item => item.id),
-            type: 'radio',
+            type: row_select_type,
             onChange: (_, selectedRows) => this.setState({selectedRows})
           }}
           dataSource={data}

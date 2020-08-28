@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, Steps, Tabs, InputNumber, DatePicker, Icon, message } from 'antd';
+import { Modal, Form, Input, Select, Col, Button, Steps, Tabs, InputNumber, DatePicker, Icon, message, Tag } from 'antd';
 import { LinkButton } from 'components';
-import TemplateSelector from '../task/TemplateSelector';
+import TemplateSelector from './TemplateSelector';
 import { http, cleanCommand, hasHostPermission } from 'libs';
 import store from './store';
 import hostStore from '../../host/store';
@@ -24,7 +24,7 @@ class ComForm extends React.Component {
       page: 0,
       nextRunTime: null,
       args: {[store.record['trigger']]: store.record['trigger_args']},
-      command: store.record['command'],
+      playbooks: [],
     }
   }
 
@@ -34,7 +34,6 @@ class ComForm extends React.Component {
       hostStore.fetchRecords()
     }
   }
-
   _parse_args = (trigger) => {
     switch (trigger) {
       case 'date':
@@ -141,12 +140,36 @@ class ComForm extends React.Component {
     }
     return [b1, b2, b3];
   };
-
+   handleClose = removedTag => {
+        const playbooks = this.state.playbooks.filter(tag => tag.name !== removedTag);
+        console.log(removedTag);
+        this.setState({ playbooks });
+   };
+  forMap = tag => {
+    const tagElem = (
+      <Tag
+        closable
+        onClose={e => {
+          e.preventDefault();
+          this.handleClose(tag);
+        }}
+      >
+        {tag}
+      </Tag>
+    );
+    return (
+      <span key={tag} style={{ display: 'inline-block' }}>
+        {tagElem}
+      </span>
+    );
+  };
   render() {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
-    const {page, args, loading, showTmp, nextRunTime} = this.state;
+    const {page, args, playbooks, loading, showTmp, nextRunTime} = this.state;
     const [b1, b2, b3] = this.verifyButtonStatus();
+    const tags = playbooks.map((item) => this.forMap(item.name));
+    // console.log(playbooks);
     return (
       <Modal
         visible
@@ -186,7 +209,7 @@ class ComForm extends React.Component {
               required
               label="任务内容"
               extra={<LinkButton onClick={() => this.setState({showTmp: true})}>从模板添加</LinkButton>}>
-
+              {tags}
             </Form.Item>
             <Form.Item label="失败通知" extra={<span>
               任务执行失败告警通知，
@@ -311,7 +334,7 @@ class ComForm extends React.Component {
           </Form.Item>
         </Form>
         {showTmp && <TemplateSelector
-          onOk={command => this.setState({command})}
+          onOk={playbooks => this.setState({playbooks})}
           onCancel={() => this.setState({showTmp: false})}/>}
       </Modal>
     )

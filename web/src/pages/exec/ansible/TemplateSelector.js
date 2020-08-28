@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the MIT License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Table, Input, Button, Select } from 'antd';
@@ -25,13 +21,9 @@ class TemplateSelector extends React.Component {
     }
   }
 
-  handleClick = (record) => {
-    this.setState({selectedRows: [record]});
-  };
-
   handleSubmit = () => {
     if (this.state.selectedRows.length > 0) {
-      this.props.onOk(this.state.selectedRows[0].body)
+      this.props.onOk(this.state.selectedRows)
     }
     this.props.onCancel()
   };
@@ -89,16 +81,10 @@ class TemplateSelector extends React.Component {
           rowKey="id"
           rowSelection={{
             selectedRowKeys: selectedRows.map(item => item.id),
-            type: 'radio',
-            onChange: (_, selectedRows) => this.setState({selectedRows})
+            onChange: (selectedRowKeys, selectedRows) => this.setState({selectedRows})
           }}
           dataSource={data}
           loading={store.isFetching}
-          onRow={record => {
-            return {
-              onClick: () => this.handleClick(record)
-            }
-          }}
           columns={this.columns}/>
       </Modal>
     )
