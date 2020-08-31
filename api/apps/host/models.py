@@ -4,6 +4,7 @@ from libs import ModelMixin, human_datetime
 from apps.account.models import User
 from apps.setting.utils import AppSetting
 from libs.ssh import SSH
+from apps.config.models import Credential
 
 
 class Host(models.Model, ModelMixin):
@@ -20,9 +21,9 @@ class Host(models.Model, ModelMixin):
     deleted_at = models.CharField(max_length=20, null=True)
     deleted_by = models.ForeignKey(User, models.PROTECT, related_name='+', null=True)
 
-    def get_ssh(self, pkey=None):
-        pkey = pkey or AppSetting.get('private_key')
-        return SSH(self.hostname, self.port, self.username, pkey)
+    def get_ssh(self):
+        cred = Credential.objects.get(name=self.access_credentials)
+        return SSH(self.hostname, self.port, self.username, cred.pwd)
 
     def __repr__(self):
         return '<Host %r>' % self.name

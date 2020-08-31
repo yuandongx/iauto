@@ -81,7 +81,7 @@ class SSHConsumer(WebsocketConsumer):
             self.send(text_data='Unknown host\r\n')
             self.close()
         try:
-            self.ssh = host.get_ssh(AppSetting.get('private_key')).get_client()
+            self.ssh = host.get_ssh().get_client()
         except Exception as e:
             self.send(bytes_data=f'Exception: {e}\r\n'.encode())
             self.close()

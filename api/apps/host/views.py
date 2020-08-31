@@ -60,13 +60,13 @@ class HostView(View):
 
             if cred is None:
                 try:
-                    cred = Credential.objects.get(name=form.hostname)
+                    cred = Credential.objects.get(name=f'{form.username}@{form.hostname}')
                     if cred.pwd != passwd:
                         cred.pwd = passwd
                         cred.save()
                 except Credential.DoesNotExist:
                     Credential.objects.create(created_by=request.user, name=f'{form.username}@{form.hostname}', pwd=passwd, desc=f'【{form.name}】的访问凭证')
-                form.access_credentials = f'{form.hostname}@{form.username}'
+                form.access_credentials = f'{form.username}@{form.hostname}'
             if form.id:
                 Host.objects.filter(pk=form.pop('id')).update(**form)
             elif Host.objects.filter(name=form.name, deleted_by_id__isnull=True).exists():
@@ -166,6 +166,7 @@ def post_import(request):
 
 def valid_ssh(hostname, port, username, password, with_expect=True):
     cli = SSH(hostname, port=port, username=username, password=password)
+    # print(hostname, port, username, password)
     try:
         cli.ping()
     except BadAuthenticationType:
