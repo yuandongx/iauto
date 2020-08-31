@@ -142,7 +142,6 @@ class ComForm extends React.Component {
   };
    handleClose = removedTag => {
         const playbooks = this.state.playbooks.filter(tag => tag.name !== removedTag);
-        console.log(removedTag);
         this.setState({ playbooks });
    };
   forMap = tag => {
