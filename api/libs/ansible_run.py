@@ -6,9 +6,11 @@ try:
 except ImportError:
     from yaml import Loader
 
+
 IMPORTED = False
 try:
     from ansible.cli.playbook import PlaybookCLI
+    from ansible.utils.display import Display
     from ansible.errors import AnsibleError, AnsibleOptionsError, AnsibleParserError
     from ansible.module_utils._text import to_text
     IMPORTED = True
@@ -21,24 +23,34 @@ class AnsibleRunnerException(Exception):
     pass
 
 
+
 class Runner(object):
     def __init__(self, **kwargs):
         self.args = ['ansible-playbook']
-        self.init_args(**kwargs)
         self.callback = None
+        self.task_id = None
+        self.display = Display()
+        self.init_args(**kwargs)
 
     def init_args(self, *args, **kwargs):
-        playbook = kwargs.get('playbook')
-        if not os.path.exists(playbook):
-            raise AnsibleRunnerException(f'The playbook {playbook} does not exist.')
-        else:
-            try:
-                with open(playbook, 'r') as f:
-                    load(f, Loader=Loader)
-            except:
-                raise AnsibleRunnerException(f'The playbook {playbook} is not a valid yaml file.')
+        self.display.display = kwargs.get('callback')
+        self.task_id = kwargs.get('task_id')
+        playbooks = kwargs.get('playbook')
+        if playbooks is not None and isinstance(playbooks, str):
+            playbooks = [playbooks]
+        if playbooks is None or not isinstance(playbooks, list):
+            raise AnsibleRunnerException(f'TypeError: the playbook should a list or a string.')
+        for playbook in playbooks:
+            if not os.path.exists(playbook):
+                raise AnsibleRunnerException(f'The playbook {playbook} does not exist.')
             else:
-                self.args.append(playbook)
+                try:
+                    with open(playbook, 'r') as f:
+                        load(f, Loader=Loader)
+                except:
+                    raise AnsibleRunnerException(f'The playbook {playbook} is not a valid yaml file.')
+                else:
+                    self.args.append(playbook)
         invntory = kwargs.get('invntory')
         if invntory is not None and os.path.exists(invntory):
             self.args.append('-i')

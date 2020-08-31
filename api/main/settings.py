@@ -28,7 +28,8 @@ SECRET_KEY = 'vk0do47)egwzz!uk49%(y3s(fpx4+ha@ugt-hcv&%&d@hwr&p7'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '172.168.1.114', '192.168.56.101']
-
+CELERY_BROKER_URL = 'redis://172.168.1.113:6379/0'
+CELERY_RESULT_BACKEND = 'redis://172.168.1.113:6379/0'
 # Application definition
 
 INSTALLED_APPS = [

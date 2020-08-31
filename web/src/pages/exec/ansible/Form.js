@@ -57,10 +57,10 @@ class ComForm extends React.Component {
     }
     this.setState({loading: true});
     formData['id'] = store.record.id;
-    formData['command'] = cleanCommand(this.state.command);
+    formData['playbooks'] = this.state.playbooks;
     formData['targets'] = store.targets.filter(x => x);
     formData['trigger_args'] = this._parse_args(formData['trigger']);
-    http.post('/api/schedule/', formData)
+    http.post('/api/exec/ansible/', formData)
       .then(res => {
         message.success('操作成功');
         store.formVisible = false;

@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Table, Divider, Modal, Tag, Dropdown, Icon, Menu, message } from 'antd';
@@ -94,7 +90,7 @@ class ComTable extends React.Component {
       title: '删除确认',
       content: `确定要${text.is_active ? '禁用' : '激活'}任务【${text['name']}】?`,
       onOk: () => {
-        return http.patch('/api/schedule/', {id: text.id, is_active: !text.is_active})
+        return http.patch('/api/exec/ansible/', {id: text.id, is_active: !text.is_active})
           .then(() => {
             message.success('操作成功');
             store.fetchRecords()
@@ -108,7 +104,7 @@ class ComTable extends React.Component {
       title: '删除确认',
       content: `确定要删除【${text['name']}】?`,
       onOk: () => {
-        return http.delete('/api/schedule/', {params: {id: text.id}})
+        return http.delete('/api/exec/ansible/', {params: {id: text.id}})
           .then(() => {
             message.success('删除成功');
             store.fetchRecords()
@@ -121,7 +117,7 @@ class ComTable extends React.Component {
     Modal.confirm({
       title: '操作确认',
       content: '立即执行该任务（不影响调度规则，且不会触发失败通知）？',
-      onOk: () => http.post(`/api/schedule/${text.id}/`)
+      onOk: () => http.post(`/api/exec/ansible/${text.id}/`)
         .then(res => store.showInfo(text, res))
     })
   };
