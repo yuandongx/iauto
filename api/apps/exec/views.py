@@ -115,6 +115,3 @@ def upload_submit(request):
             ExecTemplate.objects.create(**row)
     return json_response(dict(ok=ok, fail=fail, override=override))
 
-
-def run_ansible(request):
-    pass

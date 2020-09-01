@@ -4,41 +4,9 @@ from apps.host.models import Host
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from .tasks import run_ansible
-from apps.exec.models import Task, History
-
-
-# def result_callback(h_id, t_id, msg, color, *args, **kwargs):
-    # pass
-    # history = History.objects.filter(pk=h_id).first()
-    # if not history:
-        # history = History.objects.create(
-            # task_id=2,
-            # status=2,
-            # run_time=human_datetime(),
-            # output=msg['msg']
-        # )
-    # else:
-        # history.output = history.output + msg['msg']
-        # history.save()
-
-class CallBack(object):
-    def __init__(self, task_id, history_id):
-        self.task_id = task_id
-        self.history_id = history_id
-
-    def __call__(self, msg, color, *args, **kwargs):
-        history = History.objects.filter(pk=h_id).first()
-        if not history:
-            history = History.objects.create(
-                task_id=2,
-                status=2,
-                run_time=human_datetime(),
-                output=msg
-            )
-        else:
-            history.output = history.output + msg['msg']
-            history.save()
-
+from apps.exec.models import Task
+from libs import Runner
+from threading import Thread
 
 class Ansibleview(View):
     def get(self, request):
@@ -83,9 +51,13 @@ class Ansibleview(View):
                     rds_cli.lpush(settings.SCHEDULE_KEY, json.dumps(form))
             else:
                 Task.objects.create(created_by=request.user, **form)
-        callback = partial(result_callback, '2', '3')
-        run_ansible.delay(playbook='/www/api/libs/test.yml',
+        # callback = partial(result_callback, '2', '3')
+        # run_ansible.delay(playbook='/www/api/libs/test.yml',
+                           # v=4,
+                           # invntory='/www/api/libs/inventory')
+        runner = Runner(playbook='/www/api/libs/test.yml',
                            v=4,
-                           invntory='/www/api/libs/inventory',
-                           callback=callback)
+                           invntory='/www/api/libs/inventory')
+        thread = Thread(target=runner.run, args=())
+        thread.start()
         return json_response(error=error)

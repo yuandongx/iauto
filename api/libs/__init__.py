@@ -4,4 +4,4 @@ from .decorators import *
 from .validators import *
 from .mixins import *
 from .utils import *
-from .ansible_run import ansible_run
+from .ansible_run import Runner
