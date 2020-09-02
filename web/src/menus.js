@@ -7,6 +7,7 @@ export default [
       {title: '实时任务', auth: 'exec.task.do', path: '/exec/task'},
       {title: '计划任务', auth: 'eexec.task.do', path: '/exec/schedule'},
       {title: 'ansible任务', auth: 'exec.task.do', path: '/exec/ansible'},
+
     ]
   },
   {icon: 'schedule', title: '任务模板', auth: 'schedule.schedule.view', path: '/template'},
