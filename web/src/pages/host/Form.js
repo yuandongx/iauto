@@ -55,7 +55,6 @@ class ComForm extends React.Component {
     message.error('请输入授权密码')
   };
 
-
   columns = [
       {title: '序号', key: 'series', render: (_, __, index) => index + 1,},
       {title: "凭证名称", dataIndex: "name"},
@@ -80,6 +79,7 @@ class ComForm extends React.Component {
               </TabPane>
             </Tabs>);
     };
+
   handleAddZone = () => {
     this.setState({zone: ''}, () => {
       Modal.confirm({
