@@ -133,12 +133,12 @@ class ComForm extends React.Component {
     const data = this.props.form.getFieldsValue();
     let b1 = data['type'] && data['name'] && this.state.playbooks.length > 0;
     const b2 = store.targets.filter(x => x).length > 0;
-    const b3 = this.state.args[data['trigger']];
+    /**const b3 = this.state.args[data['trigger']];**/
     if (!b1 && this.isFirstRender && store.record.id) {
       this.isFirstRender = false;
       b1 = true
     }
-    return [b1, b2, b3];
+    return [b1, b2];
   };
    handleClose = removedTag => {
         const playbooks = this.state.playbooks.filter(tag => tag.name !== removedTag);
@@ -166,7 +166,7 @@ class ComForm extends React.Component {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
     const {page, args, playbooks, loading, showTmp, nextRunTime} = this.state;
-    const [b1, b2, b3] = this.verifyButtonStatus();
+    const [b1, b2] = this.verifyButtonStatus();
     const tags = playbooks.map((item) => this.forMap(item.name));
     // console.log(playbooks);
     return (
@@ -181,7 +181,6 @@ class ComForm extends React.Component {
         <Steps current={page} className={styles.steps}>
           <Steps.Step key={0} title="创建任务"/>
           <Steps.Step key={1} title="选择执行对象"/>
-          <Steps.Step key={2} title="设置触发器"/>
         </Steps>
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
           <div style={{display: page === 0 ? 'block' : 'none'}}>
@@ -265,69 +264,12 @@ class ComForm extends React.Component {
               </Button>
             </Form.Item>
           </div>
-          <div style={{display: page === 2 ? 'block' : 'none'}}>
-            <Form.Item wrapperCol={{span: 14, offset: 6}}>
-              {getFieldDecorator('trigger', {valuePropName: 'activeKey', initialValue: info['trigger'] || 'interval'})(
-                <Tabs tabPosition="left" style={{minHeight: 200}}>
-                  <Tabs.TabPane tab="普通间隔" key="interval">
-                    <Form.Item required label="间隔时间(秒)" extra="每隔指定n秒执行一次。">
-                      <InputNumber
-                        style={{width: 150}}
-                        placeholder="请输入"
-                        value={args['interval']}
-                        onChange={v => this.handleArgs('interval', v)}/>
-                    </Form.Item>
-                  </Tabs.TabPane>
-                  <Tabs.TabPane tab="一次性" key="date">
-                    <Form.Item required label="执行时间" extra="仅在指定时间运行一次。">
-                      <DatePicker
-                        showTime
-                        disabledDate={v => v && v.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')}
-                        style={{width: 150}}
-                        placeholder="请选择执行时间"
-                        onOk={() => false}
-                        value={args['date'] ? moment(args['date']) : undefined}
-                        onChange={v => this.handleArgs('date', v)}/>
-                    </Form.Item>
-                  </Tabs.TabPane>
-                  <Tabs.TabPane tab="UNIX Cron" key="cron">
-                    <Form.Item required label="执行规则" help="兼容Cron风格，可参考官方例子">
-                      <Input
-                        suffix={nextRunTime || <span/>}
-                        value={lds.get(args, 'cron.rule')}
-                        placeholder="例如每天凌晨1点执行：0 1 * * *"
-                        onChange={e => this.handleCronArgs('rule', e.target.value)}/>
-                    </Form.Item>
-                    <Form.Item label="生效时间" help="定义的执行规则在到达该时间后生效">
-                      <DatePicker
-                        showTime
-                        style={{width: '100%'}}
-                        placeholder="可选输入"
-                        value={lds.get(args, 'cron.start') ? moment(args['cron']['start']) : undefined}
-                        onChange={v => this.handleCronArgs('start', v)}/>
-                    </Form.Item>
-                    <Form.Item label="结束时间" help="执行规则在到达该时间后不再执行">
-                      <DatePicker
-                        showTime
-                        style={{width: '100%'}}
-                        placeholder="可选输入"
-                        value={lds.get(args, 'cron.stop') ? moment(args['cron']['stop']) : undefined}
-                        onChange={v => this.handleCronArgs('stop', v)}/>
-                    </Form.Item>
-                  </Tabs.TabPane>
-                  <Tabs.TabPane disabled tab="日历间隔" key="calendarinterval">
-                  </Tabs.TabPane>
-                </Tabs>
-              )}
-            </Form.Item>
-          </div>
+          
           <Form.Item wrapperCol={{span: 14, offset: 6}}>
-            {page === 2 &&
-            <Button disabled={!b3} type="primary" onClick={this.handleSubmit} loading={loading}>提交</Button>}
+            {page === 1 &&
+            <Button disabled={!b2} type="primary" onClick={this.handleSubmit} loading={loading}>提交</Button>}
             {page === 0 &&
             <Button disabled={!b1} type="primary" onClick={() => this.setState({page: page + 1})}>下一步</Button>}
-            {page === 1 &&
-            <Button disabled={!b2} type="primary" onClick={() => this.setState({page: page + 1})}>下一步</Button>}
             {page !== 0 &&
             <Button style={{marginLeft: 20}} onClick={() => this.setState({page: page - 1})}>上一步</Button>}
           </Form.Item>

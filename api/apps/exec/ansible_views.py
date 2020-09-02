@@ -20,23 +20,23 @@ class Ansibleview(View):
             Argument('playbooks', help='请输入任务内容'),
             Argument('rst_notify', type=dict, help='请选择执行失败通知方式'),
             Argument('targets', type=list, filter=lambda x: len(x), help='请选择执行对象'),
-            Argument('trigger', filter=lambda x: x in dict(Task.TRIGGERS), help='请选择触发器类型'),
-            Argument('trigger_args', help='请输入触发器参数'),
+            # Argument('trigger', filter=lambda x: x in dict(Task.TRIGGERS), help='请选择触发器类型'),
+            # Argument('trigger_args', help='请输入触发器参数'),
             Argument('desc', required=False),
         ).parse(request.body)
         if error is None:
             form.targets = json.dumps(form.targets)
             form.rst_notify = json.dumps(form.rst_notify)
-            if form.trigger == 'cron':
-                args = json.loads(form.trigger_args)['rule'].split()
-                if len(args) != 5:
-                    return json_response(error='无效的执行规则，请更正后再试')
-                minute, hour, day, month, week = args
-                week = '0' if week == '7' else week
-                try:
-                    CronTrigger(minute=minute, hour=hour, day=day, month=month, day_of_week=week)
-                except ValueError:
-                    return json_response(error='无效的执行规则，请更正后再试')
+            # if form.trigger == 'cron':
+                # args = json.loads(form.trigger_args)['rule'].split()
+                # if len(args) != 5:
+                    # return json_response(error='无效的执行规则，请更正后再试')
+                # minute, hour, day, month, week = args
+                # week = '0' if week == '7' else week
+                # try:
+                    # CronTrigger(minute=minute, hour=hour, day=day, month=month, day_of_week=week)
+                # except ValueError:
+                    # return json_response(error='无效的执行规则，请更正后再试')
             if form.id:
                 Task.objects.filter(pk=form.id).update(
                     updated_at=human_datetime(),

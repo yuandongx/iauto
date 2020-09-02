@@ -3,7 +3,7 @@ import shutil
 import os
 import subprocess
 from yaml import load
-from apps.exec.models import History
+# from apps.exec.models import History
 
 try:
     from yaml import CLoader as Loader
