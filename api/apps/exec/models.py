@@ -1,3 +1,4 @@
+import json
 from django.conf import settings
 from django.db import models
 from libs import ModelMixin, human_datetime
