@@ -15,7 +15,7 @@ class Store {
 
   fetchRecords = () => {
     this.isFetching = true;
-    http.get('/api/exec/template/')
+    http.get('/api/template/network')
       .then(({types, templates}) => {
         this.records = templates;
         this.types = types

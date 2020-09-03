@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, message } from 'antd';
@@ -26,7 +22,7 @@ class ComForm extends React.Component {
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
     formData['body'] = cleanCommand(this.state.body);
-    http.post('/api/exec/template/', formData)
+    http.post('/api/template/network', formData)
       .then(res => {
         message.success('操作成功');
         store.formVisible = false;
