@@ -3,7 +3,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Table, Input, Button, Select } from 'antd';
 import { SearchForm } from 'components';
-import store from '../../template/store';
+import store from '../../template/generic/store';
 
 @observer
 class TemplateSelector extends React.Component {

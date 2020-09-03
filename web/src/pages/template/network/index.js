@@ -8,34 +8,26 @@ import store from './store';
 
 export default observer(function () {
   return (
-    <AuthCard auth="exec.run_ansible.view">
+    <AuthCard auth="exec.template.view">
       <SearchForm>
-        <SearchForm.Item span={6} title="状态">
-          <Select allowClear value={store.f_status} onChange={v => store.f_status = v} placeholder="请选择">
-            <Select.Option value={-3}>未激活</Select.Option>
-            <Select.Option value={-2}>已激活</Select.Option>
-            <Select.Option value={-1}>待调度</Select.Option>
-            <Select.Option value={0}>成功</Select.Option>
-            <Select.Option value={1}>异常</Select.Option>
-            <Select.Option value={2}>失败</Select.Option>
-          </Select>
-        </SearchForm.Item>
-        <SearchForm.Item span={6} title="类型">
+        <SearchForm.Item span={8} title="模板类型">
           <Select allowClear value={store.f_type} onChange={v => store.f_type = v} placeholder="请选择">
             {store.types.map(item => (
               <Select.Option value={item} key={item}>{item}</Select.Option>
             ))}
           </Select>
         </SearchForm.Item>
-        <SearchForm.Item span={6} title="名称">
+        <SearchForm.Item span={8} title="模版名称">
           <Input allowClear value={store.f_name} onChange={e => store.f_name = e.target.value} placeholder="请输入"/>
         </SearchForm.Item>
-        <SearchForm.Item span={6}>
+        <SearchForm.Item span={8}>
           <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
         </SearchForm.Item>
       </SearchForm>
-      <AuthDiv auth="exec.ansible.add" style={{marginBottom: 16}}>
+      <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
         <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
+        <Button style={{marginLeft: 20}} type="primary" icon="import"
+                onClick={() => store.importVisible = true}>批量导入</Button>
       </AuthDiv>
       <ComTable/>
     </AuthCard>

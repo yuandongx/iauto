@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.app',
     'apps.deploy',
     'apps.notify',
+    'apps.template',
 ]
 
 MIDDLEWARE = [
