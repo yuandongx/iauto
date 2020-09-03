@@ -1,3 +1,4 @@
 localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
 
-[all:vars]
+10.102.254.110 ansible_host=10.102.254.110 ansible_user=zyyh2015 ansible_connection=network_cli ansible_password=1234 ansible_network_os=nxos
+
