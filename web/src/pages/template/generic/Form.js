@@ -89,6 +89,7 @@ class ComForm extends React.Component {
               mode="sh"
               value={this.state.content}
               onChange={val => this.setState({content: val})}
+
               height="300px"/>
           </Form.Item>
           <Form.Item label="备注信息">
