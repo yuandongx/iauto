@@ -59,5 +59,4 @@ class Ansibleview(View):
             # form.playbooks = json.loads(form.playbooks)
             print(request.body)
             run_ansible.delay(playbook=form.playbooks, invntory=form.targets)
-
         return json_response(error=error)
