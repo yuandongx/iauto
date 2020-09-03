@@ -111,7 +111,7 @@ def upload_submit(request):
     tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
     templates_path = os.path.join(settings.REPOS_DIR, "templates")
     if not os.path.exists(templates_path):
-        os.mkdirs(templates_path)
+        os.makedirs(templates_path)
     if request.method == "POST":
         files_name = request.POST.get('files')
         names = files_name.split(',')
@@ -135,7 +135,7 @@ def upload_submit(request):
                 fail.append(name)
             else:
                 try:
-                    with open(os.path.join(templates_path, name), 'r') as f:
+                    with open(new_file, 'r') as f:
                         row['content'] = f.read()
                 except:
                     row['content'] = os.path.join(templates_path, name)
