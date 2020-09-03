@@ -7,8 +7,7 @@ class Store {
   @observable types = [];
   @observable record = {};
   @observable isFetching = false;
-  @observable formVisible = false;
-  @observable importVisible = false;
+  @observable formFlag = 0;
 
   @observable f_name;
   @observable f_type;
