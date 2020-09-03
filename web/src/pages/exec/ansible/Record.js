@@ -21,7 +21,7 @@ class Record extends React.Component {
   }
 
   componentDidMount() {
-    http.get(`/api/schedule/${store.record.id}/`)
+    http.get(`/api/exec/ansible/${store.record.id}/`)
       .then(res => this.setState({records: res}))
       .finally(() => this.setState({loading: false}))
   }

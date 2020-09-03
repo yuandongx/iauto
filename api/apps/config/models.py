@@ -6,6 +6,7 @@ from apps.account.models import User
 
 class Credential(models.Model, ModelMixin):
     name = models.CharField(primary_key=True, max_length=50)
+
     pwd = models.CharField(max_length=50)
     desc = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
@@ -17,6 +18,7 @@ class Credential(models.Model, ModelMixin):
     class Meta:
         db_table = 'credential'
         ordering = ('-name',)
+
 
 class Environment(models.Model, ModelMixin):
     name = models.CharField(max_length=50)

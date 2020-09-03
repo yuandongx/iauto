@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, message } from 'antd';
@@ -25,8 +21,8 @@ class ComForm extends React.Component {
     this.setState({loading: true});
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
-    formData['body'] = cleanCommand(this.state.body);
-    http.post('/api/exec/template/', formData)
+    formData['content'] = cleanCommand(this.state.body);
+    http.post('/api/template/generic/', formData)
       .then(res => {
         message.success('操作成功');
         store.formVisible = false;
@@ -42,7 +38,7 @@ class ComForm extends React.Component {
       onOk: () => {
         if (this.state.type) {
           store.types.push(this.state.type);
-          this.props.form.setFieldsValue({'type': this.state.type})
+          this.props.form.setFieldsValue({'label': this.state.type})
         }
       },
     })
@@ -71,7 +67,7 @@ class ComForm extends React.Component {
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
           <Form.Item required label="模板类型">
             <Col span={16}>
-              {getFieldDecorator('type', {initialValue: info['type']})(
+              {getFieldDecorator('label', {initialValue: info['label']})(
                 <Select placeholder="请选择模板类型">
                   {store.types.map(item => (
                     <Select.Option value={item} key={item}>{item}</Select.Option>

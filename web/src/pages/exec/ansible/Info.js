@@ -20,7 +20,7 @@ class ComForm extends React.Component {
   }
 
   componentDidMount() {
-    http.get(`/api/schedule/${store.record.id}/?id=${store.record.h_id}`)
+    http.get(`/api/exec/ansible/${store.record.id}/?id=${store.record.h_id}`)
       .then(info => this.setState({info}))
       .finally(() => this.setState({loading: false}))
   }

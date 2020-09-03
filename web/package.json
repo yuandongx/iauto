@@ -1,6 +1,6 @@
 {
-  "name": "spug_web",
-  "version": "0.1.0",
+  "name": "iauto_web",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.10.2",

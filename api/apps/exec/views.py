@@ -92,7 +92,7 @@ def upload_submit(request):
         for name in names:
             repeat = False
             ttype = 'shell' if name.split('.')[-1] == 'sh' else 'ansible-playbook'
-            row = {'name': name, 'type': ttype}
+            row = {'name': name, 'label': ttype}
             try:
                 if os.path.exists(os.path.join(templates_path, name)):
                     os.remove(os.path.join(templates_path, name))
@@ -115,6 +115,3 @@ def upload_submit(request):
             ExecTemplate.objects.create(**row)
     return json_response(dict(ok=ok, fail=fail, override=override))
 
-
-def run_ansible(request):
-    pass

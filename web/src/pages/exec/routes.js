@@ -9,4 +9,5 @@ export default [
   makeRoute('/schedule', Schedule),
   makeRoute('/task', Task),
   makeRoute('/ansible', Tpltask),
+
 ]

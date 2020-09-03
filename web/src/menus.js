@@ -5,11 +5,16 @@ export default [
   {
     icon: 'code', title: '任务执行', auth: 'exec.task.do|exec.template.view', child: [
       {title: '实时任务', auth: 'exec.task.do', path: '/exec/task'},
-      {title: '计划任务', auth: 'eexec.task.do', path: '/exec/schedule'},
+      {title: '计划任务', auth: 'exec.task.do', path: '/exec/schedule'},
       {title: 'ansible任务', auth: 'exec.task.do', path: '/exec/ansible'},
+
     ]
   },
-  {icon: 'schedule', title: '任务模板', auth: 'schedule.schedule.view', path: '/template'},
+  {
+      icon: 'schedule', title: '任务模板', auth: 'schedule.schedule.view', child:[
+      {title: '通用任务', auth: 'template.view',  path: '/template/generic'},
+      {title: '网络设备', auth: 'template.view',  path: '/template/network'}
+  ]},
   {
     icon: 'flag', title: '应用发布', auth: 'deploy.app.view|deploy.request.view', child: [
       {title: '应用管理', auth: 'deploy.app.view', path: '/deploy/app'},

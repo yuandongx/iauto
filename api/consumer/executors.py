@@ -3,7 +3,6 @@ from channels.consumer import SyncConsumer
 from apps.setting.utils import AppSetting
 from django_redis import get_redis_connection
 from libs.ssh import SSH
-from libs.ansible_run import ansible_run
 import threading
 import socket
 import json
