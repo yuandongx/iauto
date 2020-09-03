@@ -45,7 +45,10 @@ class GenericView(View):
 class NetworkView(View):
     def get(self, request):
         templates = Template.objects.filter(flag='network')
-        types = [x['label'] for x in templates.order_by('label').values('label').distinct()]
+        types = [
+                 {'platform': 'asa', 'name': 'object', 'description': '地址对象'},
+                 {'platform': 'topsec', 'name': 'object-group', 'description': '地址组'}
+                ]
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 
     def post(self, request):

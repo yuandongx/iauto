@@ -13,7 +13,7 @@ export default observer(function () {
         <SearchForm.Item span={8} title="模板类型">
           <Select allowClear value={store.f_type} onChange={v => store.f_type = v} placeholder="请选择">
             {store.types.map(item => (
-              <Select.Option value={item} key={item}>{item}</Select.Option>
+              <Select.Option value={item.name} key={item.name}>{item.name}</Select.Option>
             ))}
           </Select>
         </SearchForm.Item>
@@ -25,9 +25,7 @@ export default observer(function () {
         </SearchForm.Item>
       </SearchForm>
       <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
-        <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
-        <Button style={{marginLeft: 20}} type="primary" icon="import"
-                onClick={() => store.importVisible = true}>批量导入</Button>
+          {store.types.map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm()}>{item.description}</Button>))}
       </AuthDiv>
       <ComTable/>
     </AuthCard>

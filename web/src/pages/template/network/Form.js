@@ -22,7 +22,7 @@ class ComForm extends React.Component {
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
     formData['body'] = cleanCommand(this.state.body);
-    http.post('/api/template/network', formData)
+    http.post('/api/template/network/', formData)
       .then(res => {
         message.success('操作成功');
         store.formVisible = false;
@@ -70,7 +70,7 @@ class ComForm extends React.Component {
               {getFieldDecorator('type', {initialValue: info['type']})(
                 <Select placeholder="请选择模板类型">
                   {store.types.map(item => (
-                    <Select.Option value={item} key={item}>{item}</Select.Option>
+                    <Select.Option value={item.platform} key={item.platform}>{item.platform}</Select.Option>
                   ))}
                 </Select>
               )}
