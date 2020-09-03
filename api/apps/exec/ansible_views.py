@@ -1,6 +1,7 @@
 import json
 from functools import partial
 from django_redis import get_redis_connection
+from django.conf import settings
 from apps.host.models import Host
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime

@@ -28,9 +28,9 @@ def run_ansible(**kwargs):
     #     re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
     #     result = re_err.findall(outs)
     #     print(result)
-    playbooks = json.loads(kwargs.playbooks)
-    print(playbooks)
-    return kwargs
+    # playbooks = json.loads(kwargs.playbooks)
+    # print(playbooks)
+    return json.loads(kwargs)
 
     # history = History.objects.filter(pk='4345353').first()
     # if not history:
