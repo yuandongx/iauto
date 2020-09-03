@@ -28,6 +28,7 @@ class History(models.Model, ModelMixin):
         (0, '成功'),
         (1, '异常'),
         (2, '失败'),
+        (3, '执行中'),
     )
     task_id = models.IntegerField()
     status = models.SmallIntegerField(choices=STATUS)

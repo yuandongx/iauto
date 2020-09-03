@@ -3,6 +3,7 @@ import shutil
 import os
 import subprocess
 from yaml import load
+import time
 # from apps.exec.models import History
 
 try:
@@ -48,12 +49,12 @@ class ResultsCollectorJSONCallback(CallbackBase):
         self.host_unreachable = {}
         self.host_failed = {}
     def v2_on_any(self, *args, **kwargs):
-        print('121312312234234234', args, kwargs)
-
+        # print('121312312234234234', args, kwargs)
+        pass
     def v2_runner_on_unreachable(self, result):
         host = result._host
-        self.host_unreachable[host.get_name()] = result
-        print('11111', result)
+        self.host_unreachable[host.get_name()] = result._result
+        # print('11111', result)
 
     def v2_runner_on_ok(self, result, *args, **kwargs):
         """Print a json representation of the result.
@@ -61,13 +62,13 @@ class ResultsCollectorJSONCallback(CallbackBase):
         Also, store the result in an instance attribute for retrieval later
         """
         host = result._host
-        self.host_ok[host.get_name()] = result
-        print('22222', json.dumps({host.name: result._result}, indent=4))
+        self.host_ok[host.get_name()] = result._result
+        # print('22222', json.dumps({host.name: result._result}, indent=4))
 
     def v2_runner_on_failed(self, result, *args, **kwargs):
         host = result._host
-        self.host_failed[host.get_name()] = result
-        print('3333', json.dumps({host.name: result._result}, indent=4))
+        self.host_failed[host.get_name()] = result._result
+        # print('3333', json.dumps({host.name: result._result}, indent=4))
 
 class PlaybookExecutor(_PlaybookExecutor):
     def __init__(self, playbooks, inventory):
@@ -160,21 +161,22 @@ class Runner(object):
         exit_code = 0
         pbex = PlaybookExecutor(self.playbooks,
                                 self.invntory)
-        result = pbex.run()
+        pbex.run()
         tmp = {
             "ok": pbex.results_callback.host_ok,
             "failed": pbex.results_callback.host_failed,
             "unreachable": pbex.results_callback.host_unreachable,
         }
-        history = History.objects.filter(pk='4345353').first()
-        if not history:
-            history = History.objects.create(
-                task_id=2,
-                status=2,
-                run_time=human_datetime(),
-                output=json.dumps(tmp)
-            )
-        else:
-            history.output=json.dumps(tmp)
-            history.save()
-        return exit_code
+        # history = History.objects.filter(pk='4345353').first()
+        # if not history:
+        #     history = History.objects.create(
+        #         task_id=2,
+        #         status=2,
+        #         run_time=human_datetime(),
+        #         output=json.dumps(tmp)
+        #     )
+        # else:
+        #     history.output=json.dumps(tmp)
+        #     history.save()
+        # return exit_code
+        return tmp

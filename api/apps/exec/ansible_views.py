@@ -24,6 +24,7 @@ class Ansibleview(View):
             # Argument('trigger_args', help='请输入触发器参数'),
             Argument('desc', required=False),
         ).parse(request.body)
+        # print(request.body)
         if error is None:
             form.targets = json.dumps(form.targets)
             form.rst_notify = json.dumps(form.rst_notify)
@@ -51,13 +52,8 @@ class Ansibleview(View):
                     rds_cli.lpush(settings.SCHEDULE_KEY, json.dumps(form))
             else:
                 Task.objects.create(created_by=request.user, **form)
-        # callback = partial(result_callback, '2', '3')
-        # run_ansible.delay(playbook='/www/api/libs/test.yml',
-                           # v=4,
-                           # invntory='/www/api/libs/inventory')
-        runner = Runner(playbook='/www/api/libs/test.yml',
-                           v=4,
-                           invntory='/www/api/libs/inventory')
-        thread = Thread(target=runner.run, args=())
-        thread.start()
+
+            # form.playbooks = json.loads(form.playbooks)
+            run_ansible.delay(playbook=form.playbooks, invntory=form.targets)
+
         return json_response(error=error)
