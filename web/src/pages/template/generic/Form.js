@@ -13,7 +13,7 @@ class ComForm extends React.Component {
     this.state = {
       loading: false,
       type: null,
-      body: store.record['body'],
+      content: store.record['content'],
     }
   }
 
@@ -21,7 +21,7 @@ class ComForm extends React.Component {
     this.setState({loading: true});
     const formData = this.props.form.getFieldsValue();
     formData['id'] = store.record.id;
-    formData['content'] = cleanCommand(this.state.body);
+    formData['content'] = cleanCommand(this.state.content);
     http.post('/api/template/generic/', formData)
       .then(res => {
         message.success('操作成功');
@@ -87,8 +87,9 @@ class ComForm extends React.Component {
           <Form.Item required label="模板内容">
             <ACEditor
               mode="sh"
-              value={this.state.body}
-              onChange={val => this.setState({body: val})}
+              value={this.state.content}
+              onChange={val => this.setState({content: val})}
+
               height="300px"/>
           </Form.Item>
           <Form.Item label="备注信息">

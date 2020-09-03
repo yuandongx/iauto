@@ -30,14 +30,14 @@ class TemplateSelector extends React.Component {
 
   columns = [{
     title: '类型',
-    dataIndex: 'type',
+    dataIndex: 'label',
   }, {
     title: '名称',
     dataIndex: 'name',
     ellipsis: true
   }, {
     title: '内容',
-    dataIndex: 'body',
+    dataIndex: 'content',
     ellipsis: true
   }, {
     title: '备注',
@@ -52,7 +52,7 @@ class TemplateSelector extends React.Component {
       data = data.filter(item => item['name'].toLowerCase().includes(store.f_name.toLowerCase()))
     }
     if (store.f_type) {
-      data = data.filter(item => item['type'].toLowerCase().includes(store.f_type.toLowerCase()))
+      data = data.filter(item => item['label'].toLowerCase().includes(store.f_type.toLowerCase()))
     }
     return (
       <Modal

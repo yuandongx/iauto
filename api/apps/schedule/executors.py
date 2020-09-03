@@ -4,7 +4,6 @@ from threading import Thread
 from libs.ssh import SSH, AuthenticationException
 from apps.host.models import Host
 from apps.config.models import Credential
-from apps.setting.utils import AppSetting
 from django.db import close_old_connections
 import subprocess
 import socket
@@ -38,7 +37,7 @@ def host_executor(q, host, password, command):
 def dispatch(command, targets, in_view=False):
     if not in_view:
         close_old_connections()
-    # threads, pkey, q = [], AppSetting.get('private_key'), Queue()
+    threads, q = [], Queue()
     for t in targets:
         if t == 'local':
             threads.append(Thread(target=local_executor, args=(q, command)))
