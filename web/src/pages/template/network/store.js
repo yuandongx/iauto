@@ -7,7 +7,7 @@ class Store {
   @observable types = [];
   @observable record = {};
   @observable isFetching = false;
-  @observable formFlag = 0;
+  @observable formFlag = null;
 
   @observable f_name;
   @observable f_type;
@@ -22,9 +22,9 @@ class Store {
       .finally(() => this.isFetching = false)
   };
 
-  showForm = (info = {}) => {
-    this.formVisible = true;
-    this.record = info
+  showForm = (key) => {
+    this.formFlag = key;
+    /**this.record = key**/
   }
 }
 

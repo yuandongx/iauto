@@ -25,7 +25,7 @@ export default observer(function () {
         </SearchForm.Item>
       </SearchForm>
       <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
-          {store.types.map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm()}>{item.description}</Button>))}
+          {store.types.map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm(item.name)}>{item.description}</Button>))}
       </AuthDiv>
       <ComTable/>
     </AuthCard>
