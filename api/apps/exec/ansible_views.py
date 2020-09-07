@@ -64,3 +64,4 @@ class Ansibleview(View):
             run_ansible.delay(execinfo=request.body.decode())
 
         return json_response(error=error)
+
