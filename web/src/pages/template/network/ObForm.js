@@ -1,9 +1,9 @@
 
+import http from 'libs/http';
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, message, Radio, Icon } from 'antd';
 import { ACEditor } from 'components';
-import { http, cleanCommand } from 'libs';
 import store from './store';
 const { Option } = Select;
 
@@ -13,6 +13,7 @@ class DataForm extends React.Component {
     this.state = {
       loading: false,
       radioValue: 1,
+      preViewConfig: null,
     }
   }
   handleSubmit = e => {
@@ -22,13 +23,16 @@ class DataForm extends React.Component {
         console.log('Received values of form: ', values);
       }
     });
+    const formData = this.props.form.getFieldsValue();
+    formData['preview'] = true;
+    http.post('/api/template/network/', formData)
+      .then(res => {
+        console.log(res);
+      }, () => this.setState({loading: false}))
   };
 
   handleSelectChange = value => {
     console.log(value);
-    this.props.form.setFieldsValue({
-      note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-    });
   };
   onRadioChange = e => {
     console.log('radio checked', e.target.value);
@@ -56,14 +60,14 @@ class DataForm extends React.Component {
         </Form.Item>
         <Form.Item required label="对象名称">
             {getFieldDecorator('name',  {
-                rules: [{ required: true, message: 'Please input your note!' }],
+                rules: [{ required: true, message: '请输入对象名称!' }],
               })(
-              <Input placeholder="请输入IP地址"/>
+              <Input placeholder="请输入对象名称!"/>
             )}
         </Form.Item>
         <Form.Item label="类型">
           {getFieldDecorator('object_type', {
-            rules: [{ required: true, message: 'Please input your note!' }],
+            rules: [{ required: true, message: '请选择要配置的对象类型!' }],
           })(<Radio.Group onChange={this.onRadioChange}>
                 <Radio value={1}>主机地址</Radio>
                 <Radio value={2}>地址范围</Radio>
@@ -71,8 +75,8 @@ class DataForm extends React.Component {
               </Radio.Group>)}
         </Form.Item>
         {this.state.radioValue === 1 && <Form.Item required label="IP地址">
-            {getFieldDecorator('name',  {
-                rules: [{ required: true, message: 'Please input your note!' }],
+            {getFieldDecorator('hostip',  {
+                rules: [{ required: true, message: '请输入主机地址!' }],
               })(
               <Input placeholder="请输入IP地址"/>
             )}
@@ -80,22 +84,20 @@ class DataForm extends React.Component {
         {this.state.radioValue === 2 && <Form.Item required label="IP地址范围">
             <Input.Group compact>
               <Form.Item
-                name={['address', 'province']}
-                rules={[{ required: true, message: 'Province is required' }]}
+                rules={[{ required: true, message: '请输入起始IP地址!' }]}
               >
-                {getFieldDecorator('name',  {
-                    rules: [{ required: true, message: 'Please input your note!' }],
+                {getFieldDecorator('start_ip',  {
+                    rules: [{ required: true, message: '请输入起始IP地址!' }],
                   })(
                   <Input placeholder="请输入IP地址"/>
                 )}
               </Form.Item>
               <Icon type="line" style={{ fontSize: '20px', color: '#08c', margin: '10px' }}/>
               <Form.Item
-                name={['address', 'street']}
-                rules={[{ required: true, message: 'Street is required' }]}
+                rules={[{ required: true, message: '请输入结束IP地址!' }]}
               >
-               {getFieldDecorator('name',  {
-                    rules: [{ required: true, message: 'Please input your note!' }],
+               {getFieldDecorator('end_ip',  {
+                    rules: [{ required: true, message: '请输入结束IP地址!' }],
                   })(
                   <Input placeholder="请输入IP地址"/>
                 )}
@@ -103,22 +105,22 @@ class DataForm extends React.Component {
             </Input.Group>
         </Form.Item>}
         {this.state.radioValue === 3 && <Form.Item required label="IP地址范围">
-            {getFieldDecorator('name',  {
-                    rules: [{ required: true, message: 'Please input your note!' }],
+            {getFieldDecorator('subnet_ip',  {
+                    rules: [{ required: true, message: '请输入子网IP!' }],
                   })(
                   <Input placeholder="请输入IP地址"/>
                 )}
         </Form.Item>}
         {this.state.radioValue === 3 && <Form.Item required label="IP地址范围">
-            {getFieldDecorator('name',  {
-                    rules: [{ required: true, message: 'Please input your note!' }],
+            {getFieldDecorator('subnet_mask',  {
+                    rules: [{ required: true, message: '请输入子网掩码!' }],
                   })(
                   <Input placeholder="请输入子网掩码"/>
                 )}
         </Form.Item>}
         <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
           <Button type="primary" htmlType="submit">
-            Submit
+            配置预览
           </Button>
         </Form.Item>
       </Form>

@@ -54,19 +54,26 @@ class NetworkView(View):
     def post(self, request):
         form, error = JsonParser(
             Argument('id', type=int, required=False),
-            Argument('name', help='请输入模版名称'),
-            Argument('label', help='请选择模版类型'),
-            Argument('content', help='请输入模版内容'),
-            Argument('desc', required=False)
+            Argument('platform', help='请输入选择设备类型'),
+            Argument('name', help='请选输入对象名称'),
+            Argument('object_type', help='请选择对象类型'),
+            Argument('hostip', required=False),
+            Argument('start_ip', required=False),
+            Argument('end_ip', required=False),
+            Argument('subnet_ip', required=False),
+            Argument('subnet_mask', required=False),
+            Argument('preview', required=False),
         ).parse(request.body)
+        print(form)
+        
         if error is None:
             if form.id:
                 form.updated_at = human_datetime()
                 form.updated_by = request.user
-                Template.objects.filter(pk=form.pop('id')).update(**form)
+                # Template.objects.filter(pk=form.pop('id')).update(**form)
             else:
                 form.created_by = request.user
-                Template.objects.create(**form)
+                # Template.objects.create(**form)
         return json_response(error=error)
 
     def delete(self, request):
