@@ -20,7 +20,7 @@ class ExecTemplate(models.Model, ModelMixin):
         return '<ExecTemplate %r>' % self.name
 
     class Meta:
-        db_table = 'exec_templates'
+        db_table = 'iauto_exec_templates'
         ordering = ('-id',)
 
 
@@ -42,7 +42,7 @@ class History(models.Model, ModelMixin):
         return tmp
 
     class Meta:
-        db_table = 'ansible_task_histories'
+        db_table = 'iauto_ansible_task_histories'
         ordering = ('-id',)
 
 
@@ -84,5 +84,5 @@ class Task(models.Model, ModelMixin):
         return '<Ansible Task %r>' % self.name
 
     class Meta:
-        db_table = 'ansible_tasks'
+        db_table = 'iauto_ansible_tasks'
         ordering = ('-id',)

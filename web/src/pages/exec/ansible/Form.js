@@ -141,7 +141,7 @@ class ComForm extends React.Component {
     return [b1, b2];
   };
    handleClose = removedTag => {
-        const playbooks = this.state.playbooks.filter(tag => tag.name !== removedTag);
+        const playbooks = this.state.playbooks.filter(tag => tag.id !== removedTag.id);
         this.setState({ playbooks });
    };
   forMap = tag => {
@@ -153,11 +153,11 @@ class ComForm extends React.Component {
           this.handleClose(tag);
         }}
       >
-        {tag}
+        {tag.name}
       </Tag>
     );
     return (
-      <span key={tag} style={{ display: 'inline-block' }}>
+      <span key={tag.id} style={{ display: 'inline-block' }}>
         {tagElem}
       </span>
     );
@@ -167,7 +167,7 @@ class ComForm extends React.Component {
     const {getFieldDecorator, getFieldValue} = this.props.form;
     const {page, args, playbooks, loading, showTmp, nextRunTime} = this.state;
     const [b1, b2] = this.verifyButtonStatus();
-    const tags = playbooks.map((item) => this.forMap(item.name));
+    const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
     // console.log(playbooks);
     return (
       <Modal
