@@ -22,7 +22,7 @@ class Host(models.Model, ModelMixin):
     deleted_by = models.ForeignKey(User, models.PROTECT, related_name='+', null=True)
 
     def get_ssh(self):
-        cred = Credential.objects.get(name=self.access_credentials)
+        cred = Credential.objects.filter(name=self.access_credentials).first()
         return SSH(self.hostname, self.port, self.username, cred.pwd)
 
     def __repr__(self):

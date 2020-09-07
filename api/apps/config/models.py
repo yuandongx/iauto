@@ -5,9 +5,8 @@ from apps.account.models import User
 
 
 class Credential(models.Model, ModelMixin):
-    name = models.CharField(primary_key=True, max_length=50)
-
-    pwd = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
+    pwd = models.CharField(max_length=100)
     desc = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)

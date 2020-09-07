@@ -22,7 +22,7 @@ class HostView(View):
         if host_id:
             if not request.user.has_host_perm(host_id):
                 return json_response(error='无权访问该主机，请联系管理员')
-            return json_response(Host.objects.get(pk=host_id))
+            return json_response(Host.objects.filter(pk=host_id).first())
         hosts = Host.objects.filter(deleted_by_id__isnull=True)
         zones = [x['zone'] for x in hosts.order_by('zone').values('zone').distinct()]
         perms = [x.id for x in hosts] if request.user.is_supper else request.user.host_perms
@@ -45,12 +45,10 @@ class HostView(View):
             cred = None
             if param_pwd is not None:
                 if param_pwd.get("name") is not None:
-                    try:
-                        cred = Credential.objects.get(name=param_pwd['name'])
+                    cred = Credential.objects.filter(name=param_pwd['name']).first()
+                    if cred is not None:
                         passwd = cred.pwd
                         form.access_credentials = cred.name
-                    except Credential.DoesNotExist:
-                        pass
                 elif param_pwd.get('password') is not None:
                     passwd = param_pwd.get('password')
             if passwd is None:
@@ -58,15 +56,16 @@ class HostView(View):
             elif valid_ssh(form.hostname, form.port, form.username, passwd) is False:
                 return json_response('auth fail')
 
-            if cred is None:
-                try:
-                    cred = Credential.objects.get(name=f'{form.username}@{form.hostname}')
-                    if cred.pwd != passwd:
-                        cred.pwd = passwd
-                        cred.save()
-                except Credential.DoesNotExist:
-                    Credential.objects.create(created_by=request.user, name=f'{form.username}@{form.hostname}', pwd=passwd, desc=f'【{form.name}】的访问凭证')
-                form.access_credentials = f'{form.username}@{form.hostname}'
+            if cred is not None:
+                if cred.pwd != passwd:
+                    cred.pwd = passwd
+                    cred.save()
+            else:
+                name = f'{form.username}@{form.hostname}'
+                cred1 = Credential.objects.filter(name=name).first()
+                if cred1 is None:
+                    Credential.objects.create(created_by=request.user, name=name, pwd=passwd, desc=f'【{form.name}】的访问凭证')
+                form.access_credentials = name
             if form.id:
                 Host.objects.filter(pk=form.pop('id')).update(**form)
             elif Host.objects.filter(name=form.name, deleted_by_id__isnull=True).exists():

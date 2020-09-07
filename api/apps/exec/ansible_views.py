@@ -1,4 +1,3 @@
-
 import json
 from functools import partial
 from django_redis import get_redis_connection
@@ -11,9 +10,13 @@ from apps.exec.models import Task
 from libs import Runner
 from threading import Thread
 
+
 class Ansibleview(View):
     def get(self, request):
-        pass
+        tasks = Task.objects.all()
+        types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
+        return json_response({'types': types, 'tasks': [x.to_dict() for x in tasks]})
+
 
     def post(self, request):
         form, error = JsonParser(
@@ -32,19 +35,20 @@ class Ansibleview(View):
             form.targets = json.dumps(form.targets)
             form.rst_notify = json.dumps(form.rst_notify)
             # if form.trigger == 'cron':
-                # args = json.loads(form.trigger_args)['rule'].split()
-                # if len(args) != 5:
-                    # return json_response(error='无效的执行规则，请更正后再试')
-                # minute, hour, day, month, week = args
-                # week = '0' if week == '7' else week
-                # try:
-                    # CronTrigger(minute=minute, hour=hour, day=day, month=month, day_of_week=week)
-                # except ValueError:
-                    # return json_response(error='无效的执行规则，请更正后再试')
+            # args = json.loads(form.trigger_args)['rule'].split()
+            # if len(args) != 5:
+            # return json_response(error='无效的执行规则，请更正后再试')
+            # minute, hour, day, month, week = args
+            # week = '0' if week == '7' else week
+            # try:
+            # CronTrigger(minute=minute, hour=hour, day=day, month=month, day_of_week=week)
+            # except ValueError:
+            # return json_response(error='无效的执行规则，请更正后再试')
             if form.id:
                 Task.objects.filter(pk=form.id).update(
                     updated_at=human_datetime(),
                     updated_by=request.user,
+                    is_active=True,
                     **form
                 )
                 task = Task.objects.filter(pk=form.id).first()
@@ -54,10 +58,9 @@ class Ansibleview(View):
                     rds_cli = get_redis_connection()
                     rds_cli.lpush(settings.SCHEDULE_KEY, json.dumps(form))
             else:
-                Task.objects.create(created_by=request.user, **form)
+                Task.objects.create(created_by=request.user, is_active=True, **form)
 
             # form.playbooks = json.loads(form.playbooks)
-            print(request.body)
-            run_ansible.delay(playbook=form.playbooks, invntory=form.targets)
+            run_ansible.delay(execinfo=request.body.decode())
 
         return json_response(error=error)

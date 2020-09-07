@@ -9,11 +9,8 @@ import json
 
 class CredentialView(View):
     def get(self, request):
-        query = {}
-        if not request.user.is_supper:
-            query['id__in'] = request.user.deploy_perms['envs']
-        envs = Credential.objects.filter(**query)
-        return json_response(envs)
+        creds = Credential.objects.all()
+        return json_response(creds)
 
     def post(self, request):
         form, error = JsonParser(
