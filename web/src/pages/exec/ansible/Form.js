@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { toJS } from 'mobx';
 import { observer} from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, Steps, Icon, message, Tag } from 'antd';
 import { LinkButton } from 'components';
@@ -162,7 +161,7 @@ class ComForm extends React.Component {
   render() {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
-    const {page, _, playbooks, loading, showTmp, } = this.state;
+    const {page, playbooks, loading, showTmp, } = this.state;
     const [b1, b2] = this.verifyButtonStatus();
     const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
     return (
