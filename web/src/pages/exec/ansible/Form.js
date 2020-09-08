@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, Steps, Tabs, InputNumber, DatePicker, Icon, message, Tag } from 'antd';
+import { Modal, Form, Input, Select, Col, Button, Steps, Icon, message, Tag } from 'antd';
 import { LinkButton } from 'components';
 import TemplateSelector from './TemplateSelector';
-import { http, cleanCommand, hasHostPermission } from 'libs';
+import { http, hasHostPermission } from 'libs';
 import store from './store';
 import hostStore from '../../host/store';
 import styles from './index.module.css';
@@ -165,7 +165,7 @@ class ComForm extends React.Component {
   render() {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
-    const {page, args, playbooks, loading, showTmp, nextRunTime} = this.state;
+    const {page, , playbooks, loading, showTmp, } = this.state;
     const [b1, b2] = this.verifyButtonStatus();
     const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
     // console.log(playbooks);

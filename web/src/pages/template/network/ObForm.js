@@ -2,8 +2,8 @@
 import http from 'libs/http';
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, message, Radio, Icon } from 'antd';
-import { ACEditor } from 'components';
+import { Modal, Form, Input, Select, Button, Radio, Icon } from 'antd';
+
 import store from './store';
 const { Option } = Select;
 
@@ -144,7 +144,6 @@ class ObjectForm extends React.Component {
         width={800}
         maskClosable={false}
         title={store.record.id ? '编辑地址对象' : '新建地址对象'}
-        onCancel={() => store.formVisible = false}
         confirmLoading={this.state.loading}
         onCancel={() => store.formFlag = null}
         onOk={this.handleSubmit}
