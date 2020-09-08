@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, Tag, Dropdown, Icon, Menu, message } from 'antd';
+import { Table, Tooltip, Divider, Modal, Tag, Icon, Menu, message } from 'antd';
 import ComForm from './Form';
 import http from 'libs/http';
 import store from './store';
@@ -9,31 +9,39 @@ import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
 
+class StartButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      taskState: this.props.state ? this.props.state : 0,
+    }
+  }
+
+  handleExecute = () => {
+      this.props.onClick();
+      this.setState({taskState: this.state.taskState === 0 ? 1 : 0});
+      http.post('/api/exec/ansible/do_job/', {id: this.props.taskId, state: this.state.taskState})
+      .then(({success, msg}) => {
+          console.log(success);
+          console.log(msg);
+      });
+  };
+  render(){
+    return(<Tooltip placement="top" title={this.state.taskState === 0 ? '开始任务': '停止执行'}>
+            <LinkButton onClick={() => this.handleExecute()}><Icon type={this.state.taskState === 0 ? "play-circle":"pause-circle"} theme="filled" /></LinkButton>
+            </Tooltip>);
+    };
+}
+
+
 @observer
 class ComTable extends React.Component {
+
   componentDidMount() {
-    store.fetchRecords()
+    store.fetchRecords();
   }
 
   colors = ['green', 'orange', 'red'];
-
-  moreMenus = (info) => (
-    <Menu>
-      <Menu.Item>
-        <LinkButton onClick={() => this.handleTest(info)}>执行测试</LinkButton>
-      </Menu.Item>
-      <Menu.Item>
-        <LinkButton auth="schedule.schedule.edit" onClick={() => this.handleActive(info)}>{info.is_active ? '禁用任务' : '激活任务'}</LinkButton>
-      </Menu.Item>
-      <Menu.Item>
-        <LinkButton onClick={() => store.showRecord(info)}>历史记录</LinkButton>
-      </Menu.Item>
-      <Menu.Divider/>
-      <Menu.Item>
-        <LinkButton auth="schedule.schedule.del" onClick={() => this.handleDelete(info)}>删除</LinkButton>
-      </Menu.Item>
-    </Menu>
-  );
 
   columns = [{
     title: '序号',
@@ -53,10 +61,10 @@ class ComTable extends React.Component {
         if (info['latest_status_alias']) {
           return <Tag color={this.colors[info['latest_status']]}>{info['latest_status_alias']}</Tag>
         } else {
-          return <Tag color="blue">待调度</Tag>
+          return <Tag color="blue">执行中</Tag>
         }
       } else {
-        return <Tag>未激活</Tag>
+        return <Tag>未执行</Tag>
       }
     },
   }, {
@@ -72,31 +80,27 @@ class ComTable extends React.Component {
     width: 180,
     render: info => (
       <span>
-        <LinkButton disabled={!info['latest_run_time']} onClick={() => store.showInfo(info)}>详情</LinkButton>
+        <Tooltip placement="top" title='查看详情'>
+          <LinkButton disabled={!info['latest_run_time']} onClick={() => store.showInfo(info)}><Icon type="eye" theme="twoTone" /></LinkButton>
+        </Tooltip>
         <Divider type="vertical"/>
-        <LinkButton auth="schedule.schedule.edit" onClick={() => store.showForm(info)}>编辑</LinkButton>
+        <Tooltip placement="top" title='编辑任务'>
+          <LinkButton onClick={() => store.showForm(info)}><Icon type="edit" theme="filled" /></LinkButton>
+        </Tooltip>
         <Divider type="vertical"/>
-        <Dropdown overlay={() => this.moreMenus(info)} trigger={['click']}>
-          <LinkButton>
-            更多 <Icon type="down"/>
-          </LinkButton>
-        </Dropdown>
+        <Tooltip placement="top" title='开始任务'>
+        <StartButton state={info.is_active} taskId={info.id} onClick={() => this.handleExecute(info)}/>
+        </Tooltip>
+        <Divider type="vertical"/>
+        <Tooltip placement="top" title='删除任务'>
+          <LinkButton onClick={() => this.handleDelete(info)}><Icon type="delete" theme="filled" /></LinkButton>
+        </Tooltip>
       </span>
     )
   }];
 
-  handleActive = (text) => {
-    Modal.confirm({
-      title: '删除确认',
-      content: `确定要${text.is_active ? '禁用' : '激活'}任务【${text['name']}】?`,
-      onOk: () => {
-        return http.patch('/api/exec/ansible/', {id: text.id, is_active: !text.is_active})
-          .then(() => {
-            message.success('操作成功');
-            store.fetchRecords()
-          })
-      }
-    })
+  handleExecute = (text) => {
+    store.fetchRecords();
   };
 
   handleDelete = (text) => {
@@ -110,15 +114,6 @@ class ComTable extends React.Component {
             store.fetchRecords()
           })
       }
-    })
-  };
-
-  handleTest = (text) => {
-    Modal.confirm({
-      title: '操作确认',
-      content: '立即执行该任务（不影响调度规则，且不会触发失败通知）？',
-      onOk: () => http.post(`/api/exec/ansible/${text.id}/`)
-        .then(res => store.showInfo(text, res))
     })
   };
 
