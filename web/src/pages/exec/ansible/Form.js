@@ -165,7 +165,7 @@ class ComForm extends React.Component {
   render() {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
-    const {page, , playbooks, loading, showTmp, } = this.state;
+    const {page, _, playbooks, loading, showTmp, } = this.state;
     const [b1, b2] = this.verifyButtonStatus();
     const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
     // console.log(playbooks);
