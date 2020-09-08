@@ -1,4 +1,3 @@
-
 import { observable } from "mobx";
 import http from 'libs/http';
 import moment from "moment";
@@ -19,7 +18,7 @@ class Store {
 
   fetchRecords = () => {
     this.isFetching = true;
-    http.get('/api/schedule/')
+    http.get('/api/exec/ansible/')
       .then(({types, tasks}) => {
         tasks.map(item => {
           const value = item['latest_run_time'];
