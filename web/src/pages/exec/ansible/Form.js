@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { observer } from 'mobx-react';
+import { toJS } from 'mobx';
+import { observer} from 'mobx-react';
 import { Modal, Form, Input, Select, Col, Button, Steps, Icon, message, Tag } from 'antd';
 import { LinkButton } from 'components';
 import TemplateSelector from './TemplateSelector';
@@ -24,7 +25,7 @@ class ComForm extends React.Component {
       page: 0,
       nextRunTime: null,
       args: {[store.record['trigger']]: store.record['trigger_args']},
-      playbooks: [],
+      playbooks: store.record.id ? store.record.playbooks : [],
     }
   }
 
@@ -57,7 +58,7 @@ class ComForm extends React.Component {
     }
     this.setState({loading: true});
     formData['id'] = store.record.id;
-    formData['playbooks'] = this.state.playbooks;
+    formData['playbooks'] = this.state.playbooks.map((item) =>(item.id));
     formData['targets'] = store.targets.filter(x => x);
     formData['trigger_args'] = this._parse_args(formData['trigger']);
     http.post('/api/exec/ansible/', formData)
@@ -90,10 +91,6 @@ class ComForm extends React.Component {
     </Form>
   );
 
-  handleArgs = (type, value) => {
-    const args = Object.assign(this.state.args, {[type]: value});
-    this.setState({args})
-  };
 
   handleCronArgs = (key, value) => {
     let args = this.state.args['cron'] || {};
@@ -133,7 +130,6 @@ class ComForm extends React.Component {
     const data = this.props.form.getFieldsValue();
     let b1 = data['type'] && data['name'] && this.state.playbooks.length > 0;
     const b2 = store.targets.filter(x => x).length > 0;
-    /**const b3 = this.state.args[data['trigger']];**/
     if (!b1 && this.isFirstRender && store.record.id) {
       this.isFirstRender = false;
       b1 = true
@@ -141,8 +137,8 @@ class ComForm extends React.Component {
     return [b1, b2];
   };
    handleClose = removedTag => {
-        const playbooks = this.state.playbooks.filter(tag => tag.id !== removedTag.id);
-        this.setState({ playbooks });
+      const playbooks = this.state.playbooks.filter(tag => tag.id !== removedTag.id);
+      this.setState({ playbooks });
    };
   forMap = tag => {
     const tagElem = (
@@ -162,13 +158,13 @@ class ComForm extends React.Component {
       </span>
     );
   };
+
   render() {
     const info = store.record;
     const {getFieldDecorator, getFieldValue} = this.props.form;
     const {page, _, playbooks, loading, showTmp, } = this.state;
     const [b1, b2] = this.verifyButtonStatus();
     const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
-    // console.log(playbooks);
     return (
       <Modal
         visible
@@ -264,7 +260,6 @@ class ComForm extends React.Component {
               </Button>
             </Form.Item>
           </div>
-          
           <Form.Item wrapperCol={{span: 14, offset: 6}}>
             {page === 1 &&
             <Button disabled={!b2} type="primary" onClick={this.handleSubmit} loading={loading}>提交</Button>}

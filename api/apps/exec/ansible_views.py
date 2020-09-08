@@ -7,6 +7,7 @@ from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from .tasks import run_ansible
 from apps.exec.models import Task
+from apps.template.models import Template
 from libs import Runner
 from threading import Thread
 
@@ -15,8 +16,14 @@ class Ansibleview(View):
     def get(self, request):
         tasks = Task.objects.all()
         types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
-        return json_response({'types': types, 'tasks': [x.to_dict() for x in tasks]})
-
+        new_tasks = []
+        for x in tasks:
+            d = x.to_dict()
+            tmpid = json.loads(d['playbooks'])
+            tmps = Template.objects.filter(id__in=tmpid)
+            d['playbooks'] = [{"name": t.name, "id": t.id} for t in tmps]
+            new_tasks.append(d)
+        return json_response({'types': types, 'tasks': new_tasks})
 
     def post(self, request):
         form, error = JsonParser(
