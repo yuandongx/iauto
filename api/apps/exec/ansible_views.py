@@ -68,7 +68,7 @@ class Ansibleview(View):
                 Task.objects.create(created_by=request.user, is_active=True, **form)
 
             # form.playbooks = json.loads(form.playbooks)
-            run_ansible.delay(execinfo=request.body.decode())
+            # run_ansible.delay(execinfo=request.body.decode())
 
         return json_response(error=error)
 

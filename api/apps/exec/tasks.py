@@ -40,41 +40,41 @@ def run_ansible(**kwargs):
                 host_dict["hostname"] = "localhost"
             if host_dict:
                 host_list.append(host_dict)
-    if playbooks:
-        for pb in playbooks:
-            content = pb.get("content")
-            if content:
-                playbook_list.append(content)
-    if host_list and playbook_list:
-        ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
-        try:
-            host_path, playbook_path_list = ansible_handle.create_tmp()
-            if host_path and playbook_path_list:
-                # history = History.objects.filter(pk='4345353').first()
-                for pre_p in playbook_path_list:
-                    cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
-                    p = subprocess.Popen(
-                        cmd,
-                        shell=True,
-                        stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                        text=True,
-                    )
-                    outs, err = p.communicate()
-                    errors = dict()
-                    if err != "" and not err.strip().startswith("[WARNING]"):
-                        errors["exec_err"] = err
-                    else:
-                        re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
-                        results = re_err.findall(outs)
-                        if results:
-                            errors = dict()
-                            for result in results:
-                                errors[result[0]] = json.loads(result[2])
-                    print(errors)
-        finally:
-            ansible_handle.remove_tmp()
+    # if playbooks:
+    #     for pb in playbooks:
+    #         content = pb.get("content")
+    #         if content:
+    #             playbook_list.append(content)
+    # if host_list and playbook_list:
+    #     ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
+    #     try:
+    #         host_path, playbook_path_list = ansible_handle.create_tmp()
+    #         if host_path and playbook_path_list:
+    #             # history = History.objects.filter(pk='4345353').first()
+    #             for pre_p in playbook_path_list:
+    #                 cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
+    #                 p = subprocess.Popen(
+    #                     cmd,
+    #                     shell=True,
+    #                     stdin=subprocess.PIPE,
+    #                     stdout=subprocess.PIPE,
+    #                     stderr=subprocess.PIPE,
+    #                     text=True,
+    #                 )
+    #                 outs, err = p.communicate()
+    #                 errors = dict()
+    #                 if err != "" and not err.strip().startswith("[WARNING]"):
+    #                     errors["exec_err"] = err
+    #                 else:
+    #                     re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
+    #                     results = re_err.findall(outs)
+    #                     if results:
+    #                         errors = dict()
+    #                         for result in results:
+    #                             errors[result[0]] = json.loads(result[2])
+    #                 print(errors)
+    #     finally:
+    #         ansible_handle.remove_tmp()
 
     return execinfo
 
