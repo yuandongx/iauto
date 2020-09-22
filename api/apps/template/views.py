@@ -64,17 +64,21 @@ class NetworkView(View):
             Argument('subnet_mask', required=False),
             Argument('preview', required=False),
         ).parse(request.body)
-        print(form)
-        
         if error is None:
-            if form.id:
-                form.updated_at = human_datetime()
-                form.updated_by = request.user
-                # Template.objects.filter(pk=form.pop('id')).update(**form)
+            if form.preview:
+                data = make_commands(form)
+                print(data)
+                
+                return json_response(data=data)
             else:
-                form.created_by = request.user
-                # Template.objects.create(**form)
-        return json_response(error=error)
+                if form.id:
+                    form.updated_at = human_datetime()
+                    form.updated_by = request.user
+                    # Template.objects.filter(pk=form.pop('id')).update(**form)
+                else:
+                    form.created_by = request.user
+                    # Template.objects.create(**form)
+            return json_response(error=error)
 
     def delete(self, request):
         form, error = JsonParser(
@@ -84,8 +88,17 @@ class NetworkView(View):
             Template.objects.filter(pk=form.id).delete()
         return json_response(error=error)
 
-
-
+def make_commands(form):
+    name, lines = None, []
+    if form.platform == 'asa':
+        lines.append("object network %s" % form.name)
+        if form.object_type == "1":
+            lines.append("host %s" % (form.hostip))
+        elif form.object_type == "2":
+            lines.append(" range %s %s" % (form.start_ip, form.end_ip))
+        elif form.object_type == "3":
+            lines.append(" subnet %s %s" % (form.subnet_ip, form.subnet_mask))
+    return {"name": name, "lines": lines}
 
 def handle_uploaded_file(f):
     # print(dir(f))

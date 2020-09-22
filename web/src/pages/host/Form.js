@@ -69,7 +69,7 @@ class ComForm extends React.Component {
     return (<Tabs defaultActiveKey="1" >
               <TabPane tab="新输入密码" key="1">
                   <Form>
-                    <Form.Item label="授权密码" help={`用户 `}>
+                    <Form.Item label="授权密码">
                       <Input.Password onChange={val => this.setState({password: {password: val.target.value}})}/>
                     </Form.Item>
                   </Form>

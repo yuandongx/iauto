@@ -2,11 +2,11 @@
 import http from 'libs/http';
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Button, Radio, Icon } from 'antd';
+import { Modal, Form, Input, Select, Collapse, Button, Radio, Icon } from 'antd';
 
 import store from './store';
 const { Option } = Select;
-
+const { Panel } = Collapse;
 class DataForm extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,6 @@ class DataForm extends React.Component {
     }
   }
   handleSubmit = e => {
-    e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
@@ -28,6 +27,7 @@ class DataForm extends React.Component {
     http.post('/api/template/network/', formData)
       .then(res => {
         console.log(res);
+        this.props.onClick(res);
       }, () => this.setState({loading: false}))
   };
 
@@ -35,14 +35,12 @@ class DataForm extends React.Component {
     console.log(value);
   };
   onRadioChange = e => {
-    console.log('radio checked', e.target.value);
     this.setState({
       radioValue: e.target.value,
     });
   };
   render() {
     const { getFieldDecorator } = this.props.form;
-    console.log(this.state.radioValue === 1);
     return (
       <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
         <Form.Item label="设备类型">
@@ -119,7 +117,7 @@ class DataForm extends React.Component {
                 )}
         </Form.Item>}
         <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" onClick={this.handleSubmit}>
             配置预览
           </Button>
         </Form.Item>
@@ -127,13 +125,14 @@ class DataForm extends React.Component {
     );
   }
 }
-
+const pre = {'white-space': 'pre-line'}
 @observer
 class ObjectForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
+      result: null,
     }
   }
   render(){
@@ -148,7 +147,12 @@ class ObjectForm extends React.Component {
         onCancel={() => store.formFlag = null}
         onOk={this.handleSubmit}
         >
-        <DForm />
+        <DForm onClick={(data) => this.setState({result: data})}/>
+      {this.state.result != null && <Collapse>
+            <Panel header={this.state.result.lines[0]} key="1">
+             <p className={pre}>{this.state.result.lines.join("&nbsp;")}</p>
+            </Panel>
+      </Collapse>}
       </Modal>
     );
   }
