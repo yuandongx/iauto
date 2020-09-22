@@ -137,3 +137,8 @@ try:
     from main.overrides import *
 except ImportError:
     pass
+
+
+# log dir
+LOG_DIR = '/tmp/log'
+ANSIBLE_LOG_DIR = '/tmp/log/ansible'

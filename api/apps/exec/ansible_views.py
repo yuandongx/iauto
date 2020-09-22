@@ -12,7 +12,7 @@ from libs import Runner
 from threading import Thread
 
 
-class Ansibleview(View):
+class ShowAnsibleview(View):
     def get(self, request):
         tasks = Task.objects.all()
         types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
@@ -71,4 +71,10 @@ class Ansibleview(View):
             # run_ansible.delay(execinfo=request.body.decode())
 
         return json_response(error=error)
+
+class DoAnsibleview(View):
+    def post(self, request):
+        run_ansible.delay(execinfo=request.body.decode())
+        return json_response(data={"msg": "execute ok"})
+
 
