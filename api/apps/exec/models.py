@@ -32,6 +32,7 @@ class History(models.Model, ModelMixin):
         (3, '执行中'),
     )
     task_id = models.IntegerField()
+    celery_id = models.CharField(max_length=50)
     status = models.SmallIntegerField(choices=STATUS)
     run_time = models.CharField(max_length=20)
     output = models.TextField()
@@ -59,7 +60,7 @@ class Task(models.Model, ModelMixin):
     targets = models.TextField()
     trigger = models.CharField(max_length=20, choices=TRIGGERS)
     trigger_args = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=False)
+    status = models.IntegerField(default=3)
     desc = models.CharField(max_length=255, null=True)
     latest = models.ForeignKey(History, on_delete=models.PROTECT, null=True)
     rst_notify = models.CharField(max_length=255, null=True)

@@ -6,7 +6,7 @@ from apps.host.models import Host
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from .tasks import run_ansible
-from apps.exec.models import Task
+from apps.exec.models import Task, History
 from apps.template.models import Template
 from libs import Runner
 from threading import Thread
@@ -15,6 +15,10 @@ from threading import Thread
 class ShowAnsibleview(View):
     def get(self, request):
         tasks = Task.objects.all()
+        historys = {}
+        for x in History.objects.all():
+            d = x.to_dict()
+            historys[d.celery_id] = d
         types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
         new_tasks = []
         for x in tasks:

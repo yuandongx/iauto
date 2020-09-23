@@ -5,6 +5,7 @@ from libs import json_response, JsonParser, Argument, human_datetime
 from libs.channel import Channel
 from apps.exec.models import ExecTemplate
 from apps.host.models import Host
+from apps.config.models import Credential
 from django.conf import settings
 
 class TemplateView(View):
@@ -49,11 +50,21 @@ def do_task(request):
         if not request.user.has_host_perm(form.host_ids):
             return json_response(error='无权访问主机，请联系管理员')
         token = Channel.get_token()
+        creds=Credential.objects.all()
+        pawd = {}
+        for c in creds:
+            t = c.to_dict()
+            pawd[t["name"]] = t
         for host in Host.objects.filter(id__in=form.host_ids):
+            if pawd.get(host.access_credentials):
+                password = pawd[host.access_credentials]["password"]
+            else:
+                password = None
             Channel.send_ssh_executor(
                 token=token,
                 hostname=host.hostname,
                 port=host.port,
+                password=password,
                 username=host.username,
                 command=form.command
             )
@@ -62,7 +73,6 @@ def do_task(request):
 
 
 def handle_uploaded_file(f):
-    # print(dir(f))
     tmp_path = os.path.join(settings.REPOS_DIR, "tmp.abc.123.XZY")
     if not os.path.exists(tmp_path):
         os.mkdir(tmp_path)

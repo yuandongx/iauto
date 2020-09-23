@@ -54,7 +54,7 @@ class SSHConsumer(WebsocketConsumer):
         data = text_data or bytes_data
         if data:
             data = json.loads(data)
-            # print('write: {!r}'.format(data))
+            print('write: {!r}'.format(data))
             resize = data.get('resize')
             if resize and len(resize) == 2:
                 self.chan.resize_pty(*resize)

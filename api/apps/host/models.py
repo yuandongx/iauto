@@ -23,11 +23,11 @@ class Host(models.Model, ModelMixin):
 
     def get_ssh(self):
         cred = Credential.objects.filter(name=self.access_credentials).first()
-        return SSH(self.hostname, self.port, self.username, cred.pwd)
+        return SSH(self.hostname, self.port, self.username, cred.password)
 
     def __repr__(self):
         return '<Host %r>' % self.name
 
     class Meta:
-        db_table = 'hosts'
+        db_table = 'iauto_hosts'
         ordering = ('-id',)

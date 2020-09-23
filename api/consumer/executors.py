@@ -8,17 +8,15 @@ import socket
 import json
 
 class Executor(SyncConsumer):
-    def ssh(self, job):
-        pkey = AppSetting.get('private_key')
-        job = Job(pkey=pkey, **job)
+    def ssh(self, kwargs):
+        job = Job(**kwargs)
         threading.Thread(target=job.run).start()
     def ansible(self, job):
-        pkey = AppSetting.get('private_key')
-        job = Job(pkey=pkey, **job)
+        job = Job(**job)
         threading.Thread(target=job.run).start()
 class Job:
-    def __init__(self, hostname, port, username, pkey, command, token=None, **kwargs):
-        self.ssh_cli = SSH(hostname, port, username, pkey)
+    def __init__(self, hostname, port, username, password, command, token=None, **kwargs):
+        self.ssh_cli = SSH(hostname, port=port, username=username, password=password)
         self.key = f'{hostname}:{port}'
         self.command = command
         self.token = token

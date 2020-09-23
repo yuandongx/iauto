@@ -12,12 +12,13 @@ class Channel:
         return uuid.uuid4().hex
 
     @staticmethod
-    def send_ssh_executor(hostname, port, username, command, token=None):
+    def send_ssh_executor(hostname, port, username, password, command, token=None):
         message = {
             'type': 'ssh',
             'token': token,
             'hostname': hostname,
             'port': port,
+            "password": password,
             'username': username,
             'command': command
         }
