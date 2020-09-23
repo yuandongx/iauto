@@ -47,7 +47,7 @@ class HostView(View):
                 if param_pwd.get("name") is not None:
                     cred = Credential.objects.filter(name=param_pwd['name']).first()
                     if cred is not None:
-                        passwd = cred.pwd
+                        passwd = cred.password
                         form.access_credentials = cred.name
                 elif param_pwd.get('password') is not None:
                     passwd = param_pwd.get('password')
@@ -57,14 +57,14 @@ class HostView(View):
                 return json_response('auth fail')
 
             if cred is not None:
-                if cred.pwd != passwd:
-                    cred.pwd = passwd
+                if cred.password != passwd:
+                    cred.password = passwd
                     cred.save()
             else:
                 name = f'{form.username}@{form.hostname}'
                 cred1 = Credential.objects.filter(name=name).first()
                 if cred1 is None:
-                    Credential.objects.create(created_by=request.user, name=name, pwd=passwd, desc=f'【{form.name}】的访问凭证')
+                    Credential.objects.create(created_by=request.user, name=name, password=passwd, desc=f'【{form.name}】的访问凭证')
                 form.access_credentials = name
             if form.id:
                 Host.objects.filter(pk=form.pop('id')).update(**form)

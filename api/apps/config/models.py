@@ -7,8 +7,8 @@ from apps.account.models import User
 class Credential(models.Model, ModelMixin):
     name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    become_method = models.CharField(max_length=100)
-    become_user = models.CharField(max_length=100)
+    become_method = models.CharField(max_length=100, default=None)
+    become_user = models.CharField(max_length=100, default=None)
     become_password = models.CharField(max_length=100, default=None)
     desc = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
