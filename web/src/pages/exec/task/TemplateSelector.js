@@ -12,6 +12,8 @@ class TemplateSelector extends React.Component {
 
     this.state = {
       selectedRows: [],
+      filter_type: "",
+      filter_name: "",
     }
   }
 
@@ -34,7 +36,7 @@ class TemplateSelector extends React.Component {
 
   columns = [{
     title: '类型',
-    dataIndex: 'type',
+    dataIndex: 'label',
   }, {
     title: '名称',
     dataIndex: 'name',
@@ -48,16 +50,26 @@ class TemplateSelector extends React.Component {
     dataIndex: 'desc',
     ellipsis: true
   }];
-
+  test = item => {
+      console.log(item['label']);
+      if (item === undefined) {
+          console.log("item");
+      } else {
+          let label1 = item['label'].toLowerCase();
+          let type1 = this.state.filter_type.toLowerCase();
+          // return item['label'].toLowerCase().includes(this.state.filter_type.toLowerCase())
+          return label1.includes(type1)
+      }
+  }
   render() {
     const {selectedRows} = this.state;
     let data = store.records;
     let row_select_type = this.props.row_select_type === undefined ? 'radio' : 'checkbox';
-    if (store.f_name) {
-      data = data.filter(item => item['name'].toLowerCase().includes(store.f_name.toLowerCase()))
+    if (this.state.filter_name !== "") {
+      data = data.filter(item => item['name'].toLowerCase().includes(this.state.filter_name.toLowerCase()));
     }
-    if (store.f_type) {
-      data = data.filter(item => item['type'].toLowerCase().includes(store.f_type.toLowerCase()))
+    if (this.state.filter_type !== "" && this.state.filter_type !== undefined) {
+      data = data.filter(item => item['label'].toLowerCase() === this.state.filter_type.toLowerCase());
     }
     return (
       <Modal
@@ -69,14 +81,14 @@ class TemplateSelector extends React.Component {
         maskClosable={false}>
         <SearchForm>
           <SearchForm.Item span={8} title="模板类别">
-            <Select allowClear placeholder="请选择" value={store.f_type} onChange={v => store.f_type = v}>
+            <Select allowClear placeholder="请选择" value={this.state.filter_type} onChange={v => this.setState({filter_type: v})}>
               {store.types.map(item => (
                 <Select.Option value={item} key={item}>{item}</Select.Option>
               ))}
             </Select>
           </SearchForm.Item>
           <SearchForm.Item span={8} title="模板名称">
-            <Input allowClear value={store.f_name} onChange={e => store.f_name = e.target.value} placeholder="请输入"/>
+            <Input allowClear value={this.state.filter_name} onChange={e => this.setState({filter_name: e.target.value})} placeholder="请输入"/>
           </SearchForm.Item>
           <SearchForm.Item span={8}>
             <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>

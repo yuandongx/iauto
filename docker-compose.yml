@@ -1,63 +1,7 @@
-version: '2.4'
-services:
-  redis:
-    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/redis
-    command: redis-server
-    volumes:
-      - /var/lib/database/redis:/data
-    ports:
-      - "6379:6379"
-    networks:
-      app_net:
-        ipv4_address: 172.168.1.113
-
-  web:
-    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/web
-    command: npm start
-    working_dir: /www/web
-    volumes:
-      - ./web:/www/web
-    ports:
-      - '3000:3000'
-    networks:
-      app_net:
-        ipv4_address: 172.168.1.112
-
-  db:
-    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    volumes:
-      - /var/lib/database/mysql:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: admin@12345
-    networks:
-      app_net:
-        ipv4_address: 172.168.1.111
-
-  api:
-    image: registry.cn-hangzhou.aliyuncs.com/yuandongx/ubuntu
-    ports:
-      - "8000:8000"
-    command: sh /iauto-service.sh
-    working_dir: /www/api
-    volumes:
-      - ./api:/www/api
-    environment:
-      GIT_PYTHON_REFRESH: quiet
-    networks:
-      app_net:
-        ipv4_address: 172.168.1.114
-    depends_on:
-      - db
-
-networks:
-  app_net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.168.1.0/24
-          gateway: 172.168.1.1
+Merge branch 'devel' of github.com:yuandongx/iauto into devel
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
+update refresh 
