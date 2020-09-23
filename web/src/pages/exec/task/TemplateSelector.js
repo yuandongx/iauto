@@ -50,17 +50,7 @@ class TemplateSelector extends React.Component {
     dataIndex: 'desc',
     ellipsis: true
   }];
-  test = item => {
-      console.log(item['label']);
-      if (item === undefined) {
-          console.log("item");
-      } else {
-          let label1 = item['label'].toLowerCase();
-          let type1 = this.state.filter_type.toLowerCase();
-          // return item['label'].toLowerCase().includes(this.state.filter_type.toLowerCase())
-          return label1.includes(type1)
-      }
-  }
+
   render() {
     const {selectedRows} = this.state;
     let data = store.records;
