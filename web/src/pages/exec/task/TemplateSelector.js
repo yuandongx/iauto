@@ -27,7 +27,7 @@ class TemplateSelector extends React.Component {
 
   handleSubmit = () => {
     if (this.state.selectedRows.length > 0) {
-      this.props.onOk(this.state.selectedRows[0].body)
+      this.props.onOk(this.state.selectedRows[0].content)
     }
     this.props.onCancel()
   };
@@ -41,7 +41,7 @@ class TemplateSelector extends React.Component {
     ellipsis: true
   }, {
     title: '内容',
-    dataIndex: 'body',
+    dataIndex: 'content',
     ellipsis: true
   }, {
     title: '备注',
