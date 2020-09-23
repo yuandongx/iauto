@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Tooltip, Divider, Modal, Tag, Icon, Menu, message } from 'antd';
+import { Table, Tooltip, Divider, Modal, Tag, Icon, message } from 'antd';
 import ComForm from './Form';
 import http from 'libs/http';
 import store from './store';
