@@ -86,7 +86,7 @@ def run_ansible(**kwargs):
                             file.write(str(err) + "\n")
                             errors["exec_err"] = err
                         else:
-                            file.write(str(out) + "\n")
+                            file.write(str(outs) + "\n")
                             re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
                             get_results = re_err.findall(outs)
                             if get_results:
