@@ -18,7 +18,7 @@ class ShowAnsibleview(View):
         historys = {}
         for x in History.objects.all():
             d = x.to_dict()
-            historys[d.celery_id] = d
+            historys[d["celery_id"]] = d
         types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
         new_tasks = []
         for x in tasks:

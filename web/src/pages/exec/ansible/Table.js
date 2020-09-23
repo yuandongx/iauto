@@ -28,7 +28,7 @@ class StartButton extends React.Component {
   };
   render(){
     return(<Tooltip placement="top" title={this.state.taskState === 0 ? '开始任务': '停止执行'}>
-            <LinkButton onClick={() => this.handleExecute()}><Icon type={this.state.taskState === 0 ? "play-circle":"pause-circle"} theme="filled" /></LinkButton>
+            <LinkButton onClick={() => this.handleExecute()}><Icon type={this.state.taskState === 0 ? "play-circle":"close-circle"} twoToneColor="#52c41a" theme="twoTone" /></LinkButton>
             </Tooltip>);
     };
 }
