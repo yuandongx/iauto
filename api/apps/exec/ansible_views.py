@@ -14,7 +14,7 @@ from threading import Thread
 
 class ShowAnsibleview(View):
     def get(self, request):
-        tasks = Task.objects.all()
+        tasks = Task.objects.filter(is_active=True).all()
         historys = {}
         for x in History.objects.all():
             d = x.to_dict()
@@ -26,8 +26,12 @@ class ShowAnsibleview(View):
             tmpid = json.loads(d['playbooks'])
             tmps = Template.objects.filter(id__in=tmpid)
             d['playbooks'] = [{"name": t.name, "id": t.id} for t in tmps]
+            state = History.objects.filter(task_id=d["id"]).first()
+            if state:
+                d["status"] = state.status
+            print(d)
             new_tasks.append(d)
-        print(new_tasks) 
+
         return json_response({'types': types, 'tasks': new_tasks})
 
     def post(self, request):
