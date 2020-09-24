@@ -9,26 +9,33 @@ import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
 
+const SUCCESS = 0
+const FAILED = 1
+const RUNNING = 2
+const WAITING = 3
+const COLORS = ['green', 'red', "blue", 'orange'];
+const MESSAGE = ['执行成功', '执行失败', "执行中", "待执行"];
+
 class StartButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      taskState: this.props.state ? this.props.state : 0,
-    }
-  }
 
   handleExecute = () => {
       this.props.onClick();
-      this.setState({taskState: this.state.taskState === 0 ? 1 : 0});
-      http.post('/api/exec/ansible/do_job/', {id: this.props.taskId, state: this.state.taskState})
+      this.setState({taskState: this.props.state === RUNNING ? 1 : 0});
+      http.post('/api/exec/ansible/do_job/', {id: this.props.taskId, state: this.props.state})
       .then(({success, msg}) => {
           console.log(success);
           console.log(msg);
       });
   };
+
   render(){
-    return(<Tooltip placement="top" title={this.state.taskState === 0 ? '开始任务': '停止执行'}>
-            <LinkButton onClick={() => this.handleExecute()}><Icon type={this.state.taskState === 0 ? "play-circle":"close-circle"} twoToneColor="#52c41a" theme="twoTone" /></LinkButton>
+
+    return(<Tooltip placement="top" title={this.props.state === 0 ? '开始任务': '停止执行'}>
+            <LinkButton onClick={() => this.handleExecute()}>
+              <Icon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
+              twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}
+              theme="twoTone" />
+              </LinkButton>
             </Tooltip>);
     };
 }
@@ -40,8 +47,6 @@ class ComTable extends React.Component {
   componentDidMount() {
     store.fetchRecords();
   }
-
-  colors = ['green', 'orange', 'red'];
 
   columns = [{
     title: '序号',
@@ -58,10 +63,14 @@ class ComTable extends React.Component {
     title: '最新状态',
     render: info => {
       if (info.is_active) {
-        if (info['latest_status_alias']) {
-          return <Tag color={this.colors[info['latest_status']]}>{info['latest_status_alias']}</Tag>
-        } else {
-          return <Tag color="blue">执行中</Tag>
+        if (info['status'] === 0) {
+          return <Tag color={COLORS[0]}>{MESSAGE[0]}</Tag>
+        } else if (info['status'] === 1) {
+          return <Tag color={COLORS[1]}>{MESSAGE[1]}</Tag>
+        } else if (info['status'] === 2) {
+          return <Tag color={COLORS[2]}>{MESSAGE[2]}</Tag>
+        } else if (info['status'] === 3)  {
+          return <Tag color={COLORS[3]}>{MESSAGE[3]}</Tag>
         }
       } else {
         return <Tag>未执行</Tag>
@@ -89,7 +98,7 @@ class ComTable extends React.Component {
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='开始任务'>
-        <StartButton state={info.is_active} taskId={info.id} onClick={() => this.handleExecute(info)}/>
+        <StartButton state={info.status} taskId={info.id} onClick={() => this.handleExecute(info)}/>
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='删除任务'>
@@ -119,7 +128,10 @@ class ComTable extends React.Component {
 
   render() {
     let data = store.records;
-    if (store.f_status !== undefined) {
+    if (store.f_status !== undefined){
+        data = data.filter(item => item["status"] === store.f_status).filter(item => item['is_active']);
+    }
+    /**if (store.f_status !== undefined) {
       if (store.f_status === -3) {
         data = data.filter(item => !item['is_active'])
       } else if (store.f_status === -2) {
@@ -130,7 +142,7 @@ class ComTable extends React.Component {
         data = data.filter(item => item['latest_status'] === store.f_status)
       }
     }
-    if (store.f_status === 0) data = data.filter(item => item['is_active']);
+    if (store.f_status === 0) data = data.filter(item => item['is_active']);**/
     if (store.f_name) {
       data = data.filter(item => item['name'].toLowerCase().includes(store.f_name.toLowerCase()))
     }

@@ -27,6 +27,7 @@ class ShowAnsibleview(View):
             tmps = Template.objects.filter(id__in=tmpid)
             d['playbooks'] = [{"name": t.name, "id": t.id} for t in tmps]
             new_tasks.append(d)
+        print(new_tasks) 
         return json_response({'types': types, 'tasks': new_tasks})
 
     def post(self, request):

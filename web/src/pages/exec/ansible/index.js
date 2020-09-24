@@ -11,12 +11,10 @@ export default observer(function () {
       <SearchForm>
         <SearchForm.Item span={6} title="状态">
           <Select allowClear value={store.f_status} onChange={v => store.f_status = v} placeholder="请选择">
-            <Select.Option value={-3}>未激活</Select.Option>
-            <Select.Option value={-2}>已激活</Select.Option>
-            <Select.Option value={-1}>待调度</Select.Option>
             <Select.Option value={0}>成功</Select.Option>
-            <Select.Option value={1}>异常</Select.Option>
-            <Select.Option value={2}>失败</Select.Option>
+            <Select.Option value={1}>失败</Select.Option>
+            <Select.Option value={2}>执行中</Select.Option>
+            <Select.Option value={3}>待执行</Select.Option>
           </Select>
         </SearchForm.Item>
         <SearchForm.Item span={6} title="类型">
