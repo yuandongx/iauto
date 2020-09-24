@@ -8,11 +8,11 @@ import store from './store';
 import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
-
+/**
 const SUCCESS = 0
-const FAILED = 1
+const FAILED = 1**/
 const RUNNING = 2
-const WAITING = 3
+/**const WAITING = 3 1**/
 const COLORS = ['green', 'red', "blue", 'orange'];
 const MESSAGE = ['执行成功', '执行失败', "执行中", "待执行"];
 
@@ -30,7 +30,7 @@ class StartButton extends React.Component {
 
   render(){
 
-    return(<Tooltip placement="top" title={this.props.state === 0 ? '开始任务': '停止执行'}>
+    return(<Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
             <LinkButton onClick={() => this.handleExecute()}>
               <Icon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
               twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}

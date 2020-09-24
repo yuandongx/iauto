@@ -22,7 +22,7 @@ class History(models.Model, ModelMixin):
         return tmp
 
     class Meta:
-        db_table = 'task_histories'
+        db_table = 'iauto_scheduler_task_histories'
         ordering = ('-id',)
 
 
@@ -64,5 +64,5 @@ class Task(models.Model, ModelMixin):
         return '<Task %r>' % self.name
 
     class Meta:
-        db_table = 'tasks'
+        db_table = 'iauto_scheduler_tasks'
         ordering = ('-id',)
