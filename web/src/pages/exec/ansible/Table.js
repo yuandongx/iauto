@@ -8,11 +8,11 @@ import store from './store';
 import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
-
+/**
 const SUCCESS = 0
-const FAILED = 1
+const FAILED = 1**/
 const RUNNING = 2
-const WAITING = 3
+/**const WAITING = 3 1**/
 const COLORS = ['green', 'red', "blue", 'orange'];
 const MESSAGE = ['执行成功', '执行失败', "执行中", "待执行"];
 
