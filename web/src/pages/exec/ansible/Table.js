@@ -30,7 +30,7 @@ class StartButton extends React.Component {
 
   render(){
 
-    return(<Tooltip placement="top" title={this.props.state === 0 ? '开始任务': '停止执行'}>
+    return(<Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
             <LinkButton onClick={() => this.handleExecute()}>
               <Icon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
               twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}
