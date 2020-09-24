@@ -79,7 +79,11 @@ class ShowAnsibleview(View):
 
 class DoAnsibleview(View):
     def post(self, request):
-        run_ansible.delay(execinfo=request.body.decode())
-        return json_response(data={"msg": "execute ok"})
+        execinfo = json.loads(request.body.decode())
+        if execinfo["state"] == "3":
+            run_ansible.delay(execinfo)
+        else:
+            run_ansible.delay(execinfo)
+        return json_response(data={"msg": "ok"})
 
 

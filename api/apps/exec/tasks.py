@@ -16,11 +16,10 @@ import datetime
 
 
 @shared_task
-def run_ansible(**kwargs):
-    print(run_ansible.request.id)
-    execinfo = json.loads(kwargs['execinfo'])
+def run_ansible(execinfo):
     task_id = execinfo['id']
     task_state = execinfo['state']
+    print(task_id)
     host_list = list()
     playbook_list = list()
     if task_id:
@@ -40,7 +39,7 @@ def run_ansible(**kwargs):
                             access_credentials = host_info.access_credentials
                             cred = Credential.objects.filter(name=access_credentials).first()
                             if cred:
-                                host_dict["password"] = cred.pwd
+                                host_dict["password"] = cred.password
                             else:
                                 host_dict["password"] = ""
                     else:
@@ -59,11 +58,12 @@ def run_ansible(**kwargs):
     if host_list and playbook_list:
         ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
         try:
-            status = 0
+            status = 1
             starttime = human_datetime()
             history = History.objects.create(
                 task_id=task_id,
-                status=1,
+                celery_id=run_ansible.request.id,
+                status=2,
             )
             host_path, playbook_path_list = ansible_handle.create_tmp()
             results = dict()
@@ -96,10 +96,10 @@ def run_ansible(**kwargs):
                                 if pre_errors:
                                     errors["ansible_err"] = pre_errors
                         if errors:
-                            status = 3
+                            status = 1
                             results[eval(playbook_ids)[index]] = errors
                         else:
-                            status = 2
+                            status = 0
                             results[eval(playbook_ids)[index]] = "ok"
         finally:
             endtime = human_datetime()
