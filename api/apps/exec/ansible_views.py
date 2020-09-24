@@ -77,9 +77,18 @@ class ShowAnsibleview(View):
 
         return json_response(error=error)
 
+    def delete(self, request):
+        taskid = json.loads(request.GET.get("id"))
+        num = Task.objects.filter(pk=taskid).update(is_active=False)
+        if num == 0:
+            return json_response(error={"msg": "删除失败！"})
+        else:
+            return json_response(data={"msg": "ok"})
+
 class DoAnsibleview(View):
     def post(self, request):
         execinfo = json.loads(request.body.decode())
+
         if execinfo["state"] == "3":
             run_ansible.delay(execinfo)
         else:
