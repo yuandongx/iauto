@@ -100,3 +100,10 @@ class DoAnsibleview(View):
         return json_response(data={"msg": "ok"})
 
 
+def show_history(request, task_id=None):
+    if request.method == "GET":
+        # history_task_id = request.GET.get("id")
+        histories = History.objects.filter(task_id=task_id)
+        return json_response([x.to_list() for x in histories])
+
+

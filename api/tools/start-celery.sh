@@ -1,1 +1,1 @@
-celery worker -A main -l info
+#celery worker -A main -l info

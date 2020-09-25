@@ -21,7 +21,8 @@ def run_ansible(execinfo):
     task_state = execinfo['state']
     print(task_id)
     host_list = list()
-    playbook_list = list()
+    playbook_content = list()
+    playbook_name = list()
     if task_id:
         taskinfo = Task.objects.filter(pk=task_id, is_active=True).first()
         if taskinfo:
@@ -51,81 +52,135 @@ def run_ansible(execinfo):
                     for prepb in eval(playbook_ids):
                         if isinstance(prepb, int):
                             pb_info = Template.objects.filter(pk=prepb).first()
+                            pb_name = pb_info.name
                             pb_content = pb_info.content
-                            if pb_content:
-                                playbook_list.append(pb_content)
+                            if pb_content and pb_name:
+                                playbook_content.append(pb_content)
+                                playbook_name.append(pb_name)
 
-    if host_list and playbook_list:
-        ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
+    if host_list and playbook_content:
+        ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_content)
         try:
             status = 1
-            starttime = human_datetime()
+            starttime = datetime.datetime.now()
             history = History.objects.create(
                 task_id=task_id,
                 celery_id=run_ansible.request.id,
+                run_time=starttime.strftime('%Y-%m-%d %H:%M:%S'),
                 status=2,
             )
             host_path, playbook_path_list = ansible_handle.create_tmp()
-            results = dict()
+            results = list()
             if host_path and playbook_path_list:
-                log_file = result_log(ANSIBLE_LOG_DIR)
-                with open(log_file, 'a') as file:
-                    for index,pre_p in enumerate(playbook_path_list):
-                        cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
-                        p = subprocess.Popen(
-                            cmd,
-                            shell=True,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            text=True,
-                        )
-                        outs, err = p.communicate()
-                        errors = dict()
-                        if err != "" and not err.strip().startswith("[WARNING]"):
-                            file.write(str(err) + "\n")
-                            errors["exec_err"] = err
-                        else:
-                            file.write(str(outs) + "\n")
-                            re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
-                            get_results = re_err.findall(outs)
-                            if get_results:
-                                pre_errors = dict()
-                                for result in get_results:
-                                    pre_errors[result[0]] = json.loads(result[2])
-                                if pre_errors:
-                                    errors["ansible_err"] = pre_errors
-                        if errors:
-                            status = 1
-                            results[eval(playbook_ids)[index]] = errors
-                        else:
-                            status = 0
-                            results[eval(playbook_ids)[index]] = "ok"
+                for index, pre_p in enumerate(playbook_path_list):
+                    result = list()
+                    result.append(playbook_name[index])
+                    cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
+                    p = subprocess.Popen(
+                        cmd,
+                        shell=True,
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True,
+                    )
+                    outs, err = p.communicate()
+                    error = False
+                    if err != "" and not err.strip().startswith("[WARNING]"):
+                        error = True
+                        info = err
+                    else:
+                        info = outs
+                        re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
+                        get_results = re_err.findall(outs)
+                        if get_results:
+                            error = True
+                            # pre_errors = dict()
+                            # for result in get_results:
+                            #     pre_errors[result[0]] = json.loads(result[2])
+                            # if pre_errors:
+                            #     errors["ansible_err"] = pre_errors
+                    if error:
+                        status = 1
+                        result.append(status)
+                    else:
+                        status = 0
+                        result.append(status)
+                    endtime = datetime.datetime.now()
+                    time = (endtime - starttime).total_seconds()
+                    result.append(time)
+                    result.append(info)
+                results.append(result)
         finally:
-            endtime = human_datetime()
-            runtime = human_diff_time(endtime, starttime)
             History.objects.filter(id=history.id).update(
                 status=status,
-                run_time=runtime,
-                output=json.dumps(results)
+                output=result
             )
             ansible_handle.remove_tmp()
 
-    # return execinfo
+    # if host_list and playbook_list:
+    #     ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
+    #     try:
+    #         status = 1
+    #         starttime = datetime.datetime.now()
+    #         history = History.objects.create(
+    #             task_id=task_id,
+    #             celery_id=run_ansible.request.id,
+    #             run_time=human_datetime(),
+    #             status=2,
+    #         )
+    #         host_path, playbook_path_list = ansible_handle.create_tmp()
+    #         results = dict()
+    #         if host_path and playbook_path_list:
+    #             log_file = result_log(ANSIBLE_LOG_DIR)
+    #             with open(log_file, 'a') as file:
+    #                 for index,pre_p in enumerate(playbook_path_list):
+    #                     cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
+    #                     p = subprocess.Popen(
+    #                         cmd,
+    #                         shell=True,
+    #                         stdin=subprocess.PIPE,
+    #                         stdout=subprocess.PIPE,
+    #                         stderr=subprocess.PIPE,
+    #                         text=True,
+    #                     )
+    #                     outs, err = p.communicate()
+    #                     errors = dict()
+    #                     if err != "" and not err.strip().startswith("[WARNING]"):
+    #                         file.write(str(err) + "\n")
+    #                         errors["exec_err"] = err
+    #                     else:
+    #                         file.write(str(outs) + "\n")
+    #                         re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
+    #                         get_results = re_err.findall(outs)
+    #                         if get_results:
+    #                             pre_errors = dict()
+    #                             for result in get_results:
+    #                                 pre_errors[result[0]] = json.loads(result[2])
+    #                             if pre_errors:
+    #                                 errors["ansible_err"] = pre_errors
+    #                     if errors:
+    #                         status = 1
+    #                         results[eval(playbook_ids)[index]] = errors
+    #                     else:
+    #                         status = 0
+    #                         results[eval(playbook_ids)[index]] = "ok"
+    #     finally:
+    #         endtime = datetime.datetime.now()
+    #
+    #         runtime = endtime - starttime
+    #         History.objects.filter(id=history.id).update(
+    #             status=status,
+    #             output=json.dumps(results)
+    #         )
+    #         ansible_handle.remove_tmp()
 
-    # history = History.objects.filter(pk='4345353').first()
-    # if not history:
 
-    # else:
-    #     history.output=json.dumps(result)
-    #     history.save()
-
-
-def result_log(log_dir):
-    date_tag = datetime.datetime.now().strftime("%Y%m%d%H%M%s")
-    random_num = random.randint(1, 99999)
-    is_exist = os.path.exists(log_dir)
-    if not is_exist:
-        os.makedirs(log_dir)
-    log_file = os.path.join(log_dir, "%s_%s" % (date_tag, random_num))
-    return log_file
+# def result_log(log_dir):
+#     date_tag = datetime.datetime.now().strftime("%Y%m%d%H%M%s")
+#     random_num = random.randint(1, 99999)
+#     is_exist = os.path.exists(log_dir)
+#     if not is_exist:
+#         os.makedirs(log_dir)
+#     log_file = os.path.join(log_dir, "%s_%s" % (date_tag, random_num))
+#     return log_file
