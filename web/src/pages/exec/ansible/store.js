@@ -26,7 +26,7 @@ class Store {
           return null
         });
         this.records = tasks;
-        this.types = types
+        this.types = types;
       })
       .finally(() => this.isFetching = false)
   };

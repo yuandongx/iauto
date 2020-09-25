@@ -8,28 +8,25 @@ import store from './store';
 import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
-/**
+
 const SUCCESS = 0
-const FAILED = 1**/
+const FAILED = 1
 const RUNNING = 2
-/**const WAITING = 3 1**/
+const WAITING = 3
 const COLORS = ['green', 'red', "blue", 'orange'];
 const MESSAGE = ['执行成功', '执行失败', "执行中", "待执行"];
 
 class StartButton extends React.Component {
 
   handleExecute = () => {
-      this.props.onClick();
-      this.setState({taskState: this.props.state === RUNNING ? 1 : 0});
-      http.post('/api/exec/ansible/do_job/', {id: this.props.taskId, state: this.props.state})
+      http.post('/api/exec/ansible/do_job/', {id: this.props.taskId, state: this.props.state === RUNNING ? 1 : 0 })
       .then(({success, msg}) => {
           console.log(success);
           console.log(msg);
-      });
+      }).finally(() => this.props.onClick());
   };
 
   render(){
-
     return(<Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
             <LinkButton onClick={() => this.handleExecute()}>
               <Icon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
@@ -63,14 +60,14 @@ class ComTable extends React.Component {
     title: '最新状态',
     render: info => {
       if (info.is_active) {
-        if (info['status'] === 0) {
-          return <Tag color={COLORS[0]}>{MESSAGE[0]}</Tag>
-        } else if (info['status'] === 1) {
-          return <Tag color={COLORS[1]}>{MESSAGE[1]}</Tag>
-        } else if (info['status'] === 2) {
-          return <Tag color={COLORS[2]}>{MESSAGE[2]}</Tag>
-        } else if (info['status'] === 3)  {
-          return <Tag color={COLORS[3]}>{MESSAGE[3]}</Tag>
+        if (info['status'] === SUCCESS) {
+          return <Tag color={COLORS[SUCCESS]}>{MESSAGE[SUCCESS]}</Tag>
+        } else if (info['status'] === FAILED) {
+          return <Tag color={COLORS[FAILED]}>{MESSAGE[FAILED]}</Tag>
+        } else if (info['status'] === RUNNING) {
+          return <Tag color={COLORS[RUNNING]}>{MESSAGE[RUNNING]}</Tag>
+        } else if (info['status'] === WAITING)  {
+          return <Tag color={COLORS[WAITING]}>{MESSAGE[WAITING]}</Tag>
         }
       } else {
         return <Tag>未执行</Tag>
@@ -90,7 +87,7 @@ class ComTable extends React.Component {
     render: info => (
       <span>
         <Tooltip placement="top" title='查看详情'>
-          <LinkButton disabled={!info['latest_run_time']} onClick={() => store.showInfo(info)}><Icon type="eye" theme="twoTone" /></LinkButton>
+          <LinkButton disabled={info["status"] === 3} onClick={() => store.showInfo(info)}><Icon type="eye" theme="twoTone" /></LinkButton>
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='编辑任务'>
@@ -125,7 +122,16 @@ class ComTable extends React.Component {
       }
     })
   };
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => store.fetchRecords(),
+      10000
+    );
+  }
 
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
   render() {
     let data = store.records;
     if (store.f_status !== undefined){
