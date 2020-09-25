@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Collapse, Icon } from 'antd';
+import { CaretRightOutlined, CheckCircleTwoTone, LoadingOutlined, WarningTwoTone } from '@ant-design/icons';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Modal, Collapse } from 'antd';
 import OutView from './OutView';
 import styles from './index.module.css';
 import store from './store';
@@ -51,13 +53,13 @@ class ExecConsole extends React.Component {
   genExtra = (outputs) => {
     let latest, icon;
     if (outputs['status'] === -2) {
-      return <Icon type="loading" style={{fontSize: 20, color: '#108ee9'}}/>
+      return <LoadingOutlined style={{fontSize: 20, color: '#108ee9'}} />;
     } else if (outputs['status'] === 0) {
       latest = outputs['info'][outputs['info'].length - 1];
-      icon = <Icon type="check-circle" style={{fontSize: 20}} theme="twoTone" twoToneColor="#52c41a"/>
+      icon = <CheckCircleTwoTone style={{fontSize: 20}} twoToneColor="#52c41a" />
     } else {
       latest = outputs['error'][outputs['error'].length - 1]
-      icon = <Icon type="warning" style={{fontSize: 20}} theme="twoTone" twoToneColor="red"/>
+      icon = <WarningTwoTone style={{fontSize: 20}} twoToneColor="red" />
     }
     return (
       <div style={{display: 'flex', alignItems: 'center'}}>
@@ -75,7 +77,7 @@ class ExecConsole extends React.Component {
         title={[
           <span key="1">执行控制台</span>,
           <div key="2" className={styles.fullscreen} onClick={() => store.isFullscreen = !store.isFullscreen}>
-            <Icon type={store.isFullscreen ? 'fullscreen-exit' : 'fullscreen'}/>
+            <LegacyIcon type={store.isFullscreen ? 'fullscreen-exit' : 'fullscreen'}/>
           </div>
         ]}
         footer={null}
@@ -86,7 +88,7 @@ class ExecConsole extends React.Component {
           accordion
           defaultActiveKey={[0]}
           className={styles.collapse}
-          expandIcon={({isActive}) => <Icon type="caret-right" style={{fontSize: 16}} rotate={isActive ? 90 : 0}/>}>
+          expandIcon={({isActive}) => <CaretRightOutlined style={{fontSize: 16}} rotate={isActive ? 90 : 0} />}>
           {Object.entries(store.outputs).map(([key, item], index) => (
             <Collapse.Panel
               key={index}
@@ -97,7 +99,7 @@ class ExecConsole extends React.Component {
           ))}
         </Collapse>
       </Modal>
-    )
+    );
   }
 }
 

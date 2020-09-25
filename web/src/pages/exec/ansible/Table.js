@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Tooltip, Divider, Modal, Tag, Icon, message } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { DeleteFilled, EditFilled, EyeTwoTone } from '@ant-design/icons';
+import { Table, Tooltip, Divider, Modal, Tag, message } from 'antd';
 import ComForm from './Form';
 import http from 'libs/http';
 import store from './store';
@@ -27,13 +29,15 @@ class StartButton extends React.Component {
   };
 
   render(){
-    return(<Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
-            <LinkButton onClick={() => this.handleExecute()}>
-              <Icon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
-              twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}
-              theme="twoTone" />
-              </LinkButton>
-            </Tooltip>);
+    return (
+      <Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
+              <LinkButton onClick={() => this.handleExecute()}>
+                <LegacyIcon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
+                twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}
+                theme="twoTone" />
+                </LinkButton>
+              </Tooltip>
+    );
     };
 }
 
@@ -83,11 +87,11 @@ class ComTable extends React.Component {
     render: info => (
       <span>
         <Tooltip placement="top" title='查看详情'>
-          <LinkButton disabled={info["status"] === 3} onClick={() => store.showInfo(info)}><Icon type="eye" theme="twoTone" /></LinkButton>
+          <LinkButton disabled={info["status"] === 3} onClick={() => store.showInfo(info)}><EyeTwoTone /></LinkButton>
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='编辑任务'>
-          <LinkButton onClick={() => store.showForm(info)}><Icon type="edit" theme="filled" /></LinkButton>
+          <LinkButton onClick={() => store.showForm(info)}><EditFilled /></LinkButton>
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='开始任务'>
@@ -95,7 +99,7 @@ class ComTable extends React.Component {
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='删除任务'>
-          <LinkButton onClick={() => this.handleDelete(info)}><Icon type="delete" theme="filled" /></LinkButton>
+          <LinkButton onClick={() => this.handleDelete(info)}><DeleteFilled /></LinkButton>
         </Tooltip>
       </span>
     )

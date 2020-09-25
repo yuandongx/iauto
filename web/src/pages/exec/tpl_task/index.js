@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Form, Button, Tag } from 'antd';
+import { PlusOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Tag } from 'antd';
 import { ACEditor, AuthCard } from 'components';
 import HostSelector from './HostSelector';
 import TemplateSelector from './TemplateSelector';
@@ -46,20 +49,20 @@ class TaskIndex extends React.Component {
                 {item.name}({item.hostname}:{item.port})</Tag>
             ))}
           </Form.Item>
-          <Button icon="plus" onClick={store.switchHost}>从主机列表中选择</Button>
+          <Button icon={<PlusOutlined />} onClick={store.switchHost}>从主机列表中选择</Button>
           <Form.Item label="执行命令">
             <ACEditor mode="sh" value={body} height="300px" onChange={body => this.setState({body})}/>
           </Form.Item>
           <Form.Item>
-            <Button icon="plus" onClick={store.switchTemplate}>从执行模版中选择</Button>
+            <Button icon={<PlusOutlined />} onClick={store.switchTemplate}>从执行模版中选择</Button>
           </Form.Item>
-          <Button icon="thunderbolt" type="primary" onClick={this.handleSubmit}>开始执行</Button>
+          <Button icon={<ThunderboltOutlined />} type="primary" onClick={this.handleSubmit}>开始执行</Button>
         </Form>
         {store.showHost && <HostSelector onCancel={store.switchHost} onOk={hosts => store.hosts = hosts}/>}
         {store.showTemplate && <TemplateSelector onCancel={store.switchTemplate} onOk={body => this.setState({body})}/>}
         {store.showConsole && <ExecConsole token={token} onCancel={store.switchConsole}/>}
       </AuthCard>
-    )
+    );
   }
 }
 

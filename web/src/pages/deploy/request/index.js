@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Button, Select, DatePicker, Radio, Row, Col, Modal, Form, Input, message } from 'antd';
+import { DeleteOutlined, ExclamationCircleOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Select, DatePicker, Radio, Row, Col, Modal, Input, message } from 'antd';
 import { SearchForm, AuthFragment, AuthCard } from 'components';
 import SelectApp from './SelectApp';
 import Ext1Form from './Ext1Form';
@@ -39,7 +42,7 @@ class Index extends React.Component {
 
   handleBatchDel = () => {
     Modal.confirm({
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       title: '批量删除发布申请',
       content: (
         <Form>
@@ -88,7 +91,7 @@ class Index extends React.Component {
               onChange={store.updateDate}/>
           </SearchForm.Item>
           <SearchForm.Item span={4} style={{textAlign: 'right'}}>
-            <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
+            <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
           </SearchForm.Item>
         </SearchForm>
         <Row style={{marginBottom: 16}}>
@@ -104,12 +107,12 @@ class Index extends React.Component {
           </Col>
           <Col span={8} style={{textAlign: 'right'}}>
             <AuthFragment auth="deploy.request.del">
-              <Button type="primary" icon="delete" onClick={this.handleBatchDel}>批量删除</Button>
+              <Button type="primary" icon={<DeleteOutlined />} onClick={this.handleBatchDel}>批量删除</Button>
             </AuthFragment>
             <AuthFragment auth="deploy.request.add">
               <Button
                 type="primary"
-                icon="plus"
+                icon={<PlusOutlined />}
                 onClick={() => store.addVisible = true}
                 style={{marginLeft: 20}}>新建发布申请</Button>
             </AuthFragment>
@@ -121,7 +124,7 @@ class Index extends React.Component {
         {store.ext2Visible && <Ext2Form/>}
         {store.approveVisible && <Approve/>}
       </AuthCard>
-    )
+    );
   }
 }
 

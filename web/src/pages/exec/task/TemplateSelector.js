@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
+import { SyncOutlined } from '@ant-design/icons';
 import { Modal, Table, Input, Button, Select } from 'antd';
 import { SearchForm } from 'components';
 import store from '../../template/generic/store';
@@ -81,7 +82,7 @@ class TemplateSelector extends React.Component {
             <Input allowClear value={this.state.filter_name} onChange={e => this.setState({filter_name: e.target.value})} placeholder="请输入"/>
           </SearchForm.Item>
           <SearchForm.Item span={8}>
-            <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
+            <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
           </SearchForm.Item>
         </SearchForm>
         <Table
@@ -100,7 +101,7 @@ class TemplateSelector extends React.Component {
           }}
           columns={this.columns}/>
       </Modal>
-    )
+    );
   }
 }
 

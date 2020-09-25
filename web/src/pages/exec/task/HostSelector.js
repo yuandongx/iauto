@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
+import { SyncOutlined } from '@ant-design/icons';
 import { Modal, Table, Input, Button, Select, Checkbox } from 'antd';
 import { SearchForm } from 'components';
 import store from '../../host/store';
@@ -102,7 +103,7 @@ class HostSelector extends React.Component {
             <Checkbox onChange={this.handleCheck}/>
           </SearchForm.Item>
           <SearchForm.Item span={4}>
-            <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
+            <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
           </SearchForm.Item>
         </SearchForm>
         <Table
@@ -120,7 +121,7 @@ class HostSelector extends React.Component {
           }}
           columns={this.columns}/>
       </Modal>
-    )
+    );
   }
 }
 

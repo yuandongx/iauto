@@ -4,7 +4,27 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import { Drawer, Breadcrumb, Table, Icon, Divider, Switch, Button, Progress, Modal, message } from 'antd';
+
+import {
+  DeleteOutlined,
+  DownloadOutlined,
+  FileOutlined,
+  FolderOutlined,
+  HomeOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
+
+import {
+  Drawer,
+  Breadcrumb,
+  Table,
+  Divider,
+  Switch,
+  Button,
+  Progress,
+  Modal,
+  message,
+} from 'antd';
 import { http, uniqueId } from 'libs';
 import lds from 'lodash';
 import styles from './index.module.css'
@@ -31,12 +51,12 @@ class FileManager extends React.Component {
     key: 'name',
     render: info => info.kind === 'd' ? (
       <div onClick={() => this.handleChdir(info.name, '1')} style={{cursor: 'pointer'}}>
-        <Icon type="folder" style={{color: '#1890ff'}}/>
+        <FolderOutlined style={{color: '#1890ff'}} />
         <span style={{color: '#1890ff', paddingLeft: 5}}>{info.name}</span>
       </div>
     ) : (
       <React.Fragment>
-        <Icon type="file"/>
+        <FileOutlined />
         <span style={{paddingLeft: 5}}>{info.name}</span>
       </React.Fragment>
     ),
@@ -63,9 +83,9 @@ class FileManager extends React.Component {
     key: 'action',
     render: info => info.kind === '-' ? (
       <React.Fragment>
-        <Icon style={{color: '#1890ff'}} type="download" onClick={() => this.handleDownload(info.name)}/>
+        <DownloadOutlined style={{color: '#1890ff'}} onClick={() => this.handleDownload(info.name)} />
         <Divider type="vertical"/>
-        <Icon style={{color: 'red'}} type="delete" onClick={() => this.handleDelete(info.name)}/>
+        <DeleteOutlined style={{color: 'red'}} onClick={() => this.handleDelete(info.name)} />
       </React.Fragment>
     ) : null
   }];
@@ -189,7 +209,7 @@ class FileManager extends React.Component {
         <div className={styles.drawerHeader}>
           <Breadcrumb>
             <Breadcrumb.Item href="#" onClick={() => this.handleChdir('', '0')}>
-              <Icon type="home"/>
+              <HomeOutlined />
             </Breadcrumb.Item>
             {this.state.pwd.map(item => (
               <Breadcrumb.Item key={item} href="#" onClick={() => this.handleChdir(item, '2')}>
@@ -204,7 +224,7 @@ class FileManager extends React.Component {
               checkedChildren="开启"
               unCheckedChildren="关闭"
               onChange={v => this.setState({showDot: v})}/>
-            <Button style={{marginLeft: 10}} size="small" type="primary" icon="upload"
+            <Button style={{marginLeft: 10}} size="small" type="primary" icon={<UploadOutlined />}
                     onClick={this.handleUpload}>上传文件</Button>
           </div>
         </div>
@@ -221,7 +241,7 @@ class FileManager extends React.Component {
           bodyStyle={{fontFamily: "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace"}}
           dataSource={objects}/>
       </Drawer>
-    )
+    );
   }
 }
 

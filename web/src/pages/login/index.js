@@ -4,7 +4,10 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import {Form, Input, Icon, Button, Tabs, Modal} from 'antd';
+import { CopyrightOutlined, GithubOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Tabs, Modal } from 'antd';
 import styles from './login.module.css';
 import history from 'libs/history';
 import {http, updatePermissions} from 'libs';
@@ -92,7 +95,7 @@ class LoginIndex extends React.Component {
                   size="large"
                   autoComplete="off"
                   placeholder="请输入账户"
-                  prefix={<Icon type="user" className={styles.icon}/>}/>
+                  prefix={<UserOutlined className={styles.icon} />}/>
               )}
             </Form.Item>
             <Form.Item className={styles.formItem}>
@@ -103,7 +106,7 @@ class LoginIndex extends React.Component {
                   autoComplete="off"
                   placeholder="请输入密码"
                   onPressEnter={this.handleSubmit}
-                  prefix={<Icon type="lock" className={styles.icon}/>}/>
+                  prefix={<LockOutlined className={styles.icon} />}/>
               )}
             </Form.Item>
           </Form>
@@ -120,12 +123,12 @@ class LoginIndex extends React.Component {
         <div className={styles.footerZone}>
           <div className={styles.linksZone}>
             <a className={styles.links} title="Github" href="https://github.com/yuandongx/iauto"  target="_blank"
-               rel="noopener noreferrer"><Icon type="github" /></a>
+               rel="noopener noreferrer"><GithubOutlined /></a>
           </div>
-          <div style={{color: 'rgba(0, 0, 0, .45)'}}>Copyright <Icon type="copyright" /> 2020 By Iauto</div>
+          <div style={{color: 'rgba(0, 0, 0, .45)'}}>Copyright <CopyrightOutlined /> 2020 By Iauto</div>
         </div>
       </div>
-    )
+    );
   }
 }
 

@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Upload, Icon, Button, Alert, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Upload, Button, Alert, message } from 'antd';
 
 import http from 'libs/http';
 import store from './store';
@@ -98,13 +101,13 @@ class ComImport extends React.Component {
           <Form.Item required label="导入数据">
             <Upload {...this.attrs} beforeUpload={this.beforeUpload} onChange={this.handleChange}>
               <Button>
-                <Icon type="upload"/> 点击上传
+                <UploadOutlined /> 点击上传
               </Button>
             </Upload>
           </Form.Item>
         </Form>
       </Modal>
-    )
+    );
   }
 }
 

@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Tag, Upload, message, Button, Icon } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Tag, Upload, message, Button } from 'antd';
 import hostStore from 'pages/host/store';
 import http from 'libs/http';
 import store from './store';
@@ -113,7 +116,7 @@ class Ext2Form extends React.Component {
           <Form.Item label="上传数据" help="通过数据传输动作来使用上传的文件。">
             <Upload name="file" fileList={fileList} headers={{'X-Token': this.token}} beforeUpload={this.handleUpload}
                     data={{deploy_id: info.deploy_id}} onChange={this.handleUploadChange}>
-              {fileList.length === 0 ? <Button loading={uploading}><Icon type="upload"/> 点击上传</Button> : null}
+              {fileList.length === 0 ? <Button loading={uploading}><UploadOutlined /> 点击上传</Button> : null}
             </Upload>
           </Form.Item>
           <Form.Item required label="发布目标主机" help="通过点击主机名称自由选择本次发布的主机。">
@@ -125,7 +128,7 @@ class Ext2Form extends React.Component {
           </Form.Item>
         </Form>
       </Modal>
-    )
+    );
   }
 }
 

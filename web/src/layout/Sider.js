@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Menu, Icon } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Layout, Menu } from 'antd';
 import { hasPermission } from "../libs/functools";
 import history from '../libs/history';
 import styles from './layout.module.css';
@@ -48,18 +49,18 @@ class Sider extends React.Component {
   makeItem = (menu) => {
     return (
       <Menu.Item key={menu.path}>
-        {menu.icon && <Icon type={menu.icon}/>}
+        {menu.icon && <LegacyIcon type={menu.icon}/>}
         <span>{menu.title}</span>
       </Menu.Item>
-    )
+    );
   };
 
   makeSubMenu = (subMenu) => {
     return (
-      <Menu.SubMenu key={subMenu.title} title={<span><Icon type={subMenu.icon}/><span>{subMenu.title}</span></span>}>
+      <Menu.SubMenu key={subMenu.title} title={<span><LegacyIcon type={subMenu.icon}/><span>{subMenu.title}</span></span>}>
         {subMenu.child.map(menu => this.makeMenu(menu))}
       </Menu.SubMenu>
-    )
+    );
   };
 
   handleSelect = ({key}) => {

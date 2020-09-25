@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import {observer} from 'mobx-react';
-import {Table, Divider, Modal, Badge, message, Form, Input} from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Divider, Modal, Badge, message, Input } from 'antd';
 import {LinkButton} from 'components';
 import ComForm from './Form';
 import http from 'libs/http';
@@ -78,7 +81,7 @@ class ComTable extends React.Component {
 
   handleReset = (info) => {
     Modal.confirm({
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       title: '重置登录密码',
       content: <Form>
         <Form.Item required label="重置后的新密码">

@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, Tooltip, Icon, message } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
+import { Table, Divider, Modal, Tooltip, message } from 'antd';
 import { LinkButton } from 'components';
 import ComForm from './Form';
 import http from 'libs/http';
@@ -14,7 +15,7 @@ import store from './store';
 @observer
 class TableView extends React.Component {
   lockIcon = <Tooltip title="私有配置应用专用，不会被其他应用获取到">
-    <Icon style={{marginRight: 5}} type="lock"/>
+    <LockOutlined style={{marginRight: 5}} />
   </Tooltip>;
 
   columns = [{
