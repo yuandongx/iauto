@@ -41,10 +41,6 @@ class StartButton extends React.Component {
 @observer
 class ComTable extends React.Component {
 
-  componentDidMount() {
-    store.fetchRecords();
-  }
-
   columns = [{
     title: '序号',
     key: 'series',
@@ -123,6 +119,7 @@ class ComTable extends React.Component {
     })
   };
   componentDidMount() {
+    store.fetchRecords();
     this.timerID = setInterval(
       () => store.fetchRecords(),
       10000
