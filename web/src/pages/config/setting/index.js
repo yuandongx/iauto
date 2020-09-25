@@ -5,7 +5,15 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Menu, Input, Button, Select, PageHeader, Icon, Modal } from 'antd';
+import {
+  DiffOutlined,
+  HistoryOutlined,
+  NumberOutlined,
+  SyncOutlined,
+  TableOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
+import { Menu, Input, Button, Select, PageHeader, Modal } from 'antd';
 import envStore from '../environment/store';
 import styles from './index.module.css';
 import history from 'libs/history';
@@ -69,7 +77,7 @@ class Index extends React.Component {
             title="环境列表"
             style={{padding: '0 0 10px 10px'}}
             onBack={() => history.goBack()}
-            extra={<Button type="link" icon="diff" onClick={store.showDiff}>对比配置</Button>}/>
+            extra={<Button type="link" icon={<DiffOutlined />} onClick={store.showDiff}>对比配置</Button>}/>
           <Menu
             mode="inline"
             selectedKeys={[String(store.env.id)]}
@@ -84,19 +92,19 @@ class Index extends React.Component {
           <SearchForm>
             <SearchForm.Item span={6} title="视图">
               <Select value={view} style={{width: '100%'}} onChange={v => this.setState({view: v})}>
-                <Select.Option value="1"><Icon type="table" style={{marginRight: 10}}/>表格</Select.Option>
-                <Select.Option value="2"><Icon type="unordered-list" style={{marginRight: 10}}/>文本</Select.Option>
-                <Select.Option value="3"><Icon type="number" style={{marginRight: 10}}/>JSON</Select.Option>
+                <Select.Option value="1"><TableOutlined style={{marginRight: 10}} />表格</Select.Option>
+                <Select.Option value="2"><UnorderedListOutlined style={{marginRight: 10}} />文本</Select.Option>
+                <Select.Option value="3"><NumberOutlined style={{marginRight: 10}} />JSON</Select.Option>
               </Select>
             </SearchForm.Item>
             <SearchForm.Item span={7} title="Key">
               <Input allowClear value={store.f_name} onChange={e => store.f_name = e.target.value} placeholder="请输入"/>
             </SearchForm.Item>
             <SearchForm.Item span={3}>
-              <Button type="primary" icon="sync" onClick={this.handleRefresh}>刷新</Button>
+              <Button type="primary" icon={<SyncOutlined />} onClick={this.handleRefresh}>刷新</Button>
             </SearchForm.Item>
             <SearchForm.Item span={4}>
-              <Button type="primary" style={{backgroundColor: 'orange', borderColor: 'orange'}} icon="history"
+              <Button type="primary" style={{backgroundColor: 'orange', borderColor: 'orange'}} icon={<HistoryOutlined />}
                       onClick={store.showRecord}>更改历史</Button>
             </SearchForm.Item>
             <SearchForm.Item span={4} style={{textAlign: 'right'}}>
@@ -112,7 +120,7 @@ class Index extends React.Component {
         {store.recordVisible && <Record/>}
         {store.diffVisible && <DiffConfig/>}
       </AuthDiv>
-    )
+    );
   }
 }
 

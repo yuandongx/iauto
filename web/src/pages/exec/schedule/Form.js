@@ -1,6 +1,25 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, Steps, Tabs, InputNumber, DatePicker, Icon, message } from 'antd';
+import {
+  ExclamationCircleOutlined,
+  LoadingOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Modal,
+  Input,
+  Select,
+  Col,
+  Button,
+  Steps,
+  Tabs,
+  InputNumber,
+  DatePicker,
+  message,
+} from 'antd';
 import { LinkButton, ACEditor } from 'components';
 import TemplateSelector from '../task/TemplateSelector';
 import { http, cleanCommand, hasHostPermission } from 'libs';
@@ -70,7 +89,7 @@ class ComForm extends React.Component {
 
   handleAddZone = () => {
     Modal.confirm({
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       title: '添加任务类型',
       content: this.addZoneForm,
       onOk: () => {
@@ -102,13 +121,13 @@ class ComForm extends React.Component {
       if (key === 'rule') {
         value = value.trim();
         if (value.split(' ').length === 5) {
-          this.setState({nextRunTime: <Icon type="loading"/>});
+          this.setState({nextRunTime: <LoadingOutlined />});
           this._fetchNextRunTime()
         } else {
           this.setState({nextRunTime: null})
         }
       } else {
-        this.setState({nextRunTime: <Icon type="loading"/>});
+        this.setState({nextRunTime: <LoadingOutlined />});
         this._fetchNextRunTime()
       }
     });
@@ -237,14 +256,14 @@ class ComForm extends React.Component {
                     ))}
                   </Select>
                   {store.targets.length > 1 && (
-                    <Icon className={styles.delIcon} type="minus-circle-o" onClick={() => store.delTarget(index)}/>
+                    <MinusCircleOutlined className={styles.delIcon} onClick={() => store.delTarget(index)} />
                   )}
                 </React.Fragment>
               ))}
             </Form.Item>
             <Form.Item wrapperCol={{span: 14, offset: 6}}>
               <Button type="dashed" style={{width: '80%'}} onClick={store.addTarget}>
-                <Icon type="plus"/>添加执行对象
+                <PlusOutlined />添加执行对象
               </Button>
             </Form.Item>
           </div>
@@ -319,7 +338,7 @@ class ComForm extends React.Component {
           onOk={command => this.setState({command})}
           onCancel={() => this.setState({showTmp: false})}/>}
       </Modal>
-    )
+    );
   }
 }
 

@@ -5,7 +5,9 @@
  */
 import React from 'react';
 import {observer} from 'mobx-react';
-import {Button, Form, Input, Radio, message, Popover} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Input, Radio, message, Popover } from 'antd';
 import styles from './index.module.css';
 import {http} from 'libs';
 import store from './store';

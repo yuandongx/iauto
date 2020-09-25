@@ -2,7 +2,10 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { toJS } from "mobx";
-import { Modal, Form, Input, Select, Col, Button, message, Tabs, Table } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Col, Button, message, Tabs, Table } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
@@ -29,7 +32,7 @@ class ComForm extends React.Component {
         if (res === 'auth fail' || res === 'Password is required') {
           this.setState({loading: false});
           Modal.confirm({
-            icon: 'exclamation-circle',
+            icon: <ExclamationCircleOutlined />,
             title: '首次验证请输入密码',
             content: this.confirmForm(),
             onOk: () => this.handleConfirm(formData),
@@ -83,7 +86,7 @@ class ComForm extends React.Component {
   handleAddZone = () => {
     this.setState({zone: ''}, () => {
       Modal.confirm({
-        icon: 'exclamation-circle',
+        icon: <ExclamationCircleOutlined />,
         title: '添加主机类别',
         content: (
           <Form>
@@ -105,7 +108,7 @@ class ComForm extends React.Component {
   handleEditZone = () => {
     this.setState({zone: store.record.zone}, () => {
       Modal.confirm({
-        icon: 'exclamation-circle',
+        icon: <ExclamationCircleOutlined />,
         title: '编辑主机类别',
         content: (
           <Form>

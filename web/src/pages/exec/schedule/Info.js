@@ -4,7 +4,9 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import { Modal, Form, Tabs, Spin } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Tabs, Spin } from 'antd';
 import { StatisticsCard } from 'components';
 import http from 'libs/http';
 import store from './store';

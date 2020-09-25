@@ -4,7 +4,9 @@
  * Released under the AGPL-3.0 License.
  */
 import React, { useState } from 'react';
-import { Button, Form, Input, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Input, message } from 'antd';
 import styles from './index.module.css';
 import { http } from 'libs';
 

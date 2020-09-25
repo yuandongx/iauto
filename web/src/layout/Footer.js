@@ -4,7 +4,8 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import { Layout, Icon } from 'antd';
+import { CopyrightOutlined, GithubOutlined } from '@ant-design/icons';
+import { Layout } from 'antd';
 import styles from './layout.module.css';
 
 
@@ -15,13 +16,13 @@ export default class extends React.Component {
         <div className={styles.footerZone}>
           <div className={styles.linksZone}>
             <a className={styles.links} title="Github" href="https://github.com/yuandongx/iauto"  target="_blank"
-               rel="noopener noreferrer"><Icon type="github" /></a>
+               rel="noopener noreferrer"><GithubOutlined /></a>
           </div>
           <div style={{color: 'rgba(0, 0, 0, .45)'}}>
-            Copyright <Icon type="copyright"/> 2020 By Iauto
+            Copyright <CopyrightOutlined /> 2020 By Iauto
           </div>
         </div>
       </Layout.Footer>
-    )
+    );
   }
 }

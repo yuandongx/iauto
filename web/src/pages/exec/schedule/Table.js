@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, Tag, Dropdown, Icon, Menu, message } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { Table, Divider, Modal, Tag, Dropdown, Menu, message } from 'antd';
 import ComForm from './Form';
 import http from 'libs/http';
 import store from './store';
@@ -82,7 +83,7 @@ class ComTable extends React.Component {
         <Divider type="vertical"/>
         <Dropdown overlay={() => this.moreMenus(info)} trigger={['click']}>
           <LinkButton>
-            更多 <Icon type="down"/>
+            更多 <DownOutlined />
           </LinkButton>
         </Dropdown>
       </span>

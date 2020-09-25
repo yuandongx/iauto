@@ -6,7 +6,8 @@
 import React from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, Tag, Icon, message } from 'antd';
+import { BuildOutlined, ExclamationCircleOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { Table, Divider, Modal, Tag, message } from 'antd';
 import http from 'libs/http';
 import store from './store';
 import { LinkButton } from "components";
@@ -62,7 +63,7 @@ class ComTable extends React.Component {
     e.stopPropagation();
     this.cloneObj = null;
     Modal.confirm({
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       title: '选择克隆对象',
       content: <CloneConfirm onChange={v => this.cloneObj = v[1]}/>,
       onOk: () => {
@@ -109,8 +110,8 @@ class ComTable extends React.Component {
     const columns = [{
       title: '模式',
       dataIndex: 'extend',
-      render: value => value === '1' ? <Icon style={{fontSize: 20, color: '#1890ff'}} type="ordered-list"/> :
-        <Icon style={{fontSize: 20, color: '#1890ff'}} type="build"/>,
+      render: value => value === '1' ? <OrderedListOutlined style={{fontSize: 20, color: '#1890ff'}} /> :
+        <BuildOutlined style={{fontSize: 20, color: '#1890ff'}} />,
       width: 80
     }, {
       title: '发布环境',

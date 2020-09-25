@@ -4,7 +4,9 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import { Row, Col, Form } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Row, Col } from 'antd';
 import styles from './index.module.css';
 import lodash from "lodash";
 

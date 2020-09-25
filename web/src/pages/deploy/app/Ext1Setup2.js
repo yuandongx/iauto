@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Form, Input, Select, Button, Icon, message } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Button, message } from "antd";
 import store from './store';
 import hostStore from 'pages/host/store';
 import styles from './index.module.css';
@@ -65,14 +68,14 @@ class Ext1Setup2 extends React.Component {
                 ))}
               </Select>
               {!store.isReadOnly && info['host_ids'].length > 1 && (
-                <Icon className={styles.delIcon} type="minus-circle-o" onClick={() => store.delHost(index)}/>
+                <MinusCircleOutlined className={styles.delIcon} onClick={() => store.delHost(index)} />
               )}
             </React.Fragment>
           ))}
         </Form.Item>
         <Form.Item wrapperCol={{span: 14, offset: 6}}>
           <Button disabled={store.isReadOnly} type="dashed" style={{width: '80%'}} onClick={store.addHost}>
-            <Icon type="plus"/>添加目标主机
+            <PlusOutlined />添加目标主机
           </Button>
         </Form.Item>
         <Form.Item wrapperCol={{span: 14, offset: 6}}>
@@ -80,7 +83,7 @@ class Ext1Setup2 extends React.Component {
           <Button style={{marginLeft: 20}} onClick={() => store.page -= 1}>上一步</Button>
         </Form.Item>
       </Form>
-    )
+    );
   }
 }
 

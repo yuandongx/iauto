@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
+import { SaveOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import Editor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
@@ -74,14 +75,14 @@ class JSONView extends React.Component {
           style={{position: 'absolute', top: 0, right: 0}}
           onClick={() => this.setState({readOnly: false})}>编辑</AuthButton>}
         {readOnly || <Button
-          icon="save"
+          icon={<SaveOutlined />}
           type="link"
           size="large"
           loading={loading}
           style={{position: 'absolute', top: 0, right: 0}}
           onClick={this.handleSubmit}>保存</Button>}
       </div>
-    )
+    );
   }
 }
 

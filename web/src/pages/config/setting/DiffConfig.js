@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Table, Row, Col, Checkbox, Form, Button, Alert } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Table, Row, Col, Checkbox, Button, Alert } from 'antd';
 import http from 'libs/http';
 import envStore from '../environment/store';
 import store from './store';
@@ -84,13 +87,13 @@ class Record extends React.Component {
           </Form.Item>
         </div>
         <div style={{display: page === 1 ? 'block' : 'none'}}>
-          <Button type="link" icon="arrow-left" style={{marginRight: 20}}
+          <Button type="link" icon={<ArrowLeftOutlined />} style={{marginRight: 20}}
                   onClick={() => this.setState({page: page - 1})}>上一步</Button>
           <Checkbox checked={hideSame} onChange={() => this.setState({hideSame: !hideSame})}>隐藏相同配置</Checkbox>
           <Table pagination={false} dataSource={records} loading={loading} columns={this.getColumns()}/>
         </div>
       </Modal>
-    )
+    );
   }
 }
 
