@@ -6,7 +6,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
-import { Switch, Col, Form, Input, Select, Button } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Switch, Col, Input, Select, Button } from "antd";
 import envStore from 'pages/config/environment/store';
 import store from './store';
 

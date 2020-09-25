@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, Tag, Icon, message } from 'antd';
+import { LoadingOutlined, SyncOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Col, Button, Tag, message } from 'antd';
 import hostStore from 'pages/host/store';
 import http from 'libs/http';
 import store from './store';
@@ -168,8 +171,8 @@ class Ext1Form extends React.Component {
               </Input.Group>
             </Col>
             <Col span={4} offset={1} style={{textAlign: 'center'}}>
-              {fetching ? <Icon type="loading" style={{fontSize: 18, color: '#1890ff'}}/> :
-                <Button type="link" icon="sync" disabled={fetching} onClick={this.fetchVersions}>刷新</Button>
+              {fetching ? <LoadingOutlined style={{fontSize: 18, color: '#1890ff'}} /> :
+                <Button type="link" icon={<SyncOutlined />} disabled={fetching} onClick={this.fetchVersions}>刷新</Button>
               }
             </Col>
           </Form.Item>
@@ -197,7 +200,7 @@ class Ext1Form extends React.Component {
           </Form.Item>
         </Form>
       </Modal>
-    )
+    );
   }
 }
 

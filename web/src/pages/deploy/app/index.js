@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
+import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { Input, Button } from 'antd';
 import { SearchForm, AuthDiv, AuthCard } from 'components';
 import ComTable from './Table';
@@ -25,11 +26,11 @@ export default observer(function () {
           <Input allowClear value={store.f_desc} onChange={e => store.f_desc = e.target.value} placeholder="请输入"/>
         </SearchForm.Item>
         <SearchForm.Item span={8}>
-          <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
+          <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
         </SearchForm.Item>
       </SearchForm>
       <AuthDiv auth="deploy.app.add" style={{marginBottom: 16}}>
-        <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => store.showForm()}>新建</Button>
       </AuthDiv>
       <ComTable/>
       {store.formVisible && <ComForm />}
@@ -37,5 +38,5 @@ export default observer(function () {
       {store.ext1Visible &&  <Ext1Form />}
       {store.ext2Visible &&  <Ext2Form />}
     </AuthCard>
-  )
+  );
 })

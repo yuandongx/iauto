@@ -5,7 +5,10 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Form, Row, Col, Button, Radio, Icon, Tooltip, message } from "antd";
+import { GitlabOutlined, InfoCircleOutlined, SettingOutlined, SwapOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Row, Col, Button, Radio, Tooltip, message } from "antd";
 import { LinkButton } from 'components';
 import Editor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-text';
@@ -61,12 +64,12 @@ class Ext1Setup3 extends React.Component {
         onChange={e => store.deploy['filter_rule']['type'] = e.target.value}>
         <Radio value="contain">包含
           <Tooltip title="请输入相对于项目根目录的文件路径，仅将匹配到文件传输至要发布的目标主机。">
-            <Icon type="info-circle" style={{color: '#515151', marginLeft: 8}}/>
+            <InfoCircleOutlined style={{color: '#515151', marginLeft: 8}} />
           </Tooltip>
         </Radio>
         <Radio value="exclude">排除
           <Tooltip title="支持模糊匹配，如果路径以 / 开头则基于项目根目录匹配，匹配到文件将不会被传输。">
-            <Icon type="info-circle" style={{color: '#515151', marginLeft: 8}}/>
+            <InfoCircleOutlined style={{color: '#515151', marginLeft: 8}} />
           </Tooltip>
         </Radio>
       </Radio.Group>
@@ -83,7 +86,7 @@ class Ext1Setup3 extends React.Component {
       <span style={{float: 'left'}}>
         {props.title}<span style={{margin: '0 8px 0 2px'}}>:</span>
         <Tooltip title={this.helpMap[props.id]}>
-          <Icon type="info-circle" style={{color: '#515151'}}/>
+          <InfoCircleOutlined style={{color: '#515151'}} />
         </Tooltip>
       </span>
       {this.state.full ? (
@@ -149,15 +152,15 @@ class Ext1Setup3 extends React.Component {
           </Col>
           <Col span={2}>
             <div className={styles.deployBlock} style={{marginTop: 39}}>
-              <Icon type="setting" style={{fontSize: 32}}/>
+              <SettingOutlined style={{fontSize: 32}} />
               <span style={{fontSize: 12, marginTop: 5}}>基础设置</span>
             </div>
             <div className={styles.deployBlock}>
-              <Icon type="gitlab" style={{fontSize: 32}}/>
+              <GitlabOutlined style={{fontSize: 32}} />
               <span style={{fontSize: 12, marginTop: 5}}>检出代码</span>
             </div>
             <div className={styles.deployBlock}>
-              <Icon type="swap" style={{fontSize: 32}}/>
+              <SwapOutlined style={{fontSize: 32}} />
               <span style={{fontSize: 12, marginTop: 5}}>版本切换</span>
             </div>
           </Col>
@@ -214,7 +217,7 @@ class Ext1Setup3 extends React.Component {
           <Button style={{marginLeft: 20}} onClick={() => store.page -= 1}>上一步</Button>
         </Form.Item>
       </React.Fragment>
-    )
+    );
   }
 }
 

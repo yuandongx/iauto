@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Steps, Collapse, PageHeader, Spin, Tag, Button, Icon } from 'antd';
+import { CaretRightOutlined, LoadingOutlined, PlayCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { Steps, Collapse, PageHeader, Spin, Tag, Button } from 'antd';
 import http from 'libs/http';
 import { AuthDiv } from 'components';
 import OutView from './OutView';
@@ -90,7 +91,7 @@ class Ext1Index extends React.Component {
   getStatus = (key, n) => {
     const step = lds.get(store.outputs, `${key}.step`, -1);
     const isError = lds.get(store.outputs, `${key}.status`) === 'error';
-    const icon = <Icon type="loading"/>;
+    const icon = <LoadingOutlined />;
     if (n > step) {
       return {key: n, status: 'wait'}
     } else if (n === step) {
@@ -126,9 +127,9 @@ class Ext1Index extends React.Component {
             style={{padding: 0}}
             tags={this.getStatusAlias()}
             extra={this.log ? (
-              <Button icon="sync" type="primary" onClick={this.fetch}>刷新</Button>
+              <Button icon={<SyncOutlined />} type="primary" onClick={this.fetch}>刷新</Button>
             ) : (
-              <Button icon="play-circle" loading={this.state.loading} type="primary"
+              <Button icon={<PlayCircleOutlined />} loading={this.state.loading} type="primary"
                       disabled={!['1', '-3'].includes(status)}
                       onClick={this.handleDeploy}>发布</Button>
             )}
@@ -150,7 +151,7 @@ class Ext1Index extends React.Component {
           <Collapse
             defaultActiveKey={'0'}
             className={styles.collapse}
-            expandIcon={({isActive}) => <Icon type="caret-right" style={{fontSize: 16}} rotate={isActive ? 90 : 0}/>}>
+            expandIcon={({isActive}) => <CaretRightOutlined style={{fontSize: 16}} rotate={isActive ? 90 : 0} />}>
             {store.request.targets.map((item, index) => (
               <Collapse.Panel key={index} header={
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -168,7 +169,7 @@ class Ext1Index extends React.Component {
           </Collapse>
         </Spin>
       </AuthDiv>
-    )
+    );
   }
 }
 

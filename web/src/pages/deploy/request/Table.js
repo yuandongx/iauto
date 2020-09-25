@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, Icon, Popover, Tag, message } from 'antd';
+import { BranchesOutlined, BuildOutlined, TagOutlined } from '@ant-design/icons';
+import { Table, Divider, Modal, Popover, Tag, message } from 'antd';
 import http from 'libs/http';
 import store from './store';
 import { LinkButton, AuthLink } from "components";
@@ -38,18 +39,24 @@ class ComTable extends React.Component {
       if (info['app_extend'] === '1') {
         const [type, ext1, ext2] = info.extra;
         if (type === 'branch') {
-          return <React.Fragment>
-            <Icon type="branches"/> {ext1}#{ext2.substr(0, 6)}
-          </React.Fragment>
+          return (
+            <React.Fragment>
+              <BranchesOutlined /> {ext1}#{ext2.substr(0, 6)}
+            </React.Fragment>
+          );
         } else {
-          return <React.Fragment>
-            <Icon type="tag"/> {ext1}
-          </React.Fragment>
+          return (
+            <React.Fragment>
+              <TagOutlined /> {ext1}
+            </React.Fragment>
+          );
         }
       } else {
-        return <React.Fragment>
-          <Icon type="build"/> {info.extra[0]}
-        </React.Fragment>
+        return (
+          <React.Fragment>
+            <BuildOutlined /> {info.extra[0]}
+          </React.Fragment>
+        );
       }
     }
   }, {

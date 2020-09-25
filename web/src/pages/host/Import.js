@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Upload, Icon, Button, Tooltip, Alert } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Upload, Button, Tooltip, Alert } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
@@ -88,13 +91,13 @@ class ComImport extends React.Component {
             <Upload name="file" accept=".xls, .xlsx" fileList={this.state.fileList} beforeUpload={() => false}
                     onChange={this.handleUpload}>
               <Button>
-                <Icon type="upload"/> 点击上传
+                <UploadOutlined /> 点击上传
               </Button>
             </Upload>
           </Form.Item>
         </Form>
       </Modal>
-    )
+    );
   }
 }
 

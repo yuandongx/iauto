@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
+import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { Input, Select, Button } from 'antd';
 import { SearchForm, AuthCard } from 'components';
 import ComTable from './Table';
@@ -24,13 +25,13 @@ export default observer(function () {
           </Select>
         </SearchForm.Item>
         <SearchForm.Item span={8}>
-          <Button type="primary" icon="sync" onClick={store.fetchRecords}>刷新</Button>
+          <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
         </SearchForm.Item>
       </SearchForm>
       <div style={{marginBottom: 16}}>
-        <Button type="primary" icon="plus" onClick={() => store.showForm()}>新建</Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => store.showForm()}>新建</Button>
       </div>
       <ComTable/>
     </AuthCard>
-  )
+  );
 })

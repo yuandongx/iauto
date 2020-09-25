@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Col, Button, message } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Col, Button, message } from 'antd';
 import { ACEditor } from 'components';
 import { http, cleanCommand } from 'libs';
 import store from './store';
@@ -32,7 +35,7 @@ class ComForm extends React.Component {
 
   handleAddZone = () => {
     Modal.confirm({
-      icon: 'exclamation-circle',
+      icon: <ExclamationCircleOutlined />,
       title: '添加模板类型',
       content: this.addZoneForm,
       onOk: () => {

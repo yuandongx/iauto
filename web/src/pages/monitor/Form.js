@@ -5,7 +5,9 @@
  */
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Radio, message, Steps, Button, Transfer, Checkbox } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Radio, message, Steps, Button, Transfer, Checkbox } from 'antd';
 import TemplateSelector from '../exec/task/TemplateSelector';
 import { LinkButton, ACEditor } from 'components';
 import { http, cleanCommand, hasHostPermission } from 'libs';

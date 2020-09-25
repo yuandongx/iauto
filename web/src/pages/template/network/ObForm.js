@@ -2,7 +2,10 @@
 import http from 'libs/http';
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Modal, Form, Input, Select, Collapse, Button, Radio, Icon } from 'antd';
+import { LineOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Collapse, Button, Radio } from 'antd';
 
 import store from './store';
 const { Option } = Select;
@@ -90,7 +93,7 @@ class DataForm extends React.Component {
                   <Input placeholder="请输入IP地址"/>
                 )}
               </Form.Item>
-              <Icon type="line" style={{ fontSize: '20px', color: '#08c', margin: '10px' }}/>
+              <LineOutlined style={{ fontSize: '20px', color: '#08c', margin: '10px' }} />
               <Form.Item
                 rules={[{ required: true, message: '请输入结束IP地址!' }]}
               >

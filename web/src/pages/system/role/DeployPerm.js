@@ -5,7 +5,9 @@
  */
 import React from 'react';
 import {observer} from 'mobx-react';
-import {Modal, Form, Transfer, message, Tabs, Alert} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Transfer, message, Tabs, Alert } from 'antd';
 import http from 'libs/http';
 import envStore from 'pages/config/environment/store';
 import appStore from 'pages/config/app/store';

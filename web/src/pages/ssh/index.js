@@ -4,6 +4,7 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
+import { FolderOpenOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
@@ -82,14 +83,14 @@ class WebSSH extends React.Component {
       <div className={styles.container}>
         <div className={styles.header}>
           <div>{host.name} | {host.username}@{host.hostname}:{host.port}</div>
-          <Button disabled={managerDisabled} type="primary" icon="folder-open" onClick={this.handleShow}>文件管理器</Button>
+          <Button disabled={managerDisabled} type="primary" icon={<FolderOpenOutlined />} onClick={this.handleShow}>文件管理器</Button>
         </div>
         <div className={styles.terminal}>
           <div ref={ref => this.container = ref}/>
         </div>
         <FileManager id={this.id} visible={visible} onClose={this.handleShow} />
       </div>
-    )
+    );
   }
 }
 
