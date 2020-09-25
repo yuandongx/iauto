@@ -46,7 +46,7 @@ def dispatch(command, targets, in_view=False):
             cred = Credential.objects.filter(name=f'{host.username}@{host.hostname}').first()
             if not host:
                 raise ValueError(f'unknown host id: {t!r}')
-            threads.append(Thread(target=host_executor, args=(q, host, cred.pwd, command)))
+            threads.append(Thread(target=host_executor, args=(q, host, cred.password, command)))
         else:
             raise ValueError(f'invalid target: {t!r}')
     for t in threads:
