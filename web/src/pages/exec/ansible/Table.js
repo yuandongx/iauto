@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { DeleteFilled, EditFilled, EyeTwoTone } from '@ant-design/icons';
+import { DeleteFilled,
+         EditFilled,
+         EyeTwoTone,
+         PlayCircleTwoTone,
+         CloseCircleTwoTone } from '@ant-design/icons';
 import { Table, Tooltip, Divider, Modal, Tag, message } from 'antd';
 import ComForm from './Form';
 import http from 'libs/http';
@@ -10,7 +13,6 @@ import store from './store';
 import { LinkButton } from "components";
 import Info from './Info';
 import Record from './Record';
-
 const SUCCESS = 0
 const FAILED = 1
 const RUNNING = 2
@@ -31,12 +33,10 @@ class StartButton extends React.Component {
   render(){
     return (
       <Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
-              <LinkButton onClick={() => this.handleExecute()}>
-                <LegacyIcon type={this.props.state === RUNNING ? "close-circle":"play-circle"}
-                twoToneColor={this.props.state === RUNNING ? "#FF3030":"#52c41a"}
-                theme="twoTone" />
-                </LinkButton>
-              </Tooltip>
+       <LinkButton onClick={() => this.handleExecute()}>
+         {this.props.state === RUNNING ? <CloseCircleTwoTone theme="twoTone" twoToneColor="#FF3030"/>:<PlayCircleTwoTone theme="twoTone"  twoToneColor="#52c41a"/>}
+       </LinkButton>
+    </Tooltip>
     );
     };
 }
