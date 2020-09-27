@@ -70,7 +70,10 @@ class ComForm extends React.Component {
   onSelectChange = (record, selected, selectedRows) => {
       this.setState({password: record});
   };
-  onCheckboxChange = (e) => {}
+  onCheckboxChange = (e) => {
+      this.setState({becomeChecked: e.target.checked});
+      console.log(this.state.becomeChecked);
+  }
   confirmForm = () => {
     let data = toJS(store.pwdRecords).map(item => {return {key: item.id, name: item.name, decription: item.desc}});
     return (<Tabs defaultActiveKey="1" >
@@ -79,11 +82,20 @@ class ComForm extends React.Component {
                     <Form.Item label="授权密码">
                       <Input.Password onChange={val => this.setState({password: {password: val.target.value}})}/>
                     </Form.Item>
-                    <Form.Item >
-                      <Checkbox checked={this.state.becomeChecked} onChange={this.onCheckboxChange}>
-                        升级权限
-                      </Checkbox>
+                    <Form.Item label="特殊权限">
+                      <Checkbox onChange={this.onCheckboxChange} />
                     </Form.Item>
+                    { this.state.becomeChecked ?<>
+                    <Form.Item name="become_method" label="加权命令">
+                      <Input/>
+                    </Form.Item>
+                    <Form.Item name="become_user" label="加权用户名">
+                      <Input/>
+                    </Form.Item>
+                    <Form.Item name="become_password" label="加权密码">
+                      <Input/>
+                    </Form.Item></>:<></>
+                    }
                   </Form>
               </TabPane>
               <TabPane tab="已有访问凭证" key="2">
