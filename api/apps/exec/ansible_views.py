@@ -121,7 +121,7 @@ class HistoryView(View):
     def _fetch_detail(self, h_id):
         record = History.objects.filter(pk=h_id).first()
         data = {'run_time': None, 'success': 0, 'failure': 0, 'duration': 0, 'outputs': []}
-        if record.output:
+        if record is not None:
             outputs = eval(record.output)
             pb_info = [x[0] for x in outputs]
             data['run_time'] = record.run_time

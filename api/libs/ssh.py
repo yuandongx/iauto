@@ -8,7 +8,7 @@ from io import StringIO
 
 class SSH:
     def __init__(self, hostname, port=SSH_PORT, username='root', password=None, connect_timeout=10):
-        print(password)
+
         if password is None:
             raise Exception('password should not be None')
         self.client = None
@@ -17,7 +17,6 @@ class SSH:
         self.username = username
         self.password = password
         self.timeout = connect_timeout
-        print("ssh .....32")
 
     @staticmethod
     def generate_key():
