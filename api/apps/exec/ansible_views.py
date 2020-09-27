@@ -120,24 +120,24 @@ class HistoryView(View):
 
     def _fetch_detail(self, h_id):
         record = History.objects.filter(pk=h_id).first()
-        outputs = eval(record.output)
-        pb_info = [x[0] for x in outputs]
-        data = {'run_time': record.run_time, 'success': 0, 'failure': 0, 'duration': 0, 'outputs': []}
-        # for h_id, code, duration, out in outputs:
-        for index, info in enumerate(outputs):
-            if info[1] == 0:
-                key = 'success'
-                data[key] += 1
-            elif info[1] == 1:
-                key = 'failure'
-                data[key] += 1
-            data['duration'] += info[2]
-            data['outputs'].append({
-                'name': pb_info[index],
-                'code': info[1],
-                'duration': info[2],
-                'output': info[3]})
-        data['duration'] = f"{data['duration'] / len(outputs):.3f}"
-        print(data)
-        # data = {'run_time': 1, 'success': 1, 'failure': 1, 'duration': 123, 'outputs': []}
+        data = {'run_time': None, 'success': 0, 'failure': 0, 'duration': 0, 'outputs': []}
+        if record.output:
+            outputs = eval(record.output)
+            pb_info = [x[0] for x in outputs]
+            data['run_time'] = record.run_time
+            # for h_id, code, duration, out in outputs:
+            for index, info in enumerate(outputs):
+                if info[1] == 0:
+                    key = 'success'
+                    data[key] += 1
+                elif info[1] == 1:
+                    key = 'failure'
+                    data[key] += 1
+                data['duration'] += info[2]
+                data['outputs'].append({
+                    'name': pb_info[index],
+                    'code': info[1],
+                    'duration': info[2],
+                    'output': info[3]})
+            data['duration'] = f"{data['duration'] / len(outputs):.3f}"
         return data
