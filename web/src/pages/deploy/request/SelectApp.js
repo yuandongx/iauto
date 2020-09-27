@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
-import { FolderOpenOutlined, BuildOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { BuildOutlined, OrderedListOutlined } from '@ant-design/icons';
 import { Modal, Button, Menu, Spin, Input, Tooltip } from 'antd';
 import store from './store';
 import styles from './index.module.css';

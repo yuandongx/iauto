@@ -5,7 +5,7 @@ import { toJS } from "mobx";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Modal, Input, Select, Row, Col, Button, message, Tabs, Table } from 'antd';
+import { Modal, Input, Select, Row, Col, Button, message, Tabs, Table, Checkbox } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
@@ -19,6 +19,10 @@ class ComForm extends React.Component {
       password: null,
       addZone: null,
       editZone: store.record.zone,
+      becomeChecked: false,
+      becomeUser: null,
+      becomeMethod: null,
+      becomePassword: null,
     }
   }
 
@@ -66,7 +70,7 @@ class ComForm extends React.Component {
   onSelectChange = (record, selected, selectedRows) => {
       this.setState({password: record});
   };
-
+  onCheckboxChange = (e) => {}
   confirmForm = () => {
     let data = toJS(store.pwdRecords).map(item => {return {key: item.id, name: item.name, decription: item.desc}});
     return (<Tabs defaultActiveKey="1" >
@@ -74,6 +78,11 @@ class ComForm extends React.Component {
                   <Form>
                     <Form.Item label="授权密码">
                       <Input.Password onChange={val => this.setState({password: {password: val.target.value}})}/>
+                    </Form.Item>
+                    <Form.Item >
+                      <Checkbox checked={this.state.becomeChecked} onChange={this.onCheckboxChange}>
+                        升级权限
+                      </Checkbox>
                     </Form.Item>
                   </Form>
               </TabPane>
@@ -188,7 +197,7 @@ class ComForm extends React.Component {
             )}
           </Form.Item>
           <Form.Item wrapperCol={{span: 14, offset: 6}}>
-            <span role="img" aria-label="notice">⚠️ 首次验证时需要输入登录用户名对应的密码，但不会存储该密码。</span>
+            <span role="img" aria-label="notice">⚠️ 首次验证时需要输入登录用户名对应的密码，并存储该密码作为后续访问凭证。</span>
           </Form.Item>
         </Form>
       </Modal>
