@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { CaretRightOutlined, CheckCircleTwoTone, LoadingOutlined, WarningTwoTone } from '@ant-design/icons';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { FullscreenExitOutlined, FullscreenOutlined, CaretRightOutlined, CheckCircleTwoTone, LoadingOutlined, WarningTwoTone } from '@ant-design/icons';
 import { Modal, Collapse } from 'antd';
 import OutView from './OutView';
 import styles from './index.module.css';
@@ -77,7 +76,7 @@ class ExecConsole extends React.Component {
         title={[
           <span key="1">执行控制台</span>,
           <div key="2" className={styles.fullscreen} onClick={() => store.isFullscreen = !store.isFullscreen}>
-            <LegacyIcon type={store.isFullscreen ? 'fullscreen-exit' : 'fullscreen'}/>
+            {store.isFullscreen? <FullscreenExitOutlined /> : <FullscreenOutlined />}
           </div>
         ]}
         footer={null}

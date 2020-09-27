@@ -25,6 +25,8 @@ class ComForm extends React.Component {
 
   render() {
     const {run_time, success, failure, duration, outputs} = this.state.info;
+    console.log(this.state.info);
+    console.log("11111111111111");
     const preStyle = {
       marginTop: 5,
       backgroundColor: '#eee',

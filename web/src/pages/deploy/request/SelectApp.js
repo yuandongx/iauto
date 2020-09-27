@@ -1,12 +1,8 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { FolderOpenOutlined, BuildOutlined, OrderedListOutlined } from '@ant-design/icons';
 import { Modal, Button, Menu, Spin, Input, Tooltip } from 'antd';
 import store from './store';
 import styles from './index.module.css';
@@ -101,8 +97,8 @@ class SelectApp extends React.Component {
                   <Button type="primary" className={styles.appBlock} onClick={() => this.handleClick(item)}>
                     <div ref={el => this.handleRef(el, item.id)}
                          style={{width: 135, overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                      <LegacyIcon type={item.extend === '1' ? 'ordered-list' : 'build'}
-                            style={{marginRight: 10}}/>{item['app_name']}
+                      {item.extend === '1' ? <OrderedListOutlined style={{marginRight: 10}}/>:<BuildOutlined style={{marginRight: 10}}/>}
+                      {item['app_name']}
                     </div>
                   </Button>
                 </Tooltip>
