@@ -12,22 +12,21 @@ import re
 import shutil
 import random
 import os
-import datetime
+from datetime import datetime, timedelta, timezone
 
 
 @shared_task
 def run_ansible(execinfo):
     task_id = execinfo['id']
     task_state = execinfo['state']
-    print(task_id)
     host_list = list()
     playbook_content = list()
     playbook_name = list()
     if task_id:
-        taskinfo = Task.objects.filter(pk=task_id, is_active=True).first()
-        if taskinfo:
-            playbook_ids = taskinfo.playbooks
-            host_ids = taskinfo.targets
+        taskinfo = Task.objects.filter(pk=task_id, is_active=True)
+        if taskinfo.first():
+            playbook_ids = taskinfo.first().playbooks
+            host_ids = taskinfo.first().targets
             if isinstance(eval(host_ids), list):
                 for preid in eval(host_ids):
                     host_dict = dict()
@@ -62,17 +61,18 @@ def run_ansible(execinfo):
         ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_content)
         try:
             status = 1
-            starttime = datetime.datetime.now()
             history = History.objects.create(
                 task_id=task_id,
                 celery_id=run_ansible.request.id,
-                run_time=starttime.strftime('%Y-%m-%d %H:%M:%S'),
+                run_time=datetime.now().astimezone(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'),
                 status=2,
             )
             host_path, playbook_path_list = ansible_handle.create_tmp()
             results = list()
+            print(playbook_path_list)
             if host_path and playbook_path_list:
                 for index, pre_p in enumerate(playbook_path_list):
+                    starttime = datetime.now().astimezone(timezone(timedelta(hours=8)))
                     result = list()
                     result.append(playbook_name[index])
                     cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
@@ -106,16 +106,17 @@ def run_ansible(execinfo):
                     else:
                         status = 0
                         result.append(status)
-                    endtime = datetime.datetime.now()
+                    endtime = datetime.now().astimezone(timezone(timedelta(hours=8)))
                     time = (endtime - starttime).total_seconds()
                     result.append(time)
                     result.append(info)
-                results.append(result)
+                    results.append(result)
         finally:
             History.objects.filter(id=history.id).update(
                 status=status,
-                output=result
+                output=results
             )
+            taskinfo.update(latest_id=history.id)
             ansible_handle.remove_tmp()
 
     # if host_list and playbook_list:

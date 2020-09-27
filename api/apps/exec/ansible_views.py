@@ -29,7 +29,6 @@ class ShowAnsibleview(View):
             state = History.objects.filter(task_id=d["id"]).first()
             if state:
                 d["status"] = state.status
-            print(d)
             new_tasks.append(d)
 
         return json_response({'types': types, 'tasks': new_tasks})
@@ -46,7 +45,6 @@ class ShowAnsibleview(View):
             # Argument('trigger_args', help='请输入触发器参数'),
             Argument('desc', required=False),
         ).parse(request.body)
-        # print(request.body)
         if error is None:
             form.targets = json.dumps(form.targets)
             form.rst_notify = json.dumps(form.rst_notify)
@@ -89,6 +87,7 @@ class ShowAnsibleview(View):
         else:
             return json_response(data={"msg": "ok"})
 
+
 class DoAnsibleview(View):
     def post(self, request):
         execinfo = json.loads(request.body.decode())
@@ -102,8 +101,43 @@ class DoAnsibleview(View):
 
 def show_history(request, task_id=None):
     if request.method == "GET":
-        # history_task_id = request.GET.get("id")
         histories = History.objects.filter(task_id=task_id)
         return json_response([x.to_list() for x in histories])
 
 
+class HistoryView(View):
+    def get(self, request, task_id):
+        task = Task.objects.filter(pk=task_id).first()
+        if not task:
+            return json_response(error='未找到指定任务')
+
+        h_id = request.GET.get('id')
+        if h_id:
+            h_id = task.latest_id if h_id == 'latest' else h_id
+            return json_response(self._fetch_detail(h_id))
+        histories = History.objects.filter(task_id=task_id)
+        return json_response([x.to_list() for x in histories])
+
+    def _fetch_detail(self, h_id):
+        record = History.objects.filter(pk=h_id).first()
+        outputs = eval(record.output)
+        pb_info = [x[0] for x in outputs]
+        data = {'run_time': record.run_time, 'success': 0, 'failure': 0, 'duration': 0, 'outputs': []}
+        # for h_id, code, duration, out in outputs:
+        for index, info in enumerate(outputs):
+            if info[1] == 0:
+                key = 'success'
+                data[key] += 1
+            elif info[1] == 1:
+                key = 'failure'
+                data[key] += 1
+            data['duration'] += info[2]
+            data['outputs'].append({
+                'name': pb_info[index],
+                'code': info[1],
+                'duration': info[2],
+                'output': info[3]})
+        data['duration'] = f"{data['duration'] / len(outputs):.3f}"
+        print(data)
+        # data = {'run_time': 1, 'success': 1, 'failure': 1, 'duration': 123, 'outputs': []}
+        return data
