@@ -5,7 +5,7 @@ import { toJS } from "mobx";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Modal, Input, Select, Col, Button, message, Tabs, Table } from 'antd';
+import { Modal, Input, Select, Row, Col, Button, message, Tabs, Table } from 'antd';
 import http from 'libs/http';
 import store from './store';
 
@@ -142,6 +142,7 @@ class ComForm extends React.Component {
         onOk={this.handleSubmit}>
         <Form labelCol={{span: 6}} wrapperCol={{span: 14}}>
           <Form.Item required label="主机类别">
+          <Row>
             <Col span={14}>
               {getFieldDecorator('zone', {initialValue: info['zone']})(
                 <Select placeholder="请选择主机类别/区域/分组">
@@ -157,6 +158,7 @@ class ComForm extends React.Component {
             <Col span={4} offset={1}>
               <Button type="link" onClick={this.handleEditZone}>编辑类别</Button>
             </Col>
+            </Row>
           </Form.Item>
           <Form.Item required label="主机名称">
             {getFieldDecorator('name', {initialValue: info['name']})(
