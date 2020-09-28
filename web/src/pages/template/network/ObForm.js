@@ -27,9 +27,10 @@ class DataForm extends React.Component {
     });
     const formData = this.props.form.getFieldsValue();
     formData['preview'] = true;
+    formData['feature'] = "object";
     http.post('/api/template/network/', formData)
       .then(res => {
-        console.log(res);
+        console.log("send ok and receive:", res);
         this.props.onClick(res);
       }, () => this.setState({loading: false}))
   };
@@ -67,7 +68,7 @@ class DataForm extends React.Component {
             )}
         </Form.Item>
         <Form.Item label="类型">
-          {getFieldDecorator('object_type', {
+          {getFieldDecorator('kind', {
             rules: [{ required: true, message: '请选择要配置的对象类型!' }],
           })(<Radio.Group onChange={this.onRadioChange}>
                 <Radio value={1}>主机地址</Radio>
@@ -152,8 +153,8 @@ class ObjectForm extends React.Component {
         >
         <DForm onClick={(data) => this.setState({result: data})}/>
       {this.state.result != null && <Collapse>
-            <Panel header={this.state.result.lines[0]} key="1">
-             <p className={pre}>{this.state.result.lines.join("&nbsp;")}</p>
+            <Panel header={this.state.result.name} key="1">
+             <p className={pre}>{this.state.result.lines}</p>
             </Panel>
       </Collapse>}
       </Modal>

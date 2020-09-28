@@ -7,7 +7,7 @@ from libs.channel import Channel
 from apps.template.models import Template
 from apps.host.models import Host
 from django.conf import settings
-
+from apps.template.networks import Hander
 
 class GenericView(View):
     def get(self, request):
@@ -53,33 +53,42 @@ class NetworkView(View):
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 
     def post(self, request):
-        form, error = JsonParser(
-            Argument('id', type=int, required=False),
-            Argument('platform', help='请输入选择设备类型'),
-            Argument('name', help='请选输入对象名称'),
-            Argument('object_type', help='请选择对象类型'),
-            Argument('hostip', required=False),
-            Argument('start_ip', required=False),
-            Argument('end_ip', required=False),
-            Argument('subnet_ip', required=False),
-            Argument('subnet_mask', required=False),
-            Argument('preview', required=False),
-        ).parse(request.body)
+        hander = Hander(request.body)
+        form, error = hander.parse()
         if error is None:
+            result = hander.render()
             if form.preview:
-                data = make_commands(form)
-                print(data)
-                
-                return json_response(data=data)
+                return json_response(data=result)
             else:
                 if form.id:
                     form.updated_at = human_datetime()
                     form.updated_by = request.user
-                    # Template.objects.filter(pk=form.pop('id')).update(**form)
                 else:
-                    form.created_by = request.user
-                    # Template.objects.create(**form)
-            return json_response(error=error)
+                    form.created_by = request.user 
+        # form, error = JsonParser(
+            # Argument('id', type=int, required=False),
+            # Argument('platform', help='请输入选择设备类型'),
+            # Argument('name', help='请选输入对象名称'),
+            # Argument('object_type', help='请选择对象类型'),
+            # Argument('hostip', required=False),
+            # Argument('start_ip', required=False),
+            # Argument('end_ip', required=False),
+            # Argument('subnet_ip', required=False),
+            # Argument('subnet_mask', required=False),
+            # Argument('preview', required=False),
+        # ).parse(request.body)
+        # if error is None:
+            # if form.preview:
+                # data = make_commands(form)
+                # return json_response(data=data)
+            # else:
+                # if form.id:
+                    # form.updated_at = human_datetime()
+                    # form.updated_by = request.user
+                # else:
+                    # form.created_by = request.user
+            # return json_response(error=error)
+        return json_response(error=error)
 
     def delete(self, request):
         form, error = JsonParser(
