@@ -25,7 +25,6 @@ class Store {
 
   showForm = (key) => {
     this.formFlag = key;
-    /**this.record = key**/
   }
 }
 

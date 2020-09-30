@@ -8,6 +8,17 @@ import ComTable from './Table';
 import store from './store';
 
 export default observer(function () {
+  const filter = (types) => {
+      var tmp = [];
+      var result = []
+      for (let i=0;i<types.length; i++){
+          if (!tmp.includes(types[i].name)){
+              tmp.push(types[i].name);
+              result.push(types[i]);
+          }
+      }
+      return result;
+  }
   return (
     <AuthCard auth="exec.template.view">
       <SearchForm>
@@ -26,7 +37,7 @@ export default observer(function () {
         </SearchForm.Item>
       </SearchForm>
       <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
-          {store.types.map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm(item.name)}>{item.description}</Button>))}
+          {filter(store.types).map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm(item.name)}>{item.description}</Button>))}
       </AuthDiv>
       <ComTable/>
     </AuthCard>

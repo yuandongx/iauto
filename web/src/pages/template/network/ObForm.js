@@ -15,13 +15,12 @@ const { Paragraph, Text } = Typography;
 const Txt =({preViewResult})=> {
     console.log(preViewResult)
       return(<>
-        {(preViewResult !== null && preViewResult.lines !== undefined) && <Collapse>
+        {(preViewResult !== null && preViewResult !== undefined && preViewResult.lines !== undefined) && <Collapse>
             <Panel header={"预览配置命令行"} key="1">
              <Paragraph>{preViewResult.lines.map((item, index)=>(<Text key={index}>{item}<br/></Text>))}</Paragraph>
         </Panel>
       </Collapse>}
       </>);
-
 }
 
 const TheForm =({form, doSubmit})=>{
@@ -91,7 +90,7 @@ export default observer(() => {
         setModalState(true);
         const formData = form.getFieldsValue();
         formData.feature = "object";
-        formData.preView = flag;
+        formData.preview = flag;
         console.log(JSON.stringify(formData));
         http.post('/api/template/network/', formData)
           .then(res => {

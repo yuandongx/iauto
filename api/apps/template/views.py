@@ -48,7 +48,10 @@ class NetworkView(View):
         templates = Template.objects.filter(flag='network')
         types = [
                  {'platform': 'asa', 'name': 'object', 'description': '地址对象'},
-                 {'platform': 'topsec', 'name': 'object-group', 'description': '地址组'}
+                 {'platform': 'asa', 'name': 'object-group', 'description': '地址组'},
+                 {'platform': 'asa', 'name': 'service', 'description': '对象对象'},
+                 {'platform': 'asa', 'name': 'service-group', 'description': '服务组'},
+                 {'platform': 'topsec', 'name': 'object-group', 'description': '地址组'},
                 ]
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 

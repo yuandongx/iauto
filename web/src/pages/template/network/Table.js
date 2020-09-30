@@ -74,6 +74,9 @@ class ComTable extends React.Component {
           }}
           columns={this.columns}/>
         {store.formFlag === 'object' && <ObjectForm/>}
+        {store.formFlag === 'object-group' && <ObjectForm/>}
+        {store.formFlag === 'service' && <ObjectForm/>}
+        {store.formFlag === 'service-group' && <ObjectForm/>}
       </React.Fragment>
     )
   }
