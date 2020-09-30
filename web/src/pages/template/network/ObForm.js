@@ -1,5 +1,5 @@
 /***
-*使用函数组件，目的是为了使用Form.useForm
+*使用函数组件，目的是为了使用Form.useForm,组拆分
 ***/
 import http from 'libs/http';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ const { Paragraph, Text } = Typography;
 const Txt =({preViewResult})=> {
     console.log(preViewResult)
       return(<>
-        {(preViewResult != null && preViewResult.lines != undefined) && <Collapse>
+        {(preViewResult !== null && preViewResult.lines !== undefined) && <Collapse>
             <Panel header={"预览配置命令行"} key="1">
              <Paragraph>{preViewResult.lines.map((item, index)=>(<Text key={index}>{item}<br/></Text>))}</Paragraph>
         </Panel>
