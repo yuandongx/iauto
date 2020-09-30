@@ -85,9 +85,11 @@ const TheForm =({form, doSubmit})=>{
 export default observer(() => {
     const [form] = Form.useForm();
     const [preViewResult, setPreViewResult] = useState();
+    const [preViewFlag, setPreViewFlag] = useState(false);
     const [modalState, setModalState] = useState(false);
     const handleSubmit = (flag) => {
         setModalState(true);
+        setPreViewFlag(flag);
         const formData = form.getFieldsValue();
         formData.feature = "object";
         formData.preview = flag;
@@ -95,8 +97,11 @@ export default observer(() => {
         http.post('/api/template/network/', formData)
           .then(res => {
             setPreViewResult(res);
-          }, () => setModalState(false));
-        setModalState(false)
+            setModalState(false);
+            if(!flag){
+              store.formFlag = null;
+            }
+          });
     };
     const formSubmit =()=>{
         handleSubmit(true);
@@ -114,7 +119,7 @@ export default observer(() => {
         onCancel={() => store.formFlag = null}
         onOk={modalSubmit}>
         <TheForm form={form} doSubmit={formSubmit}/>
-        <Txt preViewResult={preViewResult}/>
+            {preViewFlag && <Txt preViewResult={preViewResult}/>}
       </Modal>
     );
 });
