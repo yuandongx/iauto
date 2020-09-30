@@ -13,7 +13,6 @@ const { Panel } = Collapse;
 
 const { Paragraph, Text } = Typography;
 const Txt =({preViewResult})=> {
-    console.log(preViewResult)
       return(<>
         {(preViewResult !== null && preViewResult !== undefined && preViewResult.lines !== undefined) && <Collapse>
             <Panel header={"预览配置命令行"} key="1">
@@ -93,7 +92,6 @@ export default observer(() => {
         const formData = form.getFieldsValue();
         formData.feature = "object";
         formData.preview = flag;
-        console.log(JSON.stringify(formData));
         http.post('/api/template/network/', formData)
           .then(res => {
             setPreViewResult(res);
