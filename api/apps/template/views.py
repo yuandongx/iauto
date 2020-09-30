@@ -54,6 +54,7 @@ class NetworkView(View):
 
     def post(self, request):
         hander = Hander(request.body)
+        print(request.body)
         form, error = hander.parse()
         if error is None:
             result = hander.render()
