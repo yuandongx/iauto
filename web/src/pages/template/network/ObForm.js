@@ -96,6 +96,7 @@ export default observer(() => {
           .then(res => {
             setPreViewResult(res);
           }, () => setModalState(false));
+        setModalState(false)
     };
     const formSubmit =()=>{
         handleSubmit(true);
