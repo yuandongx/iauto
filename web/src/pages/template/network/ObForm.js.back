@@ -1,0 +1,160 @@
+
+import http from 'libs/http';
+import React from 'react';
+import { observer } from 'mobx-react';
+import { LineOutlined } from '@ant-design/icons';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Collapse, Button, Radio, Typography, Form } from 'antd';
+import store from './store';
+const { Option } = Select;
+const { Panel } = Collapse;
+@observer
+class DataForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      radioValue: 1,
+    }
+  }
+  handleSubmit = (flag) => {
+    console.log(this.getFieldsValue());
+    console.log("handleSubmit..........");
+    const formData = store.submitData;
+    formData['preview'] = flag;
+    formData['feature'] = "object";
+    console.log(formData);
+    console.log("11111111111111");
+    http.post('/api/template/network/', formData)
+      .then(res => {
+        store.preViewResult = res;
+      }, () => this.setState({loading: false}))
+  };
+  doSubmit = (t) => {
+      console.log(t);
+      this.handleSubmit(true);
+  }
+  handleSelectChange = value => {
+    console.log(value);
+  };
+  onRadioChange = e => {
+    this.setState({
+      radioValue: e.target.value,
+    });
+  };
+  onFieldsChange = (changedFields, allFields)=> {
+    store.submitData = allFields;
+    console.log(allFields);
+    console.log(this.getFieldsValue());
+    console.log("onFieldsChange..........");
+  }
+  render() {
+    return (
+      <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}
+            onFieldsChange={(changedFields, allFields)=>(this.onFieldsChange)}>
+        <Form.Item label="设备类型" name='platform' rules={[{ required: true, message: '请选择设备类型' }]}>
+            <Select placeholder="选择设备类型..." onChange={this.handleSelectChange}>
+              <Option value="asa">asa</Option>
+              <Option value="topsec">topsec</Option>
+            </Select>,
+        </Form.Item>
+        <Form.Item required
+            label="对象名称"
+            name="name"
+            rules={[{ required: true, message: '请输入对象名称!' }]}>
+              <Input placeholder="请输入对象名称!"/>
+        </Form.Item>
+        <Form.Item label="类型" name="kind" rules={[{ required: true, message: '请选择要配置的对象类型!' }]}>
+          <Radio.Group onChange={this.onRadioChange}>
+                <Radio value={1}>主机地址</Radio>
+                <Radio value={2}>地址范围</Radio>
+                <Radio value={3}>地址子网</Radio>
+              </Radio.Group>
+        </Form.Item>
+        {this.state.radioValue === 1 && <Form.Item required label="IP地址" rules={[{ required: true, message: '请输入主机地址!' }]}>
+            <Input placeholder="请输入IP地址"/>
+          </Form.Item>}
+        {this.state.radioValue === 2 && <Form.Item required label="IP地址范围">
+            <Input.Group compact>
+              <Form.Item
+                name="start_ip"
+                rules={[{ required: true, message: '请输入起始IP地址!' }]}>
+                    <Input placeholder="请输入IP地址"/>
+              </Form.Item>
+              <LineOutlined style={{ fontSize: '20px', color: '#08c', margin: '10px' }} />
+              <Form.Item
+                name="end_ip"
+                rules={[{ required: true, message: '请输入结束IP地址!' }]}>
+                  <Input placeholder="请输入IP地址"/>
+              </Form.Item>
+            </Input.Group>
+        </Form.Item>}
+        {this.state.radioValue === 3 && <Form.Item required label="IP地址范围"
+                name="subnet_ip"
+                rules={[{ required: true, message: '请输入子网IP!' }]}>
+                  <Input placeholder="请输入IP地址"/>
+        </Form.Item>}
+        {this.state.radioValue === 3 && <Form.Item required label="IP地址范围"
+            name="subnet_mask" rules={[{ required: true, message: '请输入子网掩码!' }]}>
+              <Input placeholder="请输入子网掩码"/>
+        </Form.Item>}
+        <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
+          <Button type="primary" onClick={()=>this.doSubmit(this.getFieldsValue())}>
+            配置预览
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  }
+}
+
+const { Paragraph, Text } = Typography;
+@observer
+class Txt extends React.Component {
+    render(){
+      return(<>
+        {store.preViewResult != null && <Collapse>
+            <Panel header={"预览配置命令行"} key="1">
+             <Paragraph>{store.preViewResult.lines.map((item, index)=>(<Text key={index}>{item}<br/></Text>))}</Paragraph>
+        </Panel>
+      </Collapse>}
+      </>);
+      }
+}
+
+// const DForm = Form.create({ name: 'horizontal_login' })(DataForm);
+
+@observer
+class ObjectForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+    };
+    this.formRef = React.createRef();
+  }
+  handleSubmit = () => {
+      this.formRef.current.handleSubmit(false);
+      // console.log(this.formRef.current.getFieldsValue());
+  }
+  render(){
+    return(
+      <Modal
+        visible
+        width={800}
+        maskClosable={false}
+        title={store.record.id ? '编辑地址对象' : '新建地址对象'}
+        confirmLoading={this.state.loading}
+        onCancel={() => store.formFlag = null}
+        onOk={this.handleSubmit}
+        >
+        <DataForm ref={this.formRef}/>
+        <Txt />
+      </Modal>
+    );
+  }
+}
+const ObjectF =()=>{
+    const [form] = Form.useForm();
+}
+export default ObjectForm;
