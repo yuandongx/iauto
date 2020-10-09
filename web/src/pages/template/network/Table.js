@@ -73,10 +73,7 @@ class ComTable extends React.Component {
             pageSizeOptions: ['10', '20', '50', '100']
           }}
           columns={this.columns}/>
-        {store.formFlag === 'object' && <ObjectForm/>}
-        {store.formFlag === 'object-group' && <ObjectForm/>}
-        {store.formFlag === 'service' && <ObjectForm/>}
-        {store.formFlag === 'service-group' && <ObjectForm/>}
+        {store.formFlag !== null && <ObjectForm formName={store.formFlag}/>}
       </React.Fragment>
     )
   }

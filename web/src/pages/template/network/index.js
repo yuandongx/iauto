@@ -12,8 +12,8 @@ export default observer(function () {
       var tmp = [];
       var result = []
       for (let i=0;i<types.length; i++){
-          if (!tmp.includes(types[i].name)){
-              tmp.push(types[i].name);
+          if (!tmp.includes(types[i].platform)){
+              tmp.push(types[i].platform);
               result.push(types[i]);
           }
       }
@@ -25,7 +25,7 @@ export default observer(function () {
         <SearchForm.Item span={8} title="模板类型">
           <Select allowClear value={store.f_type} onChange={v => store.f_type = v} placeholder="请选择">
             {store.types.map(item => (
-              <Select.Option value={item.name} key={item.name}>{item.name}</Select.Option>
+              <Select.Option value={item.platform} key={item.platform}>{item.platform}</Select.Option>
             ))}
           </Select>
         </SearchForm.Item>
@@ -37,7 +37,7 @@ export default observer(function () {
         </SearchForm.Item>
       </SearchForm>
       <AuthDiv auth="exec.template.add" style={{marginBottom: 16}}>
-          {filter(store.types).map(item=>(<Button type="link" key={item.name} onClick={() => store.showForm(item.name)}>{item.description}</Button>))}
+          {filter(store.types).map(item=>(<Button type="link" key={item.platform} onClick={() => store.showForm(item.platform)}>{item.platform}</Button>))}
       </AuthDiv>
       <ComTable/>
     </AuthCard>
