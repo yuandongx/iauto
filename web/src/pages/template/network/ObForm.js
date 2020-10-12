@@ -43,8 +43,10 @@ class FeatureTabs extends React.Component {
         console.log(event);
     }
     handleData = data => {
-        console.log(data);
-        store.saveData(data);
+        data.platform = store.formFlag;
+        http.post('/api/template/network/', data).then((result)=>{
+            store.saveData({comands: result, origin: data});
+        });
     }
     render(){
       const items = this.filter();
