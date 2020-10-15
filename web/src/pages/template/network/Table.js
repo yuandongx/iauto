@@ -2,7 +2,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Table, Divider, Modal, message } from 'antd';
-import ObjectForm from './ObForm';
 import http from 'libs/http';
 import store from './store';
 import { LinkButton } from "components";
@@ -73,7 +72,6 @@ class ComTable extends React.Component {
             pageSizeOptions: ['10', '20', '50', '100']
           }}
           columns={this.columns}/>
-        {store.formFlag !== null && <ObjectForm formName={store.formFlag}/>}
       </React.Fragment>
     )
   }

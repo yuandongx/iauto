@@ -1,15 +1,15 @@
 
 import React, {useState} from 'react';
 import { observer } from 'mobx-react';
-import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import { List, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
-import { ACEditor } from 'components';
 import { http, cleanCommand } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
 import platforms from "./platforms"
 import ComTable from './Table';
-import * as SubForms from "./forms";
+import * as Address from "./address";
+import * as Service from "./service";
 
 const { TabPane } = Tabs;
 
@@ -18,10 +18,10 @@ const SubTabPane = observer(({platform, form}) => {
     <Tabs tabPosition='left'>
     {platform.features.map((item)=>(
       <TabPane tab={item.description} key={platform.platform + item.name}>
-        {item.name === "address" && <SubForms.Address form={form}/>}
-        {item.name === "address-group" && <SubForms.AddressGroup form={form}/>}
-        {item.name === "service" && <SubForms.Service form={form}/>}
-        {item.name === "service-group" && <SubForms.ServiceGroup form={form}/>}
+        {item.name === "address" && <Address.Address form={form}/>}
+        {item.name === "address-group" && <Address.AddressGroup form={form}/>}
+        {item.name === "service" && <Service.Service form={form}/>}
+        {item.name === "service-group" && <Service.ServiceGroup form={form}/>}
       </TabPane>
     ))}
     </Tabs>
