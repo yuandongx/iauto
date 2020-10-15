@@ -3,8 +3,20 @@
 ***/
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
-import { LineOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Input, Button, Radio, Card, Form, Tabs, Select, Space} from 'antd';
+import { PlusCircleOutlined, LineOutlined, PlusOutlined, MinusCircleOutlined, PlusCircleTwoTone, MinusOutlined } from '@ant-design/icons';
+import { Input,
+         Button,
+         Radio,
+         Card,
+         Form,
+         Tabs,
+         Select,
+         Space,
+         List,
+         Row,
+         Tag,
+         Col } from 'antd';
+import { TweenOneGroup } from 'rc-tween-one';
 import store from './store';
 const { TabPane } = Tabs;
 /**
@@ -131,11 +143,14 @@ const AddressEntry = ({ value = {}, onChange }) => {
     </Input.Group>
   );
 };
-
 export const Address = observer(({ form }) => {
   return (
     <Card>
-      <Form form={form} name="dynamic_form_nest_item" autoComplete="off" layout="inline" >
+      <Form 
+        form={form}
+        name="dynamic_form_nest_item"
+        autoComplete="off"
+        layout="inline" >
         <Form.List name="addresses">
         {(fields, { add, remove }) => {
           return (
@@ -180,12 +195,84 @@ export const Address = observer(({ form }) => {
   );
 });
 
+/**
+*自定义表单项
+**/
+
+const AddressGroupEntry = ({ value = {}, onChange, add, remove }) => {
+  const [name, setName] = useState();
+  const [members, setMembers] = useState([]);
+  const options = []
+  const triggerChange = (changedValue) => {
+    if (onChange) {
+      onChange({
+        name,
+        members,
+        ...value,
+        ...changedValue,
+      });
+    }
+  };
+
+  const onNameChange = (e) => {
+    const v = e.target.value;
+    setName(v);
+    triggerChange({name: v});
+  }
+
+  const onMemberChange = (v) => {
+    console.log(`selected ${v}`);
+    setMembers(v);
+    triggerChange({members: v});
+  }
+
+  const forMap = items => items.map(item => ({label: item, value: item}));
+
+  return(
+  <div width="90%">
+    <Row align="middle">
+      <Col>
+        <Card>
+            <Space direction="vertical">
+              <Input
+                addonBefore="组名称"
+                value={value.name || name}
+                onChange={onNameChange}
+                placeholder="组名称" />
+
+              <Select
+                placeholder="选择编辑组成员"
+                options={forMap(value.members || members)}
+                mode="tags"
+                style={{ width: '100%' }} 
+                onChange={onMemberChange}/>
+            </Space>
+        </Card>
+      </Col>
+      <Col>
+        <Space direction="vertical" align="center">
+          <PlusCircleOutlined onClick={() => { add(); }}/>
+          <MinusCircleOutlined onClick={() => { remove(); }}/>
+        </Space>
+      </Col>
+    </Row>
+  </div>
+  );
+};
+
 
 export const AddressGroup = observer(({ form }) => {
-
+  const [countEntry, setCountEntry] = useState(0);
+  const count = (i) => {
+    setCountEntry(countEntry + i);
+  }
   return (
-    <Card>
-      <Form form={form} name="dynamic_form_nest_item" autoComplete="off" >
+    <div>
+      <Form
+        form={form}
+        name="dynamic_form_address_group"
+        autoComplete="off"
+        layout="inline">
       <Form.List name="users">
         {(fields, { add, remove }) => {
           return (
@@ -198,43 +285,48 @@ export const AddressGroup = observer(({ form }) => {
                     fieldKey={[field.fieldKey, 'startTime']}
                     rules={[{ required: true, message: 'Missing first name' }]}
                   >
-                    <Input placeholder="First Name" />
+                    <AddressGroupEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
                   </Form.Item>
-                  <Form.Item
-                    {...field}
-                    name={[field.name, 'endTime']}
-                    fieldKey={[field.fieldKey, 'endTime']}
-                    rules={[{ required: true, message: 'Missing last name' }]}
-                  >
-                    <Input placeholder="Last Name" />
-                  </Form.Item>
-
-                  <MinusCircleOutlined
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  />
                 </Space>
               ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    add();
-                  }}
-                  block
-                >
-                  <PlusOutlined /> Add field
-                </Button>
-              </Form.Item>
+              {countEntry === 0 && <Form.Item>
+                                      <Button
+                                        type="dashed"
+                                        onClick={() => {add(); count(1);}}
+                                        block
+                                        >
+                                        <PlusOutlined />添加
+                                        </Button>
+                                      </Form.Item>}
             </div>
           );
         }}
       </Form.List>
     </Form>
-    </Card>
+    </div>
   );
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const Service = observer(({ handleData }) => {
