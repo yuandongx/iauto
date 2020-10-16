@@ -14,6 +14,7 @@ import * as Service from "./service";
 const { TabPane } = Tabs;
 
 const SubTabPane = observer(({platform, form}) => {
+  // eslint-disable-next-line
   const [allFields, setAllFields] = useState();
   const onChange = () => {
     setAllFields(form.getFieldsValue());
@@ -82,6 +83,10 @@ export default observer(()=>{
     }
     const handleSubmit = (e) => {
       console.log(form.getFieldsValue());
+      let data = form.getFieldsValue();
+      http.post("/api/template/network/", data).then(({result}) => {
+        console.log(result);
+      });
     }
     return(
         <>
