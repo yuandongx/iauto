@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { PlusCircleOutlined, LineOutlined, PlusOutlined, MinusCircleOutlined, PlusCircleTwoTone, MinusOutlined } from '@ant-design/icons';
 import { Input,
          Button,
-         Radio,
+         Checkbox,
          Card,
          Form,
          Tabs,
@@ -23,7 +23,7 @@ const { TabPane } = Tabs;
 *自定义表单项
 **/
 const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
-  const [type, setType] = useState("1");
+  const [protocol, setProtocol] = useState([]);
   const [name, setName] = useState();
   const [hostIp, setHostIp] = useState();
   const [subnet, setSubnet] = useState();
@@ -31,15 +31,14 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
   const [startIp, setStartIp] = useState();
   const [endIp, setEndIp] = useState();
   const options = [
-  {label: "主机地址", value: "1"},
-  {label: "子网地址", value: "2"},
-  {label: "地址范围", value: "3"},
-  ]
+        {label: "tcp", value: "tcp"},
+        {label: "udp", value: "udp"},
+    ]
   const triggerChange = (changedValue) => {
     if (onChange) {
       onChange({
         name,
-        type,
+        protocol,
         hostIp,
         subnet,
         subnetMask,
@@ -50,9 +49,10 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
       });
     }
   };
-  const onTypeChange = (v) => {
-    setType(v);
-    triggerChange({type: v});
+  const onProtocolChange = (checkedList) => {
+    setProtocol(checkedList);
+    // triggerChange({protocol: protocol});
+    console.log(protocol);
   }
   const onNameChange = (e) => {
     const v = e.target.value;
@@ -89,61 +89,56 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
     triggerChange({type: v});
   }
   return(
-    <Row>
+    <Row align="middle">
       <Col>
         <Card>
-          <Input.Group compact>
+        <Space direction="vertical">
+          <Row>
             <Form.Item name="objectName" label="名称">
               <Input
                 value={value.name || name}
                 onChange={onNameChange}
                 placeholder="地址对象名称" />
             </Form.Item>
-            <Form.Item name="objectType" label="类型">
-              <Select
-                placeholder="默认主机地址"
-                value={value.type || type}
-                options={options}
-                onChange={onTypeChange}/>
+          </Row>
+          <Row>
+            <Form.Item name="objectProtocol" label="协议">
+              <Checkbox.Group options={options} onChange={onProtocolChange} value={protocol} />
             </Form.Item>
-            { type === "1" &&
-            <Form.Item name="objectHostIp" label="主机IP">
-              <Input
-                value={value.hostIp||hostIp}
-                onChange={onHostIpChange}/>
-            </Form.Item>
-            }
-            { type === "2" &&
-              <Form.Item name="objectSubnet" label="子网IP">
+          </Row>
+          <Row>
+            <Form.Item name="objectSource" label="源端口">
+              <Input.Group compact>
+                <Select defaultValue="3">
+                  <Select.Option value="1">小于</Select.Option>
+                  <Select.Option value="2">大于</Select.Option>
+                  <Select.Option value="3">等于</Select.Option>
+                  <Select.Option value="4">范围</Select.Option>
+                </Select>
+                <Input style={{ width: 100, textAlign: 'center' }} placeholder="Minimum" />
                 <Input
-                  value={value.subnet||subnet}
-                  onChange={onSubnetChange}/>
-              </Form.Item>
-            }
-            { type === "2" &&
-            <Form.Item name="objectMask" label="子网掩码">
-              <Input
-                value={value.subnetMask||subnetMask}
-                onChange={onSubnetMaskChange}/>
+                  className="site-input-split"
+                  style={{
+                    width: 30,
+                    borderLeft: 0,
+                    borderRight: 0,
+                    pointerEvents: 'none',
+                  }}
+                  placeholder="~"
+                  disabled
+                />
+                <Input
+                  className="site-input-right"
+                  style={{
+                    width: 100,
+                    textAlign: 'center',
+                  }}
+                  placeholder="Maximum"
+                />
+              </Input.Group>
             </Form.Item>
-            }
-            { type === "3" &&
-              <>
-                <Form.Item name="objectStartIp" label="子网IP">
-                  <Input
-                    placeholder="起始地址"
-                    value={value.startIp||startIp}
-                    onChange={onStartIpChange}/>
-                </Form.Item>
-                <Form.Item name="objectEndIp">
-                  <Input
-                    placeholder="结束地址"
-                    value={value.endIp||endIp}
-                    onChange={onEndIpChange}/>
-                </Form.Item>
-              </>
-            }
-          </Input.Group>
+          </Row>
+          </Space>
         </Card>
       </Col>
       <Col>
