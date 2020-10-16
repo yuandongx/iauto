@@ -14,6 +14,7 @@ import { Input,
          Space,
          List,
          Row,
+         InputNumber,
          Tag,
          Col } from 'antd';
 import { TweenOneGroup } from 'rc-tween-one';
@@ -23,35 +24,44 @@ const { TabPane } = Tabs;
 *自定义表单项
 **/
 const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
-  const [protocol, setProtocol] = useState([]);
+  const [protocol, setProtocol] = useState();
   const [name, setName] = useState();
-  const [hostIp, setHostIp] = useState();
-  const [subnet, setSubnet] = useState();
-  const [subnetMask, setSubnetMask] = useState();
-  const [startIp, setStartIp] = useState();
-  const [endIp, setEndIp] = useState();
+  const [dstPortType, setDstPortType] = useState();
+  const [srcPortType, setSrcPortType] = useState();
+  const [srcPort1, setSrcPort1] = useState();
+  const [srcPort2, setSrcPort2] = useState();
+  const [dstPort1, setDstPort1] = useState();
+  const [dstPort2, setDstPort2] = useState();
+
   const options = [
         {label: "tcp", value: "tcp"},
         {label: "udp", value: "udp"},
+    ]
+  const portOptions = [
+        {label: "lt", value: "lt"},
+        {label: "gt", value: "gt"},
+        {label: "eq", value: "eq"},
+        {label: "range", value: "range"},
     ]
   const triggerChange = (changedValue) => {
     if (onChange) {
       onChange({
         name,
         protocol,
-        hostIp,
-        subnet,
-        subnetMask,
-        startIp,
-        endIp,
+        srcPortType,
+        dstPortType,
+        srcPort1,
+        srcPort2,
+        dstPort1,
+        dstPort2,
         ...value,
         ...changedValue,
       });
     }
   };
   const onProtocolChange = (checkedList) => {
-    setProtocol(checkedList);
-    // triggerChange({protocol: protocol});
+    setProtocol([...checkedList]);
+    triggerChange({protocol: checkedList});
     console.log(protocol);
   }
   const onNameChange = (e) => {
@@ -59,34 +69,32 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
     setName(v);
     triggerChange({name: v});
   }
-  const onHostIpChange = (e) => {
-    const v = e.target.value;
-    setHostIp(v);
-    triggerChange({hostIp: v});
+  const onSrcPort1Change = (v) => {
+    setSrcPort1(v);
+    triggerChange({srcPort1: v});
   }
-  const onSubnetChange = (e) => {
-    const v = e.target.value;
-    setSubnet(v);
-    triggerChange({subnet: v});
+  const onSrcPort2Change = (v) => {
+    setSrcPort2(v);
+    triggerChange({srcPort2: v});
   }
-  const onSubnetMaskChange = (e) => {
-    const v = e.target.value;
-    setSubnetMask(v);
-    triggerChange({subnetMask: v});
+  const onDstPort1Change = (v) => {
+    setDstPort1(v);
+    triggerChange({dstPort1: v});
   }
-  const onStartIpChange = (e) => {
-    const v = e.target.value;
-    setStartIp(v);
-    triggerChange({startIp: v});
+  const onDstPort2Change = (v) => {
+    setDstPort2(v);
+    triggerChange({dstPort2: v});
   }
-  const onEndIpChange = (e) => {
-    const v = e.target.value;
-    setEndIp(v);
-    triggerChange({endIp: v});
+
+  const onSrcPortSelectChange = (v) => {
+    setSrcPortType(v);
+    console.log(v);
+    triggerChange({srcPortType: v});
   }
-  const onHiddenTypeChange = (e) => {
-    const v = e.target.value;
-    triggerChange({type: v});
+  const onDstPortSelectChange= (v) => {
+    setDstPortType(v);
+    console.log(v);
+    triggerChange({dstPortType: v});
   }
   return(
     <Row align="middle">
@@ -103,38 +111,81 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
           </Row>
           <Row>
             <Form.Item name="objectProtocol" label="协议">
-              <Checkbox.Group options={options} onChange={onProtocolChange} value={protocol} />
+              <Input hidden value={protocol}/>
+              <Checkbox.Group options={options} onChange={onProtocolChange} />
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item name="objectSource" label="源端口">
+            <Form.Item name="sourcePort" label="源端口">
               <Input.Group compact>
-                <Select defaultValue="3">
-                  <Select.Option value="1">小于</Select.Option>
-                  <Select.Option value="2">大于</Select.Option>
-                  <Select.Option value="3">等于</Select.Option>
-                  <Select.Option value="4">范围</Select.Option>
-                </Select>
-                <Input style={{ width: 100, textAlign: 'center' }} placeholder="Minimum" />
-                <Input
-                  className="site-input-split"
-                  style={{
-                    width: 30,
-                    borderLeft: 0,
-                    borderRight: 0,
-                    pointerEvents: 'none',
-                  }}
-                  placeholder="~"
-                  disabled
-                />
-                <Input
-                  className="site-input-right"
-                  style={{
-                    width: 100,
-                    textAlign: 'center',
-                  }}
-                  placeholder="Maximum"
-                />
+                <Select defaultValue="eq" options={portOptions} onChange={onSrcPortSelectChange} />
+                <InputNumber
+                  min={1}
+                  max={65535}
+                  value={value.srcPort1||srcPort1}
+                  onChange={onSrcPort1Change}
+                  style={{ width: 100, textAlign: 'center' }}
+                  placeholder={srcPortType ==="range" ? "MiniPort" : "PortNumber"} />
+                    {srcPortType==="range" && <><Input
+                      className="site-input-split"
+                      style={{
+                        width: 30,
+                        borderLeft: 0,
+                        borderRight: 0,
+                        pointerEvents: 'none',
+                      }}
+                      placeholder="~"
+                      disabled
+                    />
+                    <InputNumber
+                      min={1}
+                      max={65535}
+                      value={value.srcPort2||srcPort2}
+                      onChange={onSrcPort2Change}
+                      className="site-input-right"
+                      style={{
+                        width: 100,
+                        textAlign: 'center',
+                      }}
+                      placeholder="Maximum"
+                    /></>}
+              </Input.Group>
+            </Form.Item>
+          </Row>
+          <Row>
+            <Form.Item name="objectDestination" label="目的端口">
+              <Input.Group compact>
+                <Select defaultValue="eq" options={portOptions} onChange={onDstPortSelectChange} />
+                <InputNumber
+                  min={1}
+                  max={65535}
+                  value={value.dstPort1||dstPort1}
+                  onChange={onDstPort1Change}
+                  style={{ width: 100, textAlign: 'center' }}
+                  placeholder={dstPortType ==="range" ? "MiniPort" : "PortNumber"} />
+                    {dstPortType==="range" && <><Input
+                      className="site-input-split"
+                      style={{
+                        width: 30,
+                        borderLeft: 0,
+                        borderRight: 0,
+                        pointerEvents: 'none',
+                      }}
+                      placeholder="~"
+                      disabled
+                    />
+                    <InputNumber
+                      min={1}
+                      max={65535}
+                      value={value.dstPort2||dstPort2}
+                      onChange={onDstPort2Change}
+                      className="site-input-right"
+                      style={{
+                        width: 100,
+                        textAlign: 'center',
+                      }}
+                      placeholder="Maximum"
+                    /></>}
               </Input.Group>
             </Form.Item>
           </Row>
@@ -169,8 +220,8 @@ export const Service = observer(({ form }) => {
                 <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
                   <Form.Item
                     {...field}
-                    name={[field.name, 'address']}
-                    fieldKey={[field.fieldKey, 'address']}
+                    name={[field.name, 'service']}
+                    fieldKey={[field.fieldKey, 'service']}
                     rules={[{ required: true, message: 'Missing first name' }]}
                   >
                     <ServiceEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1)}}/>
