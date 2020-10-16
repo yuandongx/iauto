@@ -60,7 +60,6 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
   const onProtocolChange = (checkedList) => {
     setProtocol([...checkedList]);
     triggerChange({protocol: checkedList});
-    console.log(protocol);
   }
   const onNameChange = (e) => {
     const v = e.target.value;
@@ -86,12 +85,10 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
 
   const onSrcPortSelectChange = (v) => {
     setSrcPortType(v);
-    console.log(v);
     triggerChange({srcPortType: v});
   }
   const onDstPortSelectChange= (v) => {
     setDstPortType(v);
-    console.log(v);
     triggerChange({dstPortType: v});
   }
   return(
@@ -199,7 +196,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
     </Row>
   );
 };
-export const Service = observer(({ form }) => {
+export const Service = observer(({ form, platform }) => {
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
     setCountEntry(countEntry + i);
@@ -210,7 +207,7 @@ export const Service = observer(({ form }) => {
         name="dynamic_form_service"
         autoComplete="off"
         layout="inline" >
-        <Form.List name="service">
+        <Form.List name={platform + "service"}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -247,9 +244,9 @@ export const Service = observer(({ form }) => {
 *自定义表单项
 **/
 
-const ServiceGroupEntry = ({ value = {}, onChange, add, remove }) => {
+const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) => {
   const [name, setName] = useState();
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState(selections);
   const triggerChange = (changedValue) => {
     if (onChange) {
       onChange({
@@ -268,7 +265,6 @@ const ServiceGroupEntry = ({ value = {}, onChange, add, remove }) => {
   }
 
   const onMemberChange = (v) => {
-    console.log(`selected ${v}`);
     setMembers(v);
     triggerChange({members: v});
   }
@@ -289,7 +285,7 @@ const ServiceGroupEntry = ({ value = {}, onChange, add, remove }) => {
 
               <Select
                 placeholder="选择编辑组成员"
-                options={forMap(value.members || members)}
+                options={forMap(selections)}
                 mode="tags"
                 style={{ width: '100%' }} 
                 onChange={onMemberChange}/>
@@ -308,11 +304,23 @@ const ServiceGroupEntry = ({ value = {}, onChange, add, remove }) => {
 };
 
 
-export const ServiceGroup = observer(({ form }) => {
+export const ServiceGroup = observer(({ form, platform  }) => {
+  
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
     setCountEntry(countEntry + i);
-  }
+  };
+  const getOptions = () => {
+    const mayHaveFileds = form.getFieldsValue();
+    let services = mayHaveFileds.service || []
+    return services.map(item => {
+      if (item!==undefined && item.service !== undefined){
+        return item.service.name;
+      }
+    });
+  };
+  const options = getOptions();
+
   return (
     <div>
       <Form
@@ -320,7 +328,7 @@ export const ServiceGroup = observer(({ form }) => {
         name="dynamic_form_service_group"
         autoComplete="off"
         layout="inline">
-      <Form.List name="service_group">
+      <Form.List name={platform + "_service_group"}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -332,7 +340,7 @@ export const ServiceGroup = observer(({ form }) => {
                     fieldKey={[field.fieldKey, 'service_group']}
                     rules={[{ required: true, message: 'Missing name' }]}
                   >
-                    <ServiceGroupEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
+                    <ServiceGroupEntry selections={options}  add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
                   </Form.Item>
                 </Space>
               ))}

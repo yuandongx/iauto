@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
 import { List, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
-import { http, cleanCommand } from 'libs';
+import { http } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
 import platforms from "./platforms"
@@ -14,14 +14,18 @@ import * as Service from "./service";
 const { TabPane } = Tabs;
 
 const SubTabPane = observer(({platform, form}) => {
+  const [allFields, setAllFields] = useState();
+  const onChange = () => {
+    setAllFields(form.getFieldsValue());
+  }
   return (
-    <Tabs tabPosition='left'>
+    <Tabs tabPosition='left' onChange={onChange}>
     {platform.features.map((item)=>(
       <TabPane tab={item.description} key={platform.platform + item.name}>
-        {item.name === "address" && <Address.Address form={form}/>}
-        {item.name === "address-group" && <Address.AddressGroup form={form}/>}
-        {item.name === "service" && <Service.Service form={form}/>}
-        {item.name === "service-group" && <Service.ServiceGroup form={form}/>}
+        {item.name === "address" && <Address.Address form={form} platform={platform.platform} />}
+        {item.name === "address-group" && <Address.AddressGroup form={form} platform={platform.platform} />}
+        {item.name === "service" && <Service.Service form={form} platform={platform.platform} />}
+        {item.name === "service-group" && <Service.ServiceGroup form={form} platform={platform.platform} />}
       </TabPane>
     ))}
     </Tabs>

@@ -147,7 +147,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
     </Row>
   );
 };
-export const Address = observer(({ form }) => {
+export const Address = observer(({ form, platform }) => {
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
     setCountEntry(countEntry + i);
@@ -159,7 +159,7 @@ export const Address = observer(({ form }) => {
         name="dynamic_form_address"
         autoComplete="off"
         layout="inline" >
-        <Form.List name="address">
+        <Form.List name={platform + "_address"}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -196,7 +196,7 @@ export const Address = observer(({ form }) => {
 *自定义表单项
 **/
 
-const AddressGroupEntry = ({ value = {}, onChange, add, remove }) => {
+const AddressGroupEntry = ({ value = {}, getOptions, onChange, add, remove }) => {
   const [name, setName] = useState();
   const [members, setMembers] = useState([]);
   const triggerChange = (changedValue) => {
@@ -217,7 +217,6 @@ const AddressGroupEntry = ({ value = {}, onChange, add, remove }) => {
   }
 
   const onMemberChange = (v) => {
-    console.log(`selected ${v}`);
     setMembers(v);
     triggerChange({members: v});
   }
@@ -238,7 +237,7 @@ const AddressGroupEntry = ({ value = {}, onChange, add, remove }) => {
 
               <Select
                 placeholder="选择编辑组成员"
-                options={forMap(value.members || members)}
+                options={forMap(getOptions())}
                 mode="tags"
                 style={{ width: '100%' }} 
                 onChange={onMemberChange}/>
@@ -257,10 +256,19 @@ const AddressGroupEntry = ({ value = {}, onChange, add, remove }) => {
 };
 
 
-export const AddressGroup = observer(({ form }) => {
+export const AddressGroup = observer(({ form, platform }) => {
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
     setCountEntry(countEntry + i);
+  }
+  const getOptions = () => {
+    const mayHaveFileds = form.getFieldsValue();
+    let addresses = mayHaveFileds.address || []
+    return addresses.map(item => {
+      if (item !== undefined && item.address !== undefined){
+        return item.address.name;
+      }
+    });
   }
   return (
     <div>
@@ -269,7 +277,7 @@ export const AddressGroup = observer(({ form }) => {
         name="dynamic_form_address_group"
         autoComplete="off"
         layout="inline">
-      <Form.List name="address_group">
+      <Form.List name={platform + "_address_group"}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -277,11 +285,11 @@ export const AddressGroup = observer(({ form }) => {
                 <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
                   <Form.Item
                     {...field}
-                    name={[field.name, 'startTime']}
-                    fieldKey={[field.fieldKey, 'startTime']}
-                    rules={[{ required: true, message: 'Missing first name' }]}
+                    name={[field.name, 'address_group']}
+                    fieldKey={[field.fieldKey, 'address_group']}
+                    rules={[{ required: true, message: 'Missing name' }]}
                   >
-                    <AddressGroupEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
+                    <AddressGroupEntry getOptions={getOptions} add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
                   </Form.Item>
                 </Space>
               ))}
