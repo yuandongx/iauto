@@ -3,31 +3,29 @@
 ***/
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
-import { PlusCircleOutlined, LineOutlined, PlusOutlined, MinusCircleOutlined, PlusCircleTwoTone, MinusOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined,
+         PlusOutlined,
+         MinusCircleOutlined,
+        } from '@ant-design/icons';
 import { Input,
          Button,
          Checkbox,
          Card,
          Form,
-         Tabs,
          Select,
          Space,
-         List,
          Row,
          InputNumber,
-         Tag,
-         Col } from 'antd';
-import { TweenOneGroup } from 'rc-tween-one';
-import store from './store';
-const { TabPane } = Tabs;
+         Col
+        } from 'antd';
 /**
 *自定义表单项
 **/
 const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
   const [protocol, setProtocol] = useState();
   const [name, setName] = useState();
-  const [dstPortType, setDstPortType] = useState();
-  const [srcPortType, setSrcPortType] = useState();
+  const [dstPortType, setDstPortType] = useState("eq");
+  const [srcPortType, setSrcPortType] = useState("eq");
   const [srcPort1, setSrcPort1] = useState();
   const [srcPort2, setSrcPort2] = useState();
   const [dstPort1, setDstPort1] = useState();
@@ -102,7 +100,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
         <Card>
         <Space direction="vertical">
           <Row>
-            <Form.Item name="objectName" label="名称">
+            <Form.Item label="名称">
               <Input
                 value={value.name || name}
                 onChange={onNameChange}
@@ -110,13 +108,13 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item name="objectProtocol" label="协议">
+            <Form.Item label="协议">
               <Input hidden value={protocol}/>
               <Checkbox.Group options={options} onChange={onProtocolChange} />
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item name="sourcePort" label="源端口">
+            <Form.Item label="源端口">
               <Input.Group compact>
                 <Select defaultValue="eq" options={portOptions} onChange={onSrcPortSelectChange} />
                 <InputNumber
@@ -153,7 +151,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item name="objectDestination" label="目的端口">
+            <Form.Item label="目的端口">
               <Input.Group compact>
                 <Select defaultValue="eq" options={portOptions} onChange={onDstPortSelectChange} />
                 <InputNumber
@@ -252,7 +250,6 @@ export const Service = observer(({ form }) => {
 const ServiceGroupEntry = ({ value = {}, onChange, add, remove }) => {
   const [name, setName] = useState();
   const [members, setMembers] = useState([]);
-  const options = []
   const triggerChange = (changedValue) => {
     if (onChange) {
       onChange({
@@ -331,9 +328,9 @@ export const ServiceGroup = observer(({ form }) => {
                 <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
                   <Form.Item
                     {...field}
-                    name={[field.name, 'startTime']}
-                    fieldKey={[field.fieldKey, 'startTime']}
-                    rules={[{ required: true, message: 'Missing first name' }]}
+                    name={[field.name, 'service_group']}
+                    fieldKey={[field.fieldKey, 'service_group']}
+                    rules={[{ required: true, message: 'Missing name' }]}
                   >
                     <ServiceGroupEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
                   </Form.Item>

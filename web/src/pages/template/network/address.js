@@ -14,7 +14,6 @@ import { Input,
          Space,
          Row,
          Col } from 'antd';
-import store from './store';
 /**
 *自定义表单项
 **/
