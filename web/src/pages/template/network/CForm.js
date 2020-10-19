@@ -13,6 +13,7 @@ import * as Service from "./service";
 
 const { TabPane } = Tabs;
 
+/****/
 const SubTabPane = observer(({platform, form}) => {
   // eslint-disable-next-line
   const [allFields, setAllFields] = useState();

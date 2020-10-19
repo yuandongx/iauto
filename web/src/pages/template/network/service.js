@@ -196,7 +196,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
     </Row>
   );
 };
-export const Service = observer(({ form, platform }) => {
+export const Service = ({ form, platform }) => {
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
     setCountEntry(countEntry + i);
@@ -238,7 +238,7 @@ export const Service = observer(({ form, platform }) => {
         </Form.List>
       </Form>
   );
-});
+};
 
 /**
 *自定义表单项
@@ -282,7 +282,6 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
                 value={value.name || name}
                 onChange={onNameChange}
                 placeholder="组名称" />
-
               <Select
                 placeholder="选择编辑组成员"
                 options={forMap(selections)}
@@ -304,7 +303,7 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
 };
 
 
-export const ServiceGroup = observer(({ form, platform  }) => {
+export const ServiceGroup = ({ form, platform  }) => {
   
   const [countEntry, setCountEntry] = useState(0);
   const count = (i) => {
@@ -360,5 +359,5 @@ export const ServiceGroup = observer(({ form, platform  }) => {
     </Form>
     </div>
   );
-});
+};
 

@@ -14,6 +14,18 @@ import { Input,
          Space,
          Row,
          Col } from 'antd';
+/****/
+function isValidIP(ip) {
+    let reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+    return reg.test(ip);
+}
+const validateHostIp = ip => {
+  if (isValidIP(ip)) {
+    return {validateStatus: "success", errorMsg: null};
+  }
+  return {validateStatus: "error", errorMsg: "The formate of ip address is error."};
+}
+
 /**
 *自定义表单项
 **/
@@ -25,6 +37,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
   const [subnetMask, setSubnetMask] = useState();
   const [startIp, setStartIp] = useState();
   const [endIp, setEndIp] = useState();
+  const [validateIP, setValidateIP] = useState({validateStatus: "", errorMsg: null});
   const options = [
   {label: "主机地址", value: "1"},
   {label: "子网地址", value: "2"},
@@ -57,6 +70,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
   const onHostIpChange = (e) => {
     const v = e.target.value;
     setHostIp(v);
+    setValidateIP(validateHostIp(v));
     triggerChange({hostIp: v});
   }
   const onSubnetChange = (e) => {
@@ -85,13 +99,13 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
       <Col>
         <Card>
           <Input.Group compact>
-            <Form.Item name="objectName" label="名称">
+            <Form.Item label="名称">
               <Input
                 value={value.name || name}
                 onChange={onNameChange}
                 placeholder="地址对象名称" />
             </Form.Item>
-            <Form.Item name="objectType" label="类型">
+            <Form.Item label="类型">
               <Select
                 placeholder="默认主机地址"
                 value={value.type || type}
@@ -99,21 +113,21 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
                 onChange={onTypeChange}/>
             </Form.Item>
             { type === "1" &&
-            <Form.Item name="objectHostIp" label="主机IP">
+            <Form.Item label="主机IP" hasFeedback validateStatus={validateIP.validateStatus} help={validateIP.errorMsg}>
               <Input
                 value={value.hostIp||hostIp}
                 onChange={onHostIpChange}/>
             </Form.Item>
             }
             { type === "2" &&
-              <Form.Item name="objectSubnet" label="子网IP">
+              <Form.Item label="子网IP">
                 <Input
                   value={value.subnet||subnet}
                   onChange={onSubnetChange}/>
               </Form.Item>
             }
             { type === "2" &&
-            <Form.Item name="objectMask" label="子网掩码">
+            <Form.Item label="子网掩码">
               <Input
                 value={value.subnetMask||subnetMask}
                 onChange={onSubnetMaskChange}/>
@@ -121,13 +135,13 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
             }
             { type === "3" &&
               <>
-                <Form.Item name="objectStartIp" label="子网IP">
+                <Form.Item label="子网IP">
                   <Input
                     placeholder="起始地址"
                     value={value.startIp||startIp}
                     onChange={onStartIpChange}/>
                 </Form.Item>
-                <Form.Item name="objectEndIp">
+                <Form.Item >
                   <Input
                     placeholder="结束地址"
                     value={value.endIp||endIp}
