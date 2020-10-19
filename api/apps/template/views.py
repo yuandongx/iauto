@@ -88,6 +88,7 @@ class NetworkView(View):
             # if form.preview:
                 # data = make_commands(form)
                 # return json_response(data=data)
+
             # else:
                 # if form.id:
                     # form.updated_at = human_datetime()

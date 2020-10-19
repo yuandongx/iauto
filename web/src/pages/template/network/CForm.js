@@ -81,9 +81,18 @@ export default observer(()=>{
     const tabChange = (activeKey) => {
       setActiveKey(activeKey);
     }
-    const handleSubmit = (e) => {
+    const handleSubmit1 = (e) => {
       console.log(form.getFieldsValue());
       let data = form.getFieldsValue();
+      data.save = false;
+      http.post("/api/template/network/", data).then(({result}) => {
+        console.log(result);
+      });
+    }
+    const handleSubmit2 = (e) => {
+      console.log(form.getFieldsValue());
+      let data = form.getFieldsValue();
+      data.save = true;
       http.post("/api/template/network/", data).then(({result}) => {
         console.log(result);
       });
@@ -119,10 +128,10 @@ export default observer(()=>{
         </Card>
         {activeKey !== "all" &&
         <Space align="center" style={{marginLeft: "10%"}}>
-          <Button type="primary" onClick={handleSubmit}>
+          <Button type="primary" onClick={handleSubmit1}>
             生成配置
           </Button>
-          <Button type="primary" onClick={handleSubmit}>
+          <Button type="primary" onClick={handleSubmit2}>
             提交配置
           </Button>
           </Space>}

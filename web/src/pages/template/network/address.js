@@ -268,6 +268,7 @@ export const AddressGroup = observer(({ form, platform }) => {
       if (item !== undefined && item.address !== undefined){
         return item.address.name;
       }
+      return null;
     });
   }
   return (
