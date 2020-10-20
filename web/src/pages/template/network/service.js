@@ -15,9 +15,11 @@ import { Input,
          Select,
          Space,
          Row,
+         Radio,
          InputNumber,
          Col
         } from 'antd';
+import style from "./style.css"
 /**
 *自定义表单项
 **/
@@ -243,15 +245,123 @@ export const Service = ({ form, platform }) => {
 /**
 *自定义表单项
 **/
+const Entry = ({name, noRemove, addEntry, removeEntry, value, onChange}) => {
+  const [type, setType] = useState("group-object");
+  const [ptype, setPType] = useState("eq");
+  const [gname, setGname] = useState();
+  const [port1, setPort1] = useState();
+  const [port2, setPort2] = useState();
 
+  const triggerChange = changedValue => {
+    if (onChange) {
+      onChange({
+        key: name,
+        type,
+        ptype,
+        gname,
+        port1,
+        port2,
+        ...value,
+        ...changedValue
+      });
+    }
+  }
+  const handleObjectChange = v => {
+    setType(v);
+    triggerChange({type: v});
+  }
+  const handlePortTypeChange = v => {
+    setPType(v);
+    triggerChange({ptype: v});
+  }
+
+  const handleNameChange = e => {
+    setGname(e.target.value)
+    triggerChange({gname: e.target.value});
+  }
+
+  const handlePort1Change = e => {
+    setPort1(e.target.value);
+    triggerChange({port1: e.target.value});
+  }
+
+  const handlePort2Change = e => {
+    setPort2(e.target.value);
+    triggerChange({port2: e.target.value});
+  }
+
+  const portObjectInput = () => {
+    if(type === "group-object") {
+      return (<Col span={12}>
+                  <Input value={value.gname || gname} onChange={handleNameChange}/>
+              </Col>);
+    } else if (type === "port-object" && ptype === "eq") {
+      return (
+        <>
+          <Col span={4}>
+              <Select value={value.ptype || ptype} onChange={handlePortTypeChange}>
+                <Select.Option value="eq">eq</Select.Option>
+                <Select.Option value="range">range</Select.Option>
+              </Select>
+          </Col>
+          <Col span={8}>
+              <Input value={value.port1|| port1} onChange={handlePort1Change}/>
+          </Col>
+          
+        </>
+      );
+    } else if (type === "port-object" && ptype === "range") {
+      return(
+        <>
+          <Col span={4}>
+              <Select value={value.ptype || ptype} onChange={handlePortTypeChange}>
+                <Select.Option value="eq">eq</Select.Option>
+                <Select.Option value="range">range</Select.Option>
+              </Select>
+          </Col>
+          <Col span={5}>
+             <Input value={value.port1|| port1} onChange={handlePort1Change}/>
+          </Col>
+          <Col span={1}>
+            <Input disabled value="－"/>
+          </Col>
+          <Col span={5}>
+             <Input value={value.port2|| port2} onChange={handlePort2Change}/>
+          </Col>
+        </>
+      );
+    }
+    return (<></>);
+  }
+
+  return (
+    <Row align="middle">
+      <Col span={6}>
+          <Select value={value.type} onChange={handleObjectChange}>
+            <Select.Option value="port-object">port-object</Select.Option>
+            <Select.Option value="group-object">group-object</Select.Option>
+          </Select>
+      </Col>
+      {portObjectInput()}
+      <Col span={2}>
+        <Space direction="vertical" align="center" size={0}>
+          <PlusCircleOutlined onClick={()=> {addEntry();}}/>
+          {!noRemove && <MinusCircleOutlined onClick={()=> {removeEntry(name);}}/>}
+        </Space>
+      </Col>
+    </Row>
+  );
+};
 const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) => {
   const [name, setName] = useState();
-  const [members, setMembers] = useState(selections);
+  const [protocol, setProtocol] = useState(0);
+  const [entries, setEntries] = useState([]);
   const triggerChange = (changedValue) => {
     if (onChange) {
       onChange({
         name,
-        members,
+        protocol,
+        entries,
         ...value,
         ...changedValue,
       });
@@ -264,41 +374,120 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
     triggerChange({name: v});
   }
 
-  const onMemberChange = (v) => {
-    setMembers(v);
-    triggerChange({members: v});
+  const onProtocolChange = (v) => {
+    setProtocol(v);
+    triggerChange({protocol: v});
   }
+
+  const addEntry = item => {
+    var id;
+    if(entries.length === 0) {
+      id = 0;
+    } else {
+      let i = entries.length - 1;
+      id = Number(entries[i].key) + 1;
+    }
+    const new_item = {...item, key: String(id)};
+    setEntries([...entries, new_item]);
+
+  }
+
+  const removeEntry = key => {
+
+    let new_entries = entries.filter(item => item.key !== key);
+    setEntries(new_entries);
+  }
+
+  const handEntryChange = v => {
+    if (v.key === undefined) {
+      return;
+    }
+    var flag = false;
+    for (var index=0; index < entries.length; index++){
+      if(entries[index].key === v.key){
+        entries[index] = v;
+        setEntries(entries);
+        flag = true;
+        break;
+      }
+    }
+    if (!flag) {
+      setEntries([...entries, v]);
+    }
+    triggerChange({entries: entries});
+  }
+  const mapEntries = () => {
+    var noRemove = false;
+    if(entries.length < 2) {
+      noRemove = true;
+    }
+    if(entries.length === 0) {
+      return (<Entry
+                addEntry={addEntry}
+                removeEntry={removeEntry}
+                key={"0"}
+                name={"0"}
+                value={{type: "group-object", key: "0"}}
+                onChange={handEntryChange}
+                noRemove={noRemove} />);
+    }
+    
+    return (
+    <>
+    {entries.map(item => (<Entry
+                            addEntry={addEntry}
+                            removeEntry={removeEntry}
+                            key={item.key}
+                            name={item.key}
+                            value={item}
+                            onChange={handEntryChange}
+                            noRemove={noRemove} />))}
+   </>)
+  }
+
 
   const forMap = items => items.map(item => ({label: item, value: item}));
 
   return(
-  <div width="90%">
-    <Row align="middle">
-      <Col>
-        <Card>
-            <Space direction="vertical">
-              <Input
-                addonBefore="组名称"
-                value={value.name || name}
-                onChange={onNameChange}
-                placeholder="组名称" />
-              <Select
-                placeholder="选择编辑组成员"
-                options={forMap(selections)}
-                mode="tags"
-                style={{ width: '100%' }} 
-                onChange={onMemberChange}/>
-            </Space>
-        </Card>
-      </Col>
-      <Col>
-        <Space direction="vertical" align="center">
-          <PlusCircleOutlined onClick={() => { add(); }}/>
-          <MinusCircleOutlined onClick={() => { remove(); }}/>
-        </Space>
-      </Col>
-    </Row>
-  </div>
+        <Card style={{width: "800px"}} bordered={false}>
+          <Row align="middle" justify="center">
+            <Col span={23}>
+              <Card>
+                <Row>
+                  <Col span={23}>
+                    <Input
+                      addonBefore="组名称"
+                      style={{width: "90%"}}
+                      onChange={onNameChange}
+                      value={value.name || name}/>
+                  </Col>
+                </Row>
+                <Row gutter={[2, 2]}>
+                  <Col span={3}>
+                    <span>
+                      选择组协议:
+                    </span>
+                  </Col>
+                  <Col span={12}>
+                    <Radio.Group onChange={onProtocolChange} value={protocol}>
+                      <Radio value={0}>不指定(默认)</Radio>
+                      <Radio value={1}>tcp</Radio>
+                      <Radio value={2}>udp</Radio>
+                      <Radio value={3}>tcp-udp</Radio>
+                    </Radio.Group>
+                  </Col>
+                </Row>
+                  {mapEntries()}
+              </Card>
+            </Col>
+            <Col span={1}>
+              <Space direction="vertical" align="center">
+                <PlusCircleOutlined onClick={() => { add(); }}/>
+                <MinusCircleOutlined onClick={() => { remove(); }}/>
+              </Space>
+            </Col>
+          </Row>
+      </Card>
   );
 };
 

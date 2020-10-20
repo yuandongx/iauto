@@ -100,8 +100,7 @@ export default observer(()=>{
     }
     return(
         <>
-        <Card>
-        <Tabs onChange={tabChange}>
+        <Tabs onChange={tabChange} size="large">
           <TabPane tab="模板汇总" key="all">
             <SearchForm>
               <SearchForm.Item span={8} title="平台类型">
@@ -126,7 +125,6 @@ export default observer(()=>{
           ))}
         </Tabs>
         {activeKey === "all" && <ComTable />}
-        </Card>
         {activeKey !== "all" &&
         <Space align="center" style={{marginLeft: "10%"}}>
           <Button type="primary" onClick={handleSubmit1}>
