@@ -1,10 +1,11 @@
 import os
+import json
 import hashlib
 from shutil import move
 from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from libs.channel import Channel
-from apps.template.models import Template
+from apps.template.models import Template, NetworkTemp
 from apps.host.models import Host
 from django.conf import settings
 from apps.template.networks import Hander
@@ -45,58 +46,35 @@ class GenericView(View):
 
 class NetworkView(View):
     def get(self, request):
-        templates = Template.objects.filter(flag='network')
-        types = [
-                 {'platform': 'asa', 'features': {'address': '地址对象',
-                                                 'address-group': '地址组',
-                                                 'service': '对象对象',
-                                                 'service-group': '服务组'}},
-                 {'platform': 'topsec', 'features': {'address': '地址对象',
-                                                 'address-group': '地址组',
-                                                 'service': '对象对象',
-                                                 'service-group': '服务组'}},
-                ]
+        templates = NetworkTemp.objects.all()
+        types = [x['temp_type'] for x in templates.order_by('temp_type').values('temp_type').distinct()]
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 
     def post(self, request):
-        hander = Hander(request.body)
-        print(request.body)
-        form, error = hander.parse()
-        if error is None:
-            result = hander.render()
-            if form.preview:
-                return json_response(data=result)
+        test_Name = "test1"
+        test_Type = "test-type1"
+        all_info = json.loads(request.body.decode())
+        save = all_info.get("save")
+        hander = Hander(all_info)
+        pre_line, all_lines = hander.parse()
+        exist_name = NetworkTemp.objects.values_list("name", flat=True)
+        if save:
+            if test_Name in exist_name:
+                return json_response(error="template name same")
+            try:
+                num = NetworkTemp.objects.create(name=test_Name,
+                                          temp_type=test_Type,
+                                          parameter=all_info,
+                                          config_lines="\n".join(all_lines),
+                                          desc="test_desc",
+                                          created_at=human_datetime(),
+                                          created_by=request.user)
+            except Exception as E:
+                return json_response(error=str(E))
             else:
-                if form.id:
-                    form.updated_at = human_datetime()
-                    form.updated_by = request.user
-                else:
-                    form.created_by = request.user 
-        # form, error = JsonParser(
-            # Argument('id', type=int, required=False),
-            # Argument('platform', help='请输入选择设备类型'),
-            # Argument('name', help='请选输入对象名称'),
-            # Argument('object_type', help='请选择对象类型'),
-            # Argument('hostip', required=False),
-            # Argument('start_ip', required=False),
-            # Argument('end_ip', required=False),
-            # Argument('subnet_ip', required=False),
-            # Argument('subnet_mask', required=False),
-            # Argument('preview', required=False),
-        # ).parse(request.body)
-        # if error is None:
-            # if form.preview:
-                # data = make_commands(form)
-                # return json_response(data=data)
-
-            # else:
-                # if form.id:
-                    # form.updated_at = human_datetime()
-                    # form.updated_by = request.user
-                # else:
-                    # form.created_by = request.user
-            # return json_response(error=error)
-        return json_response(error=error)
+                return json_response(data={"lines": pre_line, "save": "ok"})
+        else:
+            return json_response(data={"lines": pre_line})
 
     def delete(self, request):
         form, error = JsonParser(
@@ -108,7 +86,7 @@ class NetworkView(View):
 
 def make_commands(form):
     name, lines = None, []
-    if form.platform == 'asa':
+    if form.platform == 'asa': 
         lines.append("object network %s" % form.name)
         if form.object_type == "1":
             lines.append("host %s" % (form.hostip))

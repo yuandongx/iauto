@@ -17,10 +17,10 @@ class ComTable extends React.Component {
     dataIndex: 'name',
   }, {
     title: '模版类型',
-    dataIndex: 'label',
+    dataIndex: 'temp_type',
   }, {
     title: '模版内容',
-    render: text => text.content,
+    render: text => text.config_lines,
     ellipsis: true
   }, {
     title: '描述信息',
