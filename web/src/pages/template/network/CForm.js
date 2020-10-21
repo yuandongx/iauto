@@ -34,8 +34,8 @@ const SubTabPane = observer(({platform, form}) => {
 });
 
 const ListView = observer(() => {
-  var result = [];
   const renderData = () => {
+    var result = [];
     if(store.result_data !== null && store.result_data.lines !== undefined){
       for(let k in store.result_data.lines) {
         let p = k.split("_")[0];
@@ -122,12 +122,12 @@ export default observer(()=>{
       setActiveKey(activeKey);
     }
     const handleSubmit1 = (e) => {
-
       let data = form.getFieldsValue();
       data.save = false;
       http.post("/api/template/network/", data).then((result) => {
         store.saveData(result);
       });
+      console.log(data);
     }
     const handleSubmit2 = (e) => {
       setShowModal(true);

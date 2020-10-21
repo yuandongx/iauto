@@ -23,13 +23,13 @@ const validateHostIp = ip => {
   if (isValidIP(ip)) {
     return {validateStatus: "success", errorMsg: null};
   }
-  return {validateStatus: "error", errorMsg: "The formate of ip address is error."};
+  return {validateStatus: "error", errorMsg: "IP地址格式错误."};
 }
 
 /**
 *自定义表单项
 **/
-const AddressEntry = ({ value = {}, onChange, add, remove }) => {
+const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
   const [type, setType] = useState("1");
   const [name, setName] = useState();
   const [hostIp, setHostIp] = useState();
@@ -94,17 +94,44 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
     triggerChange({endIp: v});
   }
 
+  const onSelectHostIpChange = (v) => {
+    setHostIp(v);
+    // setValidateIP(validateHostIp(v));
+    triggerChange({hostIp: v});
+  }
+
+  const addHostEntry = () => {
+    if (platform === "topsec"){
+      return (<Col span={12}><Form.Item label="主机IP" >
+              <Select
+                placeholder="输入host ip address"
+                mode="tags"
+                style={{ width: '100%' }} 
+                onChange={onSelectHostIpChange}/>
+              </Form.Item></Col>);
+    } else {
+      return (<Col span={8}><Form.Item label="主机IP" hasFeedback validateStatus={validateIP.validateStatus} help={validateIP.errorMsg}>
+                <Input
+                  value={value.hostIp||hostIp}
+                  onChange={onHostIpChange}/>
+              </Form.Item></Col>);
+    }
+  }
+
   return(
     <Row>
       <Col>
-        <Card>
-          <Input.Group compact>
+        <Card style={{width: "800px"}}>
+<Row>
+          <Col span={6}>
             <Form.Item label="名称">
               <Input
                 value={value.name || name}
                 onChange={onNameChange}
                 placeholder="地址对象名称" />
             </Form.Item>
+          </Col>
+          <Col span={6}>
             <Form.Item label="类型">
               <Select
                 placeholder="默认主机地址"
@@ -112,44 +139,40 @@ const AddressEntry = ({ value = {}, onChange, add, remove }) => {
                 options={options}
                 onChange={onTypeChange}/>
             </Form.Item>
-            { type === "1" &&
-            <Form.Item label="主机IP" hasFeedback validateStatus={validateIP.validateStatus} help={validateIP.errorMsg}>
-              <Input
-                value={value.hostIp||hostIp}
-                onChange={onHostIpChange}/>
-            </Form.Item>
-            }
+          </Col>
+            {type === "1" && addHostEntry() }
             { type === "2" &&
-              <Form.Item label="子网IP">
+              <Col span={6}><Form.Item label="子网IP">
                 <Input
                   value={value.subnet||subnet}
                   onChange={onSubnetChange}/>
-              </Form.Item>
+              </Form.Item></Col>
             }
-            { type === "2" &&
+            { type === "2" &&<Col span={6}>
             <Form.Item label="子网掩码">
               <Input
                 value={value.subnetMask||subnetMask}
                 onChange={onSubnetMaskChange}/>
-            </Form.Item>
+            </Form.Item></Col>
             }
             { type === "3" &&
-              <>
+              <><Col span={6}>
                 <Form.Item label="子网IP">
                   <Input
                     placeholder="起始地址"
                     value={value.startIp||startIp}
                     onChange={onStartIpChange}/>
-                </Form.Item>
+                </Form.Item></Col><Col span={6}>
                 <Form.Item >
                   <Input
                     placeholder="结束地址"
                     value={value.endIp||endIp}
                     onChange={onEndIpChange}/>
-                </Form.Item>
+                </Form.Item></Col>
               </>
             }
-          </Input.Group>
+
+</Row>
         </Card>
       </Col>
       <Col>
@@ -185,7 +208,7 @@ export const Address = observer(({ form, platform }) => {
                     fieldKey={[field.fieldKey, 'address']}
                     rules={[{ required: true, message: 'Missing first name' }]}
                   >
-                    <AddressEntry add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1)}}/>
+                    <AddressEntry platform={platform} add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1)}}/>
                   </Form.Item>
                 </Space>
               ))}
