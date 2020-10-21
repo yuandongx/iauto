@@ -137,6 +137,7 @@ export default observer(()=>{
     }
     const handleModalCancle = () => {
       setShowModal(false);
+      setLoading(false);
     }
     const handleModalOK = (info) => {
       setShowModal(false);
