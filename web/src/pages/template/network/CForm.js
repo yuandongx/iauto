@@ -1,8 +1,7 @@
-
 import React, {useState} from 'react';
 import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
-import { Collapse, Modal, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
+import { Collapse, Modal, Input, Select, Button, Tabs, Divider, Form, Space } from 'antd';
 import { http } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
@@ -35,8 +34,8 @@ const SubTabPane = observer(({platform, form}) => {
 });
 
 const ListView = observer(() => {
-  var result = [];
   const renderData = () => {
+    var result = [];
     if(store.result_data !== null && store.result_data.lines !== undefined){
       for(let k in store.result_data.lines) {
         let p = k.split("_")[0];
@@ -118,18 +117,17 @@ export default observer(()=>{
     const [activeKey, setActiveKey] = useState("all");
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [info, setInfo] = useState();
     const [form] = Form.useForm();
     const tabChange = (activeKey) => {
       setActiveKey(activeKey);
     }
     const handleSubmit1 = (e) => {
-
       let data = form.getFieldsValue();
       data.save = false;
       http.post("/api/template/network/", data).then((result) => {
         store.saveData(result);
       });
+      console.log(data);
     }
     const handleSubmit2 = (e) => {
       setShowModal(true);
@@ -137,10 +135,10 @@ export default observer(()=>{
     }
     const handleModalCancle = () => {
       setShowModal(false);
+      setLoading(false);
     }
     const handleModalOK = (info) => {
       setShowModal(false);
-      setInfo(info);
       let data = form.getFieldsValue();
       Object.assign(data, info);
       console.log(info);
