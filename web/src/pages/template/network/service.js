@@ -2,7 +2,6 @@
 *
 ***/
 import React, { useState } from 'react';
-import { observer } from 'mobx-react';
 import { PlusCircleOutlined,
          PlusOutlined,
          MinusCircleOutlined,
@@ -19,7 +18,6 @@ import { Input,
          InputNumber,
          Col
         } from 'antd';
-import style from "./style.css"
 /**
 *自定义表单项
 **/
@@ -445,9 +443,6 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
    </>)
   }
 
-
-  const forMap = items => items.map(item => ({label: item, value: item}));
-
   return(
         <Card style={{width: "800px"}} bordered={false}>
           <Row align="middle" justify="center">
@@ -505,6 +500,7 @@ export const ServiceGroup = ({ form, platform  }) => {
       if (item!==undefined && item.service !== undefined){
         return item.service.name;
       }
+      return null
     });
   };
   const options = getOptions();

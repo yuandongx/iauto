@@ -1,8 +1,7 @@
-
 import React, {useState} from 'react';
 import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
-import { Collapse, Modal, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
+import { Collapse, Modal, Input, Select, Button, Tabs, Divider, Form, Space } from 'antd';
 import { http } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
@@ -118,7 +117,6 @@ export default observer(()=>{
     const [activeKey, setActiveKey] = useState("all");
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [info, setInfo] = useState();
     const [form] = Form.useForm();
     const tabChange = (activeKey) => {
       setActiveKey(activeKey);
@@ -141,7 +139,6 @@ export default observer(()=>{
     }
     const handleModalOK = (info) => {
       setShowModal(false);
-      setInfo(info);
       let data = form.getFieldsValue();
       Object.assign(data, info);
       console.log(info);
