@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
-import { List, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
+import { Collapse, Modal, Input, Select, Button, Tabs, Card, Typography, Divider, Form, Space } from 'antd';
 import { http } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
@@ -33,49 +33,53 @@ const SubTabPane = observer(({platform, form}) => {
     </Tabs>
   );
 });
-const data = [
-  'Racing car sprays burning fuel into crowd.',
-  'Japanese princess to wed commoner.',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-  'Los Angeles battles huge wildfires.',
-];
+
 const ListView = observer(() => {
+  var result = [];
+  const renderData = () => {
+    if(store.result_data !== null && store.result_data.lines !== undefined){
+      for(let k in store.result_data.lines) {
+        let p = k.split("_")[0];
+        let l = store.result_data.lines[k].filter(item => item !== "");
+        result.push({platform: p, lines: l});
+      }
+    }
+    return result
+  }
+
+  const data = renderData();
   return (
     <>
-      <Divider orientation="left">Default Size</Divider>
-      <List
-        header={<div>Header</div>}
-        footer={<div>Footer</div>}
-        bordered
-        dataSource={data}
-        renderItem={item => (
-          <List.Item>
-            <Typography.Text mark>[ITEM]</Typography.Text> {item}
-          </List.Item>
-        )}
-      />
-      <Divider orientation="left">Small Size</Divider>
-      <List
-        size="small"
-        header={<div>Header</div>}
-        footer={<div>Footer</div>}
-        bordered
-        dataSource={data}
-        renderItem={item => <List.Item>{item}</List.Item>}
-      />
-      <Divider orientation="left">Large Size</Divider>
-      <List
-        size="large"
-        header={<div>Header</div>}
-        footer={<div>Footer</div>}
-        bordered
-        dataSource={data}
-        renderItem={item => <List.Item>{item}</List.Item>}
-      />
+      {data.length !== 0 && <Divider orientation="left">预览配置</Divider>}
+      <Collapse accordion>
+        {data.map(entry => (
+
+          <Collapse.Panel
+            header={entry.platform}
+            key={entry.platform}>
+              {entry.lines.map(line => (
+                <p>{line}</p> ))
+              }
+          </Collapse.Panel>
+        ))}
+      </Collapse>
     </>
-    );
+  );
 });
+
+const InfoMadal = ({onOK, onCancle}) => {
+
+  return (
+    <Modal
+      title="输入模板信息"
+      onOk={onOK}
+      onCancel={onCancle}
+      >
+
+    </Modal>
+  );
+}
+
 export default observer(()=>{
     const [activeKey, setActiveKey] = useState("all");
     const [form] = Form.useForm();
@@ -83,11 +87,11 @@ export default observer(()=>{
       setActiveKey(activeKey);
     }
     const handleSubmit1 = (e) => {
-      console.log(form.getFieldsValue());
+
       let data = form.getFieldsValue();
       data.save = false;
-      http.post("/api/template/network/", data).then(({result}) => {
-        console.log(result);
+      http.post("/api/template/network/", data).then((result) => {
+        store.saveData(result);
       });
     }
     const handleSubmit2 = (e) => {
@@ -134,6 +138,7 @@ export default observer(()=>{
             提交配置
           </Button>
           </Space>}
+          {activeKey !== "all" && <ListView />}
         </>
     );
 });
