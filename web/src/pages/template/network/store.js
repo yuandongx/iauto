@@ -8,7 +8,6 @@ class Store {
   @observable record = {};
   @observable isFetching = false;
   @observable formFlag = null;
-  @observable preViewResult = null;
   @observable f_name;
   @observable f_type;
   @observable result_data = null;
@@ -29,6 +28,7 @@ class Store {
   saveData = (ob) => {
     this.result_data = ob;
   }
+
 }
 
 export default new Store()
