@@ -55,10 +55,12 @@ class NetworkView(View):
         test_Type = "test-type1"
         all_info = json.loads(request.body.decode())
         print(all_info)
-
         save = all_info.get("save")
         hander = Hander(all_info)
         pre_line, all_lines = hander.parse()
+        print(pre_line)
+        print(all_lines)
+
         exist_name = NetworkTemp.objects.values_list("name", flat=True)
         if save:
             if test_Name in exist_name:
@@ -74,9 +76,9 @@ class NetworkView(View):
             except Exception as E:
                 return json_response(error=str(E))
             else:
-                return json_response(data={"lines": all_lines, "save": "ok"})
+                return json_response(data={"lines": pre_line, "save": "ok"})
         else:
-            return json_response(data={"lines": all_lines})
+            return json_response(data={"lines": pre_line})
 
     def delete(self, request):
         form, error = JsonParser(

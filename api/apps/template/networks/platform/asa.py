@@ -115,4 +115,41 @@ class Parse(object):
                     elif protocol == "3":
                         cmd += " tcp-udp"
                     servicegroup_lines.append(cmd)
-                    members = servicegroup_info.get("members")
+                    entries = servicegroup_info.get("entries") or list()
+                    for entry in entries:
+                        if protocol == "0":
+                            if entry["type"] == "group-object":
+                                gname = entry.get("gname")
+                                if gname:
+                                    servicegroup_lines.append("  group-object %s" % gname)
+                            elif entry["type"] == "service-object":
+                                pass
+                        else:
+                            if entry["type"] == "group-object":
+                                gname = entry.get("gname")
+                                if gname:
+                                    servicegroup_lines.append("  group-object %s" % gname)
+                            elif entry["type"] == "port-object":
+                                ptype = entry.get("ptype")
+                                start_port = entry.get("port1")
+                                end_port = entry.get("port2")
+                                if ptype == "range" and start_port and end_port:
+                                    servicegroup_lines.append("  port-object range %s %s" % (start_port, end_port))
+                                elif ptype == "eq" and start_port:
+                                    servicegroup_lines.append("  port-object eq %s" % start_port)
+        return servicegroup_lines
+                     
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
