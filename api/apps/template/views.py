@@ -54,6 +54,8 @@ class NetworkView(View):
         test_Name = "test1"
         test_Type = "test-type1"
         all_info = json.loads(request.body.decode())
+        print(all_info)
+
         save = all_info.get("save")
         hander = Hander(all_info)
         pre_line, all_lines = hander.parse()
@@ -72,9 +74,9 @@ class NetworkView(View):
             except Exception as E:
                 return json_response(error=str(E))
             else:
-                return json_response(data={"lines": pre_line, "save": "ok"})
+                return json_response(data={"lines": all_lines, "save": "ok"})
         else:
-            return json_response(data={"lines": pre_line})
+            return json_response(data={"lines": all_lines})
 
     def delete(self, request):
         form, error = JsonParser(
