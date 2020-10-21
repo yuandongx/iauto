@@ -57,8 +57,8 @@ const ListView = observer(() => {
           <Collapse.Panel
             header={entry.platform}
             key={entry.platform}>
-              {entry.lines.map(line => (
-                <p>{line}</p> ))
+              {entry.lines.map((line, index) => (
+                <p key={line + index}>{line}</p> ))
               }
           </Collapse.Panel>
         ))}
@@ -67,21 +67,58 @@ const ListView = observer(() => {
   );
 });
 
-const InfoMadal = ({onOK, onCancle}) => {
-
+const InfoMadal = observer(({visible, handleModalOK, handleModalCancle}) => {
+  const [form] = Form.useForm();
+  const onOK = () => {
+    form.submit();
+    const data = form.getFieldsValue();
+    console.log(data);
+    handleModalOK(data);
+  }
+  const onCancle = () => {
+    handleModalCancle();
+  }
   return (
     <Modal
       title="输入模板信息"
       onOk={onOK}
+      visible={visible}
       onCancel={onCancle}
       >
+      <Form form={form}>
+        <Form.Item
+          label="模版名称"
+          name="template_name"
+          rules={[{ required: true, message: '请输入模版名称!' }]}
+        >
+          <Input />
+        </Form.Item>
 
+          <Form.Item
+            label="模版类型"
+            name="template_type"
+            rules={[{ required: true, message: '请输入模版类型!' }]}
+          >
+            <Input />
+        </Form.Item>
+
+          <Form.Item
+            label="描述信息"
+            name="template_description"
+            rules={[{ required: true, message: '请输入模版描述信息!' }]}
+          >
+            <Input.TextArea />
+        </Form.Item>
+      </Form>
     </Modal>
   );
-}
+});
 
 export default observer(()=>{
     const [activeKey, setActiveKey] = useState("all");
+    const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState();
     const [form] = Form.useForm();
     const tabChange = (activeKey) => {
       setActiveKey(activeKey);
@@ -95,12 +132,24 @@ export default observer(()=>{
       });
     }
     const handleSubmit2 = (e) => {
-      console.log(form.getFieldsValue());
+      setShowModal(true);
+      setLoading(true);
+    }
+    const handleModalCancle = () => {
+      setShowModal(false);
+    }
+    const handleModalOK = (info) => {
+      setShowModal(false);
+      setInfo(info);
       let data = form.getFieldsValue();
+      Object.assign(data, info);
+      console.log(info);
+      console.log(data);
       data.save = true;
-      http.post("/api/template/network/", data).then(({result}) => {
+      http.post("/api/template/network/", data).then((result) => {
         console.log(result);
       });
+      setLoading(false);
     }
     return(
         <>
@@ -134,11 +183,12 @@ export default observer(()=>{
           <Button type="primary" onClick={handleSubmit1}>
             生成配置
           </Button>
-          <Button type="primary" onClick={handleSubmit2}>
+          <Button type="primary" onClick={handleSubmit2}  loading={loading}>
             提交配置
           </Button>
           </Space>}
           {activeKey !== "all" && <ListView />}
+          {showModal && <InfoMadal visible={showModal} handleModalOK={handleModalOK} handleModalCancle={handleModalCancle}/>}
         </>
     );
 });
