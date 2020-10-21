@@ -374,9 +374,9 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
     triggerChange({name: v});
   }
 
-  const onProtocolChange = (v) => {
-    setProtocol(v);
-    triggerChange({protocol: v});
+  const onProtocolChange = (e) => {
+    setProtocol(e.target.value);
+    triggerChange({protocol: e.target.value});
   }
 
   const addEntry = item => {

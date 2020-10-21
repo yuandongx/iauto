@@ -11,7 +11,7 @@ class Store {
   @observable preViewResult = null;
   @observable f_name;
   @observable f_type;
-  @observable submitData = {};
+  @observable result_data = null;
 
   fetchRecords = () => {
     this.isFetching = true;
@@ -25,6 +25,9 @@ class Store {
 
   showForm = (key) => {
     this.formFlag = key;
+  }
+  saveData = (ob) => {
+    this.result_data = ob;
   }
 }
 
