@@ -1,4 +1,4 @@
-from apps.template.networks.platform import asa_parse#, topsec_parse
+from apps.template.networks.platform import asa_parse, topsec_parse
 
 
 
@@ -19,8 +19,7 @@ class Hander(object):
                 if pre in self.asa_types:
                     cfg_lines = asa_parse(pre, info)
                 if pre in self.topsec_types:
-                    pass
-                    # cfg_lines = topsec_parse(pre, info)
+                    cfg_lines = topsec_parse(pre, info)
 
                 if cfg_lines:
                     all_config_lines.extend(cfg_lines)

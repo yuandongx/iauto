@@ -51,26 +51,21 @@ class NetworkView(View):
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 
     def post(self, request):
-        test_Name = "test1"
-        test_Type = "test-type1"
         all_info = json.loads(request.body.decode())
-        print(all_info)
         save = all_info.get("save")
         hander = Hander(all_info)
         pre_line, all_lines = hander.parse()
-        print(pre_line)
-        print(all_lines)
 
         exist_name = NetworkTemp.objects.values_list("name", flat=True)
         if save:
-            if test_Name in exist_name:
-                return json_response(error="template name same")
+            # if test_Name in exist_name:
+                # return json_response(error="template name same")
             try:
-                num = NetworkTemp.objects.create(name=test_Name,
-                                          temp_type=test_Type,
+                num = NetworkTemp.objects.create(name=all_info.get("template_name"),
+                                          temp_type=all_info.get("template_type"),
                                           parameter=all_info,
                                           config_lines="\n".join(all_lines),
-                                          desc="test_desc",
+                                          desc=all_info.get("template_description"),
                                           created_at=human_datetime(),
                                           created_by=request.user)
             except Exception as E:
