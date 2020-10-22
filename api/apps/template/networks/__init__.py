@@ -4,26 +4,25 @@ from apps.template.networks.platform import asa_parse, topsec_parse
 class Hander(object):
     def __init__(self, data):
         self.data = data
-        self.asa_types = ['asa_address', 'asa_address_group', 'asaservice', 'asa_service_group', 'asa_schedule', 'asa_acl']
-        self.topsec_types = ['topsec_address', 'topsec_address_group', 'topsecservice', 'topsec_service_group', 'topsec_schedule', 'topsec_acl']
 
     def parse(self):
-        all_keys = self.data.keys()
         pre_config_lines = dict()
         all_config_lines = list()
-        for pre in all_keys:
-            info = self.data.get(pre)
+        effective_parm = dict()
+        platform = self.data.get("platform")
+        for pre, info in self.data.items():
             if info:
                 cfg_lines = list()
-                if pre in self.asa_types:
+                if platform == "asa" and pre.startswith("asa"):
+                    effective_parm[pre] = info
                     cfg_lines = asa_parse(pre, info)
-                if pre in self.topsec_types:
+                if platform == "topsec" and pre.startswith("topsec"):
+                    effective_parm[pre] = info
                     cfg_lines = topsec_parse(pre, info)
-
                 if cfg_lines:
                     all_config_lines.extend(cfg_lines)
                     pre_config_lines[pre] = cfg_lines
 
-        return pre_config_lines, all_config_lines
+        return effective_parm, pre_config_lines, all_config_lines
    
 

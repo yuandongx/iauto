@@ -18,7 +18,7 @@ class Parse(object):
             lines = self.__address_parse()
         elif self.parse_type == "asa_address_group":
             lines = self.__addressgroup_parse()
-        elif self.parse_type == "asaservice":
+        elif self.parse_type == "asa_service":
             lines = self.__service_parse()
         elif self.parse_type == "asa_service_group":
             lines = self.__servicegroup_parse()

@@ -53,8 +53,9 @@ class NetworkView(View):
     def post(self, request):
         all_info = json.loads(request.body.decode())
         save = all_info.get("save")
+        platform = all_info.get("platform")
         hander = Hander(all_info)
-        pre_line, all_lines = hander.parse()
+        effective_parm, pre_line, all_lines = hander.parse()
 
         exist_name = NetworkTemp.objects.values_list("name", flat=True)
         if save:
@@ -63,7 +64,7 @@ class NetworkView(View):
             try:
                 num = NetworkTemp.objects.create(name=all_info.get("template_name"),
                                           temp_type=all_info.get("template_type"),
-                                          parameter=all_info,
+                                          parameter=effective_parm,
                                           config_lines="\n".join(all_lines),
                                           desc=all_info.get("template_description"),
                                           created_at=human_datetime(),

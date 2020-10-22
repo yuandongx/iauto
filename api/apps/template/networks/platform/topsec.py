@@ -16,7 +16,7 @@ class Parse(object):
             lines = self.__address_parse()
         elif self.parse_type == "topsec_address_group":
             lines = self.__addressgroup_parse()
-        elif self.parse_type == "topsecservice":
+        elif self.parse_type == "topsec_service":
             lines = self.__service_parse()
         elif self.parse_type == "topsec_service_group":
             lines = self.__servicegroup_parse()
@@ -26,7 +26,7 @@ class Parse(object):
             lines = self.__acl_parse()
         return lines
 
-    def __address_parse(self):
+    def __address_parse(self):   
         addr_lines = list()
         print(self.data)
         for parm in self.data:
@@ -96,17 +96,17 @@ class Parse(object):
         
     def __servicegroup_parse(self):
         servicegroup_lines = list()
-        servicegroup_info = parm.get("service_group")
-        if servicegroup_info:
-            name = servicegroup_info.get("name")
-            if name:
-                members = servicegroup_info.get("members")
-                if members:
-                    member_str = ""
-                    for mem in menbers:
-                        member_str += "%s " % mem
-                    servicegroup_lines.append("define group_service add name %s member '%s'" %s (name, member_str))
-        
+        for parm in self.data:
+            servicegroup_info = parm.get("service_group")
+            if servicegroup_info:
+                name = servicegroup_info.get("name")
+                if name:
+                    members = servicegroup_info.get("members")
+                    if members:
+                        member_str = ""
+                        for mem in members:
+                            member_str += "%s " % mem
+                        servicegroup_lines.append("define group_service add name %s member '%s'" % (name, member_str))
         return  servicegroup_lines
         
     def __schedule_parse(self):
