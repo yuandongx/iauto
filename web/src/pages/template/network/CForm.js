@@ -35,12 +35,16 @@ const SubTabPane = observer(({platform, form}) => {
 
 const ListView = observer(() => {
   const renderData = () => {
-    var result = [];
+    var result = {};
     if(store.result_data !== null && store.result_data.lines !== undefined){
       for(let k in store.result_data.lines) {
         let p = k.split("_")[0];
         let l = store.result_data.lines[k].filter(item => item !== "");
-        result.push({platform: p, lines: l});
+        if(result[p] === undefined) {
+          result[p] = l;
+        } else {
+          result[p] = [...result[p], ...l]
+        }
       }
     }
     return result
@@ -51,12 +55,12 @@ const ListView = observer(() => {
     <>
       {data.length !== 0 && <Divider orientation="left">预览配置</Divider>}
       <Collapse accordion>
-        {data.map(entry => (
+        {Object.entries(data).map(entry => (
 
           <Collapse.Panel
-            header={entry.platform}
-            key={entry.platform}>
-              {entry.lines.map((line, index) => (
+            header={entry[0]}
+            key={entry[0]}>
+              {entry[1].map((line, index) => (
                 <p key={line + index}>{line}</p> ))
               }
           </Collapse.Panel>
@@ -124,10 +128,10 @@ export default observer(()=>{
     const handleSubmit1 = (e) => {
       let data = form.getFieldsValue();
       data.save = false;
+      console.log(data);
       http.post("/api/template/network/", data).then((result) => {
         store.saveData(result);
       });
-      console.log(data);
     }
     const handleSubmit2 = (e) => {
       setShowModal(true);
