@@ -80,7 +80,7 @@ class NetworkView(View):
             Argument('id', type=int, help='请指定操作对象')
         ).parse(request.GET)
         if error is None:
-            Template.objects.filter(pk=form.id).delete()
+            NetworkTemp.objects.filter(pk=form.id).delete()
         return json_response(error=error)
 
 def make_commands(form):

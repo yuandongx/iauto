@@ -1,12 +1,11 @@
 from apps.template.networks.platform import asa_parse, topsec_parse
 
 
-
 class Hander(object):
     def __init__(self, data):
         self.data = data
-        self.asa_types = ['asa_address', 'asa_address_group', 'asaservice', 'asa_service_group']
-        self.topsec_types = ['topsec_address', 'topsec_address_group', 'topsecservice', 'topsecservice_group']
+        self.asa_types = ['asa_address', 'asa_address_group', 'asaservice', 'asa_service_group', 'asa_schedule', 'asa_acl']
+        self.topsec_types = ['topsec_address', 'topsec_address_group', 'topsecservice', 'topsec_service_group', 'topsec_schedule', 'topsec_acl']
 
     def parse(self):
         all_keys = self.data.keys()
@@ -25,6 +24,6 @@ class Hander(object):
                     all_config_lines.extend(cfg_lines)
                     pre_config_lines[pre] = cfg_lines
 
-        return pre_config_lines, all_config_lines  
+        return pre_config_lines, all_config_lines
    
 
