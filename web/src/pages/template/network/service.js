@@ -310,7 +310,6 @@ const Switcher = ({ value, platform, onChange, add, remove }) => {
 
 export const Service = ({ form, platform }) => {
   const [countEntry, setCountEntry] = useState(0);
-  
   const count = (i) => {
     setCountEntry(countEntry + i);
   }
@@ -357,7 +356,7 @@ export const Service = ({ form, platform }) => {
 *自定义表单项
 **/
 const Entry = ({nkey, noRemove, addEntry, removeEntry, value, onChange}) => {
-  const [type, setType] = useState("group-object");
+  const [type, setType] = useState("port-object");
   const [ptype, setPType] = useState("eq");
   const [gname, setGname] = useState();
   const [port1, setPort1] = useState();
@@ -599,6 +598,85 @@ const ServiceGroupEntry = ({ value = {}, selections, onChange, add, remove }) =>
   );
 };
 
+/**
+*topsec
+**/
+const ServiceGroupEntry1 = ({ value = {}, selections, onChange, add, remove }) => {
+  const [name, setName] = useState();
+  const [members, setMembers] = useState([]);
+  const triggerChange = (changedValue) => {
+    if (onChange) {
+      onChange({
+        name,
+        members,
+        ...value,
+        ...changedValue,
+      });
+    }
+  };
+
+  const onNameChange = (e) => {
+    const v = e.target.value;
+    setName(v);
+    triggerChange({name: v});
+  }
+
+  const onMembersChange = (v) => {
+    setMembers(v);
+    triggerChange({members: v});
+  }
+  return(
+        <Card style={{width: "800px"}} bordered={false}>
+          <Row align="middle" justify="center">
+            <Col span={23}>
+              <Card>
+                <Row>
+                  <Col span={8}>
+                  <Form.Item label="名称" required name="name">
+                    <Input
+                      style={{width: "90%"}}
+                      value={value.name || name}
+                      onChange={onNameChange}/>
+                  </Form.Item>
+                  </Col>
+                  <Col span={16}>
+                  <Form.Item label="组成员" required name="group_members">
+                    <Select
+                      mode="tags"
+                      options={selections}
+                      style={{ width: '100%' }}
+                      value={value.members||members}
+                      onChange={onMembersChange}
+                      placeholder="Tags Mode" />
+                  </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col span={1}>
+              <Space direction="vertical" align="center">
+                <PlusCircleOutlined onClick={() => { add(); }}/>
+                <MinusCircleOutlined onClick={() => { remove(); }}/>
+              </Space>
+            </Col>
+          </Row>
+      </Card>
+  );
+};
+
+/**
+*
+*不同的平台对应不同的组件.
+**/
+const Switch = ({ value, onChange, platform, selections, add, remove}) => {
+  if(platform === "topsec") {
+    return(<ServiceGroupEntry1 value={value} onChange={onChange} selections={selections}  add={add} remove={remove}/>);
+  }
+  return (
+  <ServiceGroupEntry value={value} onChange={onChange} selections={selections}  add={add} remove={remove}/>
+        );
+}
+
 
 export const ServiceGroup = ({ form, platform  }) => {
   
@@ -637,7 +715,7 @@ export const ServiceGroup = ({ form, platform  }) => {
                     fieldKey={[field.fieldKey, 'service_group']}
                     rules={[{ required: true, message: 'Missing name' }]}
                   >
-                    <ServiceGroupEntry selections={options}  add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
+                    <Switch platform={platform} selections={options}  add={()=>{add(); count(1);}} remove={()=>{remove(field.name); count(-1);}}/>
                   </Form.Item>
                 </Space>
               ))}
