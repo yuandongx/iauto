@@ -128,7 +128,7 @@ export default observer(()=>{
     const handleSubmit1 = (e) => {
       let data = form.getFieldsValue();
       data.save = false;
-      console.log(data);
+      data.platform = activeKey;
       http.post("/api/template/network/", data).then((result) => {
         store.saveData(result);
       });
@@ -145,9 +145,8 @@ export default observer(()=>{
       setShowModal(false);
       let data = form.getFieldsValue();
       Object.assign(data, info);
-      console.log(info);
-      console.log(data);
       data.save = true;
+      data.platform = activeKey;
       http.post("/api/template/network/", data).then((result) => {
         console.log(result);
       });
