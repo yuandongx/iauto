@@ -9,6 +9,7 @@ import platforms from "./platforms"
 import ComTable from './Table';
 import * as Address from "./address";
 import * as Service from "./service";
+import TimeRange from "./time";
 
 const { TabPane } = Tabs;
 
@@ -27,6 +28,7 @@ const SubTabPane = observer(({platform, form}) => {
         {item.name === "address-group" && <Address.AddressGroup form={form} platform={platform.platform} />}
         {item.name === "service" && <Service.Service form={form} platform={platform.platform} />}
         {item.name === "service-group" && <Service.ServiceGroup form={form} platform={platform.platform} />}
+        {item.name === "time-range" && <TimeRange form={form} platform={platform.platform} />}
       </TabPane>
     ))}
     </Tabs>
