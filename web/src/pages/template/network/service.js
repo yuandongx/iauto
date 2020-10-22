@@ -319,7 +319,7 @@ export const Service = ({ form, platform }) => {
         name="dynamic_form_service"
         autoComplete="off"
         layout="inline" >
-        <Form.List name={platform + "service"}>
+        <Form.List name={platform + "_service"}>
         {(fields, { add, remove }) => {
           return (
             <div>
