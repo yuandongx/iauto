@@ -8,7 +8,7 @@ export default [
       {name: "service", description: "服务"},
       {name: "service-group", description: "服务组"},
       {name: "time-range", description: "时间"},
-      {name: "acl", description: "ACL"},
+      {name: "policy", description: "ACL"},
     ]
   },
   {
