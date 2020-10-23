@@ -131,6 +131,7 @@ export default observer(()=>{
       let data = form.getFieldsValue();
       data.save = false;
       data.platform = activeKey;
+      console.log(data);
       http.post("/api/template/network/", data).then((result) => {
         store.saveData(result);
       });
