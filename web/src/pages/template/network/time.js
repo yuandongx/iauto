@@ -10,10 +10,62 @@ import { PlusOutlined,
          MinusCircleOutlined} from '@ant-design/icons'
 import React, { useState } from 'react';
 
-export default ({ form, platform  }) => {
-  
-  const [countEntry, setCountEntry] = useState(0);
+const TimeEntry = ({value ={}, onChange, add, remove}) => {
+  const [name, setName] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  const trigartChange = (changeValue) => {
+    if (onChange) {
+      onChange({
+        name,
+        startTime,
+        endTime,
+        ...value,
+        ...changeValue
+      });
+    }
+  }
+  const onStartTimeChange = (date, dateString) => {
+    setStartTime(date.format("YYYY-MM-DD HH:mm:ss"));
+    trigartChange({startTime: date.format("YYYY-MM-DD HH:mm:ss")});
+  }
+  const onEndTimeChange = (date, dateString) => {
+    setEndTime(date.format("YYYY-MM-DD HH:mm:ss"));
+    trigartChange({endTime: date.format("YYYY-MM-DD HH:mm:ss")});
+  }
+  const onHandleNameChange = (e) => {
+    setName(e.target.value);
+    trigartChange({name: e.target.value});
+  }
+  return (<Row align="middle" justify="space-around">
+            <Col>
+              <Form.Item label="名称" required name="name">
+                <Input value={value.name||name} onChange={onHandleNameChange}/>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label="开始时间" name="start_time">
+                <Input value={value.startTime||startTime} hidden/>
+                <DatePicker allowClear onChange={onStartTimeChange} showTime format="YYYY-MM-DD HH:mm:ss" />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label="终止时间" required name="end_time">
+                <Input value={value.endTime||endTime} hidden/>
+                <DatePicker allowClear onChange={onEndTimeChange} showTime format="YYYY-MM-DD HH:mm:ss" />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Space align="center" direction="vertical" size={1}>
+                <PlusCircleOutlined onClick={add} />
+                <MinusCircleOutlined onClick={remove} />
+              </Space>
+            </Col>
+          </Row>);
+} 
 
+export default ({ form, platform  }) => {
+  const [countEntry, setCountEntry] = useState(0);
   // const getOptions = () => {
     // const mayHaveFileds = form.getFieldsValue();
     // let services = mayHaveFileds.service || []
@@ -25,6 +77,8 @@ export default ({ form, platform  }) => {
     // });
   // };
   // const options = getOptions();
+
+
 
   return (
     <div>
@@ -40,28 +94,13 @@ export default ({ form, platform  }) => {
               {fields.map(field => (
                   <Form.Item
                     {...field}
-                    name={[field.name, 'service_group']}
-                    fieldKey={[field.fieldKey, 'service_group']}
+                    name={[field.name, 'time_range']}
+                    fieldKey={[field.fieldKey, 'time_range']}
                     rules={[{ required: true, message: 'Missing name' }]}
                   >
-                    <Row align="middle" justify="space-around">
-                      <Col>
-                        <Form.Item label="名称" required>
-                          <Input />
-                        </Form.Item>
-                      </Col>
-                      <Col>
-                        <Form.Item label="时间" required>
-                          <DatePicker.RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                        </Form.Item>
-                      </Col>
-                      <Col>
-                        <Space align="center" direction="vertical" size={1}>
-                          <PlusCircleOutlined onClick={() => {add(); setCountEntry(countEntry + 1)}} />
-                          <MinusCircleOutlined onClick={() => {remove(field.name); setCountEntry(countEntry - 1);}} />
-                        </Space>
-                      </Col>
-                    </Row>
+                   <TimeEntry
+                    add={()=>{add(); setCountEntry(countEntry +1);}}
+                    remove={()=>{remove(); setCountEntry(countEntry - 1);}}/>
                   </Form.Item>
               ))}
               {countEntry === 0 && <Form.Item>
