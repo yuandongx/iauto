@@ -136,7 +136,6 @@ export default ({ form, platform  }) => {
                                       <Button
                                         type="dashed"
                                         onClick={() => {add(); setCountEntry(1);}}
-                                        block
                                         >
                                         <PlusOutlined />添加
                                         </Button>

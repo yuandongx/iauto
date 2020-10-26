@@ -10,7 +10,8 @@ import ComTable from './Table';
 import * as Address from "./address";
 import * as Service from "./service";
 import TimeRange from "./time";
-import Policy from "./policy";
+import AsaAcl from "./asa_acl";
+import TopsecFWPolicy from "./topsec_fwplicy";
 
 const { TabPane } = Tabs;
 
@@ -30,7 +31,8 @@ const SubTabPane = observer(({platform, form}) => {
         {item.name === "service" && <Service.Service form={form} platform={platform.platform} />}
         {item.name === "service-group" && <Service.ServiceGroup form={form} platform={platform.platform} />}
         {item.name === "time-range" && <TimeRange form={form} platform={platform.platform} />}
-        {item.name === "policy" && <Policy form={form} platform={platform.platform} />}
+        {item.name === "asa-acl" && <AsaAcl form={form} platform="asa"/>}
+        {item.name === "topsec-fw-policy" && <TopsecFWPolicy form={form}/>}
       </TabPane>
     ))}
     </Tabs>
