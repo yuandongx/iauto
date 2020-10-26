@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { protocols } from "./platform";
 import { PlusCircleOutlined,
          PlusOutlined,
          MinusCircleOutlined,} from '@ant-design/icons';
@@ -9,6 +10,7 @@ import { Input,
          Select,
          Space,
          Row,
+         Radio,
          Col } from 'antd';
 /**
 *默认的是Cisco
@@ -17,93 +19,8 @@ const formItemLayout = {
   labelCol: { span: 4 },
   // wrapperCol: { span: 12 },
 };
-const Acl = ({platform, value={}, onChange, add, remove}) => {
-  const [fields, Fields] = useState({});
-  const triggerChange = (changeValue) => {
-    if(onChange){
-      onChange({
-        ...fields,
-        ...value,
-        ... changeValue,
-      });
-    }
-  }
-  
-  
-  return (
-    <Row align="middle">
-      <Col span={12}>
-        <Card>
-              <Form.Item
-                label="名称"
-                {...formItemLayout}
-                required>
-                <Input/>
-              </Form.Item>
-
-              <Form.Item
-                label="协议"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="Action"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="源服务端口"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="目的务端口"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="源地址对象"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="目的址对象"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="时间"
-                {...formItemLayout}
-                required>
-                <Input />
-              </Form.Item>
-
-        </Card>
-      </Col>
-      <Col span={1}>
-        <Space direction="vertical" align="center">
-          <PlusCircleOutlined onClick={add}/>
-          <MinusCircleOutlined onClick={remove}/>
-        </Space>
-      </Col>
-    </Row>
-  );
-}
-
-
-
+const actionCisco = ["permit", "deny"]
+const actionTopsec = ["accept", "deny", "collect"]
 export default ({form, platform})=>{
   const [count, Count] = useState(0);
   const render = (fields, { add, remove }) => {
@@ -111,16 +28,108 @@ export default ({form, platform})=>{
       <>
         {
           fields.map(field => (
-            <div key={field.key}>
-              <Form.Item
-                {...field}
-                name={[field.name, 'address_group']}
-                fieldKey={[field.fieldKey, 'address_group']}
-                rules={[{ required: true, message: 'Missing name' }]}
-              >
-              <Acl platform={platform} add={()=>{add(); Count(count +1);}} remove={()=>{remove(field.name); Count(count-1);}}/>
-              </Form.Item>
-            </div>
+              <Row align="middle" key={field.key}>
+                <Col span={12}>
+                  <Card>
+                    <Form.Item
+                      label="名称"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'name']}
+                      fieldKey={[field.fieldKey, 'name']}
+                      required>
+                      <Input/>
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Action"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'action']}
+                      fieldKey={[field.fieldKey, 'action']}
+                      required>
+                      <Radio.Group
+                       options={platform === "topsec" ? actionTopsec : actionCisco}/>
+                    </Form.Item>
+
+                    <Form.Item
+                      label="协议"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'protocol']}
+                      fieldKey={[field.fieldKey, 'protocol']}
+                      required>
+                       <Select
+                          showSearch
+                          style={{ width: 200 }}
+                          placeholder="Select a person"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="源服务端口"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'src_port']}
+                      fieldKey={[field.fieldKey, 'src_port']}
+                      required>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="目的务端口"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'dest_port']}
+                      fieldKey={[field.fieldKey, 'dest_port']}
+                      required>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="源地址对象"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'src_address']}
+                      fieldKey={[field.fieldKey, 'src_address']}
+                      required>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="目的址对象"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'dest_addres']}
+                      fieldKey={[field.fieldKey, 'dest_addres']}
+                      required>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="时间"
+                      {...formItemLayout}
+                      {...field}
+                      name={[field.name, 'time_range']}
+                      fieldKey={[field.fieldKey, 'time_range']}
+                      required>
+                      <Input />
+                    </Form.Item>
+
+                  </Card>
+                </Col>
+                <Col span={1}>
+                  <Space direction="vertical" align="center">
+                    <PlusCircleOutlined onClick={()=>{add(); Count(count+1)}}/>
+                    <MinusCircleOutlined onClick={()=>{remove(field.name); Count(count-1)}}/>
+                  </Space>
+                </Col>
+              </Row>
+
           ))
         }
         {count === 0 && <Form.Item>
