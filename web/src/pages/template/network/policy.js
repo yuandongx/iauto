@@ -75,7 +75,7 @@ const PortItem = ({value={}, onChange, validateStatus}) => {
   }
   return (
     <Space>
-      <Select placeholder="端口类型" value={type} onChange={handleTypeChage}>
+      <Select placeholder="端口类型" style={{ width: 100 }} value={type} onChange={handleTypeChage}>
         <Select.Option value="eq">eq</Select.Option>
         <Select.Option value="neq">neq</Select.Option>
         <Select.Option value="range">range</Select.Option>
@@ -101,7 +101,7 @@ const PortItem = ({value={}, onChange, validateStatus}) => {
 *自定义地址组件
 **/
 const AddressItem = ({value={}, onChange, validateStatus}) => {
-  const [type, setType] = useState("any");
+  const [type, setType] = useState();
   const [ip, setIp] = useState();
   const [mask, setMask] = useState();
   const triggerChange = changeValue => {
@@ -144,9 +144,9 @@ const AddressItem = ({value={}, onChange, validateStatus}) => {
     if(type === "any") {
       return "any"
     } else if(type === "host") {
-      return "主机IP"
+      return "主机IP,如: 1.1.1.1"
     } else if(type === "subnet"){
-      return "子网IP"
+      return "子网IP,如: 1.1.1.0"
     } else if(type === "object"){
       return "地址对象(组)"
     } 
@@ -154,17 +154,17 @@ const AddressItem = ({value={}, onChange, validateStatus}) => {
   }
   return (
     <Space>
-      <Select value={type} onChange={handleTypeChage}>
+      <Select placeholder="选择对象类型" value={type} onChange={handleTypeChage}>
         <Select.Option value="any">任意地址</Select.Option>
         <Select.Option value="host">主机地址</Select.Option>
         <Select.Option value="subnet">子网地址</Select.Option>
         <Select.Option value="object">地址对象</Select.Option>
       </Select>
-      <Input
-        value={ip}
-        onChange={handleIPChage}
-        disabled={type === "any"?true:false}
-        placeholder={placeholdersIP()}/>
+      {type !==undefined &&<Input
+                            value={ip}
+                            onChange={handleIPChage}
+                            disabled={type === "any"?true:false}
+                            placeholder={placeholdersIP()}/>}
       {type === "subnet" && <Input
                             value={mask}
                             placeholder="子网掩码"
@@ -267,7 +267,7 @@ export default ({form, platform})=>{
                         fieldKey={[field.fieldKey, 'src_address']}
                         help={dstPortStatus.errorMsg}
                         validateStatus={dstPortStatus.vildate}
-                        >
+                        required>
                         <AddressItem />
                       </Form.Item>
 
@@ -278,7 +278,7 @@ export default ({form, platform})=>{
                         key={"dest_addres" + field.key}
                         name={[field.name, 'dest_address']}
                         fieldKey={[field.fieldKey, 'dest_addres']}
-                        >
+                        required>
                         <AddressItem />
                       </Form.Item>
 
