@@ -115,18 +115,18 @@ const AddressItem = ({value={}, onChange, validateStatus}) => {
       });
     }
   }
-  const handleIPChage = (v) => {
-    setIp(v);
-    triggerChange({ip: v});
+  const handleIPChage = (e) => {
+    setIp(e.target.value);
+    triggerChange({ip: e.target.value});
     // if (port2 !== undefined && type === "range" && v > port2) {
       // validateStatus({errorMsg: "终止端口必须大于起始端口", vildate: "error"});
     // } else {
       // validateStatus({errorMsg: "", vildate: "success"});
     // }
   }
-  const handleMaskChage = (v) => {
-    setMask(v);
-    triggerChange({mask: v});
+  const handleMaskChage = (e) => {
+    setMask(e.target.value);
+    triggerChange({mask: e.target.value});
     // if (port1 !== undefined && v < port1) {
       // validateStatus({errorMsg: "终止端口必须大于起始端口", vildate: "error"});
     // } else {
