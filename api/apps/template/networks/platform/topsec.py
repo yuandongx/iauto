@@ -20,7 +20,7 @@ class Parse(object):
             lines = self.__service_parse()
         elif self.parse_type == "topsec_service_group":
             lines = self.__servicegroup_parse()
-        elif self.parse_type == "topsec_schedule":
+        elif self.parse_type == "topsec_time_range":
             lines = self.__schedule_parse()
         elif self.parse_type == "topsec_acl":
             lines = self.__acl_parse()
@@ -91,7 +91,6 @@ class Parse(object):
                                 service_lines.append("define service add name %s protocol %s port %s port2 %s" % (name, protocol_dict.get(pre), port1, port2)) 
                             else:
                                 service_lines.append("define service add name %s protocol %s port %s" % (name, protocol_dict.get(pre), port1)) 
-
         return service_lines
         
     def __servicegroup_parse(self):
@@ -108,10 +107,34 @@ class Parse(object):
                             member_str += "%s " % mem
                         servicegroup_lines.append("define group_service add name %s member '%s'" % (name, member_str))
         return  servicegroup_lines
-        
+
     def __schedule_parse(self):
-        pass
-        
+        schedule_list = list()
+        for parm in self.data:
+            schedule_info = parm.get("time_range")
+            if schedule_info:
+                name = schedule_info.get("name")
+                endtime = schedule_info.get("endTime")
+                starttime = schedule_info.get("startTime")
+                if name and endtime and starttime:
+                    sdate = starttime.split()[0]
+                    stime = starttime.split()[1]
+                    edate = endtime.split()[0]
+                    etime = endtime.split()[1]
+                    cmd = "define schedule add name %s cyctype yearcyc sdate %s stime %s edate %s etime %s" % (name, sdate, stime, edate, etime)
+                    schedule_list.append(cmd)
+        return schedule_list
+
     def __acl_parse(self):
-        pass
+        acl_list = list()
+        for parm in self.data:
+            acl_info = parm.get("acl")
+            if acl_info:
+                name = acl_info.get("name")
+                protocol = acl_info.get("protocol")
+                src = acl_info.get("src")
+                det = acl_info.get("det")
+                port = acl_info.get("port")
+                schedule = acl_info.get("schedule")
+            
     

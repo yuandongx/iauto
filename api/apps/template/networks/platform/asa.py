@@ -1,4 +1,6 @@
-  
+import time
+
+
 def asa_parse(type, data):
     if type and data:
         cmd_list = Parse(type, data).work()
@@ -22,6 +24,10 @@ class Parse(object):
             lines = self.__service_parse()
         elif self.parse_type == "asa_service_group":
             lines = self.__servicegroup_parse()
+        elif self.parse_type == "asa_time_range":
+            lines = self.__schedule_parse()
+        elif self.parse_type == "asa_acl":
+            lines = self.__acl_parse():
         return lines
 
     def __address_parse(self):
@@ -138,8 +144,45 @@ class Parse(object):
                                 elif ptype == "eq" and start_port:
                                     servicegroup_lines.append("  port-object eq %s" % start_port)
         return servicegroup_lines
+        
+    def __schedule_parse(self):
+        schedule_list = list()
+        month_transform = {"1": "January",
+                           "2": "February",
+                           "3": "March",
+                           "4": "April",
+                           "5": "May",
+                           "6": "June",
+                           "7": "July",
+                           "8": "August",
+                           "9": "September",
+                           "10": "October",
+                           "11": "November",
+                           "12": "December"}
+        for parm in self.data:
+            schedule_info = parm.get("time_range")
+            if schedule_info:
+                name = schedule_info.get("name")
+                endtime = schedule_info.get("endTime")
+                starttime = schedule_info.get("startTime")
+                if name and endtime:
+                    schedule_list.append("time-range %s" % name)
+                    cmd = "  absolute"
+                    if starttime:
+                        starttime_array = time.strptime(starttime, "%Y-%m-%d %H:%M:%S")
+                        cmd += " start %s:%s %s %s %s" % (starttime_array.tm_hour, starttime_array.tm_min, 
+                                                          starttime_array.tm_mday, month_transform[str(starttime_array.tm_mon)],
+                                                          starttime_array.tm_year)
+                    endtime_array = time.strptime(endtime, "%Y-%m-%d %H:%M:%S")
+                    cmd += " end %s:%s %s %s %s" % (endtime_array.tm_hour, endtime_array.tm_min, 
+                                                      endtime_array.tm_mday, month_transform[str(endtime_array.tm_mon)],
+                                                      endtime_array.tm_year)
+                    schedule_list.append(cmd)
+        return schedule_list
                      
-
+    def __acl_parse(self):
+        pass
+        
 
 
 

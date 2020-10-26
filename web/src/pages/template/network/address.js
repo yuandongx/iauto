@@ -104,7 +104,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
     if (platform === "topsec"){
       return (<Col span={12}><Form.Item label="主机IP" >
               <Select
-                placeholder="输入host ip address"
+                placeholder="主机IP地址"
                 mode="tags"
                 style={{ width: '100%' }} 
                 onChange={onSelectHostIpChange}/>
@@ -112,6 +112,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
     } else {
       return (<Col span={8}><Form.Item label="主机IP" hasFeedback validateStatus={validateIP.validateStatus} help={validateIP.errorMsg}>
                 <Input
+				  placeholder="主机IP地址"
                   value={value.hostIp||hostIp}
                   onChange={onHostIpChange}/>
               </Form.Item></Col>);
@@ -119,10 +120,10 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
   }
 
   return(
-    <Row>
+    <Row align="middle">
       <Col>
         <Card style={{width: "800px"}}>
-<Row>
+		<Row>
           <Col span={6}>
             <Form.Item label="名称">
               <Input
@@ -144,6 +145,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
             { type === "2" &&
               <Col span={6}><Form.Item label="子网IP">
                 <Input
+				  placeholder="xx.xx.xx.xx"
                   value={value.subnet||subnet}
                   onChange={onSubnetChange}/>
               </Form.Item></Col>
@@ -151,13 +153,14 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
             { type === "2" &&<Col span={6}>
             <Form.Item label="子网掩码">
               <Input
+			    placeholder="xx.xx.xx.xx"
                 value={value.subnetMask||subnetMask}
                 onChange={onSubnetMaskChange}/>
             </Form.Item></Col>
             }
             { type === "3" &&
               <><Col span={6}>
-                <Form.Item label="子网IP">
+                <Form.Item label="地址范围">
                   <Input
                     placeholder="起始地址"
                     value={value.startIp||startIp}
@@ -172,7 +175,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
               </>
             }
 
-</Row>
+		</Row>
         </Card>
       </Col>
       <Col>

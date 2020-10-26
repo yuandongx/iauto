@@ -55,15 +55,18 @@ const ListView = observer(() => {
   const data = renderData();
   return (
     <>
-      {data.length !== 0 && <Divider orientation="left">预览配置</Divider>}
+      {Object.keys(data).length !== 0 && <Divider>配置命令行预览</Divider>}
       <Collapse accordion>
         {Object.entries(data).map(entry => (
-
           <Collapse.Panel
             header={entry[0]}
             key={entry[0]}>
               {entry[1].map((line, index) => (
-                <p key={line + index}>{line}</p> ))
+                <div style={{marginRight: 2}} key={line + index}>
+				{!line.startsWith(" ") && <p>{line}</p>}
+				{line.startsWith(" ") && <p style={{marginLeft: 15}}>{line}</p>}
+				</div>
+				))
               }
           </Collapse.Panel>
         ))}
@@ -183,14 +186,14 @@ export default observer(()=>{
         </Tabs>
         {activeKey === "all" && <ComTable />}
         {activeKey !== "all" &&
-        <Space align="center" style={{marginLeft: "10%"}}>
+        <Space style={{marginLeft: "40%", marginTop: "1%", marginBottom: "1%"}}>
           <Button type="primary" onClick={handleSubmit1}>
-            生成配置
+            预览配置
           </Button>
           <Button type="primary" onClick={handleSubmit2}  loading={loading}>
-            提交配置
+            保存配置
           </Button>
-          </Space>}
+        </Space>}
           {activeKey !== "all" && <ListView />}
           {showModal && <InfoMadal visible={showModal} handleModalOK={handleModalOK} handleModalCancle={handleModalCancle}/>}
         </>

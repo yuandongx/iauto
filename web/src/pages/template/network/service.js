@@ -36,10 +36,10 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
         {label: "udp", value: "udp"},
     ]
   const portOptions = [
-        {label: "lt", value: "lt"},
-        {label: "gt", value: "gt"},
-        {label: "eq", value: "eq"},
-        {label: "range", value: "range"},
+        {label: "小于", value: "lt"},
+        {label: "大于", value: "gt"},
+        {label: "等于", value: "eq"},
+        {label: "范围", value: "range"},
     ]
   const triggerChange = (changedValue) => {
     if (onChange) {
@@ -120,7 +120,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
                   value={value.srcPort1||srcPort1}
                   onChange={onSrcPort1Change}
                   style={{ width: 100, textAlign: 'center' }}
-                  placeholder={srcPortType ==="range" ? "MiniPort" : "PortNumber"} />
+                  placeholder={srcPortType ==="range" ? "最小端口号" : "端口号"} />
                     {srcPortType==="range" && <><Input
                       className="site-input-split"
                       style={{
@@ -142,7 +142,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
                         width: 100,
                         textAlign: 'center',
                       }}
-                      placeholder="Maximum"
+                      placeholder="最大端口号"
                     /></>}
               </Input.Group>
             </Form.Item>
@@ -157,7 +157,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
                   value={value.dstPort1||dstPort1}
                   onChange={onDstPort1Change}
                   style={{ width: 100, textAlign: 'center' }}
-                  placeholder={dstPortType ==="range" ? "MiniPort" : "PortNumber"} />
+                  placeholder={dstPortType ==="range" ? "最小端口号" : "端口号"} />
                     {dstPortType==="range" && <><Input
                       className="site-input-split"
                       style={{
@@ -179,7 +179,7 @@ const ServiceEntry = ({ value = {}, onChange, add, remove }) => {
                         width: 100,
                         textAlign: 'center',
                       }}
-                      placeholder="Maximum"
+                      placeholder="最大端口号"
                     /></>}
               </Input.Group>
             </Form.Item>
