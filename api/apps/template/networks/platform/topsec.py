@@ -92,7 +92,7 @@ class Parse(object):
                             else:
                                 service_lines.append("define service add name %s protocol %s port %s" % (name, protocol_dict.get(pre), port1)) 
         return service_lines
-        
+
     def __servicegroup_parse(self):
         servicegroup_lines = list()
         for parm in self.data:
@@ -136,5 +136,4 @@ class Parse(object):
                 det = acl_info.get("det")
                 port = acl_info.get("port")
                 schedule = acl_info.get("schedule")
-            
-    
+

@@ -26,8 +26,8 @@ class Parse(object):
             lines = self.__servicegroup_parse()
         elif self.parse_type == "asa_time_range":
             lines = self.__schedule_parse()
-        elif self.parse_type == "asa_acl":
-            lines = self.__acl_parse():
+        elif self.parse_type == "asa_policy":
+            lines = self.__acl_parse()
         return lines
 
     def __address_parse(self):
