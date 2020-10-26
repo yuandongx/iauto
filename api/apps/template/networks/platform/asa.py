@@ -182,17 +182,97 @@ class Parse(object):
                      
     def __policy_parse(self):
         acl_list = list()
+        print(self.data)
         for parm in self.data:
-            policy_info = parm.get("asa_policy")
-            if policy_info:
-                name = acl_info.get("name")
-                action = acl_info.get("action")
-                protocol = acl_info.get("protocol")
-                src = acl_info.get("src_address")
-                dest = acl_info.get("dest_address")
-                src_port = acl_info.get("src_port")
-                dest_port = acl_info.get("dest_port")
-                schedule = acl_info.get("time_range")
+            name = parm.get("name")
+            action = parm.get("action")
+            protocol = parm.get("protocol")
+            src = parm.get("src_address")
+            dest = parm.get("dest_address")
+            src_port = parm.get("src_port")
+            dest_port = parm.get("dest_port")
+            schedule = parm.get("time_range")
+            print(src)
+            print(dest)
+
+            if all([name, action, protocol, src, dest]):
+                cmd = "access-list %s extended %s %s" % (name, action, protocol)
+                if src:
+                    src_type = src.get("type")
+                    if src_type == "host":
+                        ip = src.get("ip")
+                        if not ip:
+                            continue
+                        cmd += " host %s" % ip
+                    elif src_type == "subnet":
+                        subnet = src.get("ip")
+                        mask = src.get("mask")
+                        if not subnet or not mask:
+                            continue
+                        cmd += " %s %s" % (subnet, mask)
+                    elif src_type == "any":
+                        cmd += " any"
+                    else:
+                        ob = src.get("ip")
+                        if not ob:
+                            continue
+                        cmd += " object-group %s" % ob
+
+                if src_port and protocol in ["tcp", "udp"]:
+                    port_type = src_port.get("type")
+                    port_num = src_port.get("port1")
+                    if port_type == "range":
+                        port_num_end = src_port.get("port2")
+                        if all([port_type, port_num, port_num_end]):
+                            cmd += " range %s %s" % (port_type, port_num, port_num_end)
+                        else:
+                            continue
+                    else:
+                        if all([port_type, port_num]):
+                            cmd += " %s %s" %(port_type, port_num)
+                        else:
+                            continue
+                
+                if dest:
+                    dest_type = dest.get("type")
+                    if dest_type == "host":
+                        ip = dest.get("ip")
+                        if not ip:
+                            continue
+                        cmd += " host %s" % ip
+                    elif dest_type == "subnet":
+                        subnet = dest.get("ip")
+                        mask = dest.get("mask")
+                        if not subnet or not mask:
+                            continue
+                        cmd += " %s %s" % (subnet, mask)
+                    elif dest_type == "any":
+                        cmd += " any"
+                    else:
+                        ob = dest.get("ip")
+                        if not ob:
+                            continue
+                        cmd += " object-group %s" % ob
+
+                if dest_port and protocol in ["tcp", "udp"]:
+                    port_type = dest_port.get("type")
+                    port_num = dest_port.get("port1")
+                    if port_type == "range":
+                        port_num_end = dest_port.get("port2")
+                        if all([port_type, port_num, port_num_end]):
+                            cmd += " range %s %s" % (port_type, port_num, port_num_end)
+                        else:
+                            continue
+                    else:
+                        if all([port_type, port_num]):
+                            cmd += " %s %s" %(port_type, port_num)
+                        else:
+                            continue
+                            
+                if schedule:
+                    cmd += " time-range %s" % schedule
+                acl_list.append(cmd)
+        return acl_list
         
 
 

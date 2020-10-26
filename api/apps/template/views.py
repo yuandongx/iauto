@@ -52,12 +52,13 @@ class NetworkView(View):
 
     def post(self, request):
         all_info = json.loads(request.body.decode())
-        print(all_info)
+        # print(all_info)
+        
         save = all_info.get("save")
         platform = all_info.get("platform")
         hander = Hander(all_info)
         effective_parm, pre_line, all_lines = hander.parse()
-
+        # print(all_lines)
         exist_name = NetworkTemp.objects.values_list("name", flat=True)
         if save:
             # if test_Name in exist_name:
