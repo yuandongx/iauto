@@ -27,7 +27,7 @@ class Parse(object):
         elif self.parse_type == "asa_time_range":
             lines = self.__schedule_parse()
         elif self.parse_type == "asa_policy":
-            lines = self.__acl_parse()
+            lines = self.__policy_parse()
         return lines
 
     def __address_parse(self):
@@ -180,8 +180,19 @@ class Parse(object):
                     schedule_list.append(cmd)
         return schedule_list
                      
-    def __acl_parse(self):
-        pass
+    def __policy_parse(self):
+        acl_list = list()
+        for parm in self.data:
+            policy_info = parm.get("asa_policy")
+            if policy_info:
+                name = acl_info.get("name")
+                action = acl_info.get("action")
+                protocol = acl_info.get("protocol")
+                src = acl_info.get("src_address")
+                dest = acl_info.get("dest_address")
+                src_port = acl_info.get("src_port")
+                dest_port = acl_info.get("dest_port")
+                schedule = acl_info.get("time_range")
         
 
 

@@ -53,7 +53,6 @@ class NetworkView(View):
     def post(self, request):
         all_info = json.loads(request.body.decode())
         print(all_info)
-
         save = all_info.get("save")
         platform = all_info.get("platform")
         hander = Hander(all_info)
