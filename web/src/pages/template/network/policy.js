@@ -16,8 +16,10 @@ import { Input,
 /**
 *默认的是Cisco
 **/
-
-const AddressItem = ({value={}, onChange, validateStatus}) => {
+/**
+*自定义端口组件
+**/
+const PortItem = ({value={}, onChange, validateStatus}) => {
   const [type, setType] = useState("eq");
   const [port1, setPort1] = useState();
   const [port2, setPort2] = useState();
@@ -95,6 +97,81 @@ const AddressItem = ({value={}, onChange, validateStatus}) => {
     </Space>
     );
 }
+/**
+*自定义地址组件
+**/
+const AddressItem = ({value={}, onChange, validateStatus}) => {
+  const [type, setType] = useState("any");
+  const [ip, setIp] = useState();
+  const [mask, setMask] = useState();
+  const triggerChange = changeValue => {
+    if(onChange){
+      onChange({
+        type,
+        ip,
+        mask,
+        ...value,
+        ...changeValue
+      });
+    }
+  }
+  const handleIPChage = (v) => {
+    setIp(v);
+    triggerChange({ip: v});
+    // if (port2 !== undefined && type === "range" && v > port2) {
+      // validateStatus({errorMsg: "终止端口必须大于起始端口", vildate: "error"});
+    // } else {
+      // validateStatus({errorMsg: "", vildate: "success"});
+    // }
+  }
+  const handleMaskChage = (v) => {
+    setMask(v);
+    triggerChange({mask: v});
+    // if (port1 !== undefined && v < port1) {
+      // validateStatus({errorMsg: "终止端口必须大于起始端口", vildate: "error"});
+    // } else {
+      // validateStatus({errorMsg: "", vildate: "success"});
+    // }
+  }
+  const handleTypeChage = (v) => {
+    setType(v);
+    triggerChange({type: v});
+    // setPort1();
+    // setPort2();
+    // if(v !== "range"){validateStatus({});}
+  }
+  const placeholdersIP = () => {
+    if(type === "any") {
+      return "any"
+    } else if(type === "host") {
+      return "主机IP"
+    } else if(type === "subnet"){
+      return "子网IP"
+    } else if(type === "object"){
+      return "地址对象(组)"
+    } 
+    return ""
+  }
+  return (
+    <Space>
+      <Select value={type} onChange={handleTypeChage}>
+        <Select.Option value="any">任意地址</Select.Option>
+        <Select.Option value="host">主机地址</Select.Option>
+        <Select.Option value="subnet">子网地址</Select.Option>
+        <Select.Option value="object">地址对象</Select.Option>
+      </Select>
+      <Input
+        value={ip}
+        onChange={handleIPChage}
+        disabled={type === "any"?true:false}
+        placeholder={placeholdersIP()}/>
+      {type === "subnet" && <Input
+                            value={mask}
+                            placeholder="子网掩码"
+                            onChange={handleMaskChage} />}
+    </Space>
+    );
+}
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -167,7 +244,7 @@ export default ({form, platform})=>{
                         validateStatus={srcPortStatus.vildate}
                         fieldKey={[field.fieldKey, 'src_port']}
                         >
-                        <AddressItem validateStatus={setSrcPStatus}/>
+                        <PortItem validateStatus={setSrcPStatus}/>
                       </Form.Item>
 
                       <Form.Item
@@ -178,7 +255,7 @@ export default ({form, platform})=>{
                         name={[field.name, 'dest_port']}
                         fieldKey={[field.fieldKey, 'dest_port']}
                         >
-                        <AddressItem validateStatus={setDstPStatus}/>
+                        <PortItem validateStatus={setDstPStatus}/>
                       </Form.Item>
 
                       <Form.Item
@@ -191,7 +268,7 @@ export default ({form, platform})=>{
                         help={dstPortStatus.errorMsg}
                         validateStatus={dstPortStatus.vildate}
                         >
-                        <Input />
+                        <AddressItem />
                       </Form.Item>
 
                       <Form.Item
@@ -202,7 +279,7 @@ export default ({form, platform})=>{
                         name={[field.name, 'dest_addres']}
                         fieldKey={[field.fieldKey, 'dest_addres']}
                         >
-                        <Input />
+                        <AddressItem />
                       </Form.Item>
 
                       <Form.Item
