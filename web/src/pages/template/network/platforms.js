@@ -8,7 +8,7 @@ export default [
       {name: "service", description: "服务"},
       {name: "service-group", description: "服务组"},
       {name: "time-range", description: "时间"},
-      {name: "policy", description: "ACL"},
+      {name: "asa-acl", description: "ACL"},
     ]
   },
   {
@@ -20,7 +20,7 @@ export default [
       {name: "service", description: "服务"},
       {name: "service-group", description: "服务组"},
       {name: "time-range", description: "时间"},
-      {name: "policy", description: "安全策略"},
+      {name: "topsec-fw-policy", description: "安全策略"},
     ]
   },
 ]
