@@ -276,7 +276,7 @@ export default ({form, platform})=>{
                         {...formItemLayout}
                         {...field}
                         key={"dest_addres" + field.key}
-                        name={[field.name, 'dest_addres']}
+                        name={[field.name, 'dest_address']}
                         fieldKey={[field.fieldKey, 'dest_addres']}
                         >
                         <AddressItem />
