@@ -53,7 +53,10 @@ export default ({form})=>{
                         name={[field.name, 'src_area']}
                         fieldKey={[field.fieldKey, 'src_area']}
                         >
-                        <Input />
+                        <Select
+                          mode="tags"
+                          style={{ width: 200 }}
+                          />
                       </Form.Item>
 
                       <Form.Item
@@ -64,7 +67,10 @@ export default ({form})=>{
                         name={[field.name, 'dst_area']}
                         fieldKey={[field.fieldKey, 'dst_area']}
                         >
-                        <Input/>
+                        <Select
+                          mode="tags"
+                          style={{ width: 200 }}
+                          />
                       </Form.Item>
 
                       <Form.Item
