@@ -22,8 +22,8 @@ class Parse(object):
             lines = self.__servicegroup_parse()
         elif self.parse_type == "topsec_time_range":
             lines = self.__schedule_parse()
-        elif self.parse_type == "topsec_acl":
-            lines = self.__acl_parse()
+        elif self.parse_type == "topsec_policy":
+            lines = self.__policy_parse()
         return lines
 
     def __address_parse(self):   
@@ -125,93 +125,49 @@ class Parse(object):
                     schedule_list.append(cmd)
         return schedule_list
 
-    def __acl_parse(self):
+    def __policy_parse(self):
         policy_list = list()
+        print(self.data)
         for parm in self.data:
-            name = parm.get("name")
             action = parm.get("action")
-            protocol = parm.get("protocol")
             src = parm.get("src_address")
+            src_area = parm.get("src_area")
             dest = parm.get("dest_address")
-            src_port = parm.get("src_port")
-            dest_port = parm.get("dest_port")
+            dest_area = parm.get("dst_area")
+            service = parm.get("service")
             schedule = parm.get("time_range")
-            if all([name, action, protocol, src, dest]):
-                cmd = "access-list %s extended %s %s" % (name, action, protocol)
+            comment = parm.get("comment")
+            if action:
+                cmd = "firewall policy add action %s" % action
+                if src_area:
+                    src_area_str = ""
+                    for area in src_area:
+                        src_area_str += "%s " % area
+                    cmd  += " srcarea '%s'" % src_area_str
+                if dest_area:
+                    dest_area_str = ""
+                    for area in dest_area:
+                        dest_area_str += "%s " % area
+                    cmd  += " dstarea '%s'" % dest_area_str
                 if src:
-                    src_type = src.get("type")
-                    if src_type == "host":
-                        ip = src.get("ip")
-                        if not ip:
-                            continue
-                        cmd += " host %s" % ip
-                    elif src_type == "subnet":
-                        subnet = src.get("ip")
-                        mask = src.get("mask")
-                        if not subnet or not mask:
-                            continue
-                        cmd += " %s %s" % (subnet, mask)
-                    elif src_type == "any":
-                        cmd += " any"
-                    else:
-                        ob = src.get("ip")
-                        if not ob:
-                            continue
-                        cmd += " object-group %s" % ob
-
-                if src_port and protocol in ["tcp", "udp"]:
-                    port_type = src_port.get("type")
-                    port_num = src_port.get("port1")
-                    if port_type == "range":
-                        port_num_end = src_port.get("port2")
-                        if all([port_type, port_num, port_num_end]):
-                            cmd += " range %s %s" % (port_type, port_num, port_num_end)
-                        else:
-                            continue
-                    else:
-                        if all([port_type, port_num]):
-                            cmd += " %s %s" %(port_type, port_num)
-                        else:
-                            continue
-                
+                    src_str = ""
+                    for info in src:
+                        src_str += "%s " % info
+                    cmd  += " src '%s'" % src_str
                 if dest:
-                    dest_type = dest.get("type")
-                    if dest_type == "host":
-                        ip = dest.get("ip")
-                        if not ip:
-                            continue
-                        cmd += " host %s" % ip
-                    elif dest_type == "subnet":
-                        subnet = dest.get("ip")
-                        mask = dest.get("mask")
-                        if not subnet or not mask:
-                            continue
-                        cmd += " %s %s" % (subnet, mask)
-                    elif dest_type == "any":
-                        cmd += " any"
-                    else:
-                        ob = dest.get("ip")
-                        if not ob:
-                            continue
-                        cmd += " object-group %s" % ob
-
-                if dest_port and protocol in ["tcp", "udp"]:
-                    port_type = dest_port.get("type")
-                    port_num = dest_port.get("port1")
-                    if port_type == "range":
-                        port_num_end = dest_port.get("port2")
-                        if all([port_type, port_num, port_num_end]):
-                            cmd += " range %s %s" % (port_type, port_num, port_num_end)
-                        else:
-                            continue
-                    else:
-                        if all([port_type, port_num]):
-                            cmd += " %s %s" %(port_type, port_num)
-                        else:
-                            continue
-                            
+                    dest_str = ""
+                    for info in dest:
+                        src_str += "%s " % info
+                    cmd  += " dst '%s'" % dest_str
+                if service:
+                    service_str = ""
+                    for serv in service:
+                        service_str += "%s " % serv
+                    cmd  += " service '%s'" % service_str  
                 if schedule:
-                    cmd += " time-range %s" % schedule
+                    cmd += " schedule '%s '" % schedule
+                if comment:
+                    cmd += " comment '%s'" % comment
                 policy_list.append(cmd)
         return policy_list
 
