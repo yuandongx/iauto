@@ -3,14 +3,6 @@ import React from 'react';
 import {Statistic, Card, Row, Col} from 'antd';
 import { http } from 'libs';
 
-class Hosts extends React.Component {
-  renderStatis = () => {}
-  render(){
-    return (<div name="all-hosts-statistic"></div>)
-  }
-}
-
-
 export default class StatisticCard extends React.Component {
   constructor(props) {
     super(props);
