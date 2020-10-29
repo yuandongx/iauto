@@ -31,7 +31,8 @@ I-auto是面向中小型企业设计的轻量级无Agent的自动化运维平台
 * Redis 6.0+
 
 ## 安装
-docker-compose up 一键启动服务
+### 1、docker-compose up 一键启动服务
+*首先安装dokcer,请参考[docker安装](https://docs.docker.com/engine/install/)
 
 
 

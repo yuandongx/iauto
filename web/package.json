@@ -6,6 +6,7 @@
     "@ant-design/compatible": "^1.0.0",
     "@ant-design/icons": "^4.0.0",
     "@antv/data-set": "^0.10.2",
+    "@antv/g2": "^4.0.15",
     "ace-builds": "^1.4.7",
     "antd": "^4.0.0",
     "axios": "^0.19.0",
