@@ -30,10 +30,13 @@ I-auto是面向中小型企业设计的轻量级无Agent的自动化运维平台
 * React 16.11
 * Redis 6.0+
 
-## 安装
+## 服务安装运行
 ### 1、docker-compose up 一键启动服务
-*首先安装dokcer,请参考[docker安装](https://docs.docker.com/engine/install/)
-
+* 首先安装dokcer,请参考[docker安装](https://docs.docker.com/engine/install/)；
+* 安装python3、pip；
+* pip install docker-compose；
+* cd到源码中docker-compose所在的路径下， 执行命令：docker-compose [-d] up；
+* 等待服务起来即可访问http://127.0.0.1:3000，默认端口是3000，可在docker-compose中修改。
 
 
 
