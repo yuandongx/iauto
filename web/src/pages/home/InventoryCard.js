@@ -4,8 +4,7 @@
  * Released under the AGPL-3.0 License.
  */
 import React from 'react';
-import {Statistic, Card, Row, Col} from 'antd';
-import { http } from 'libs';
+import {Card, Row, Col} from 'antd';
 import Hostinventory from './Inventory/Hostinventory';
 import Templateinventory from './Inventory/Templateinventory';
 
