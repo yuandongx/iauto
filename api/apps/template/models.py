@@ -26,7 +26,7 @@ class Template(models.Model, ModelMixin):
         
 class NetworkTemp(models.Model, ModelMixin):
     name = models.CharField(max_length=50)
-    temp_type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
     parameter = models.TextField()
     config_lines = models.TextField()
     desc = models.CharField(max_length=255, null=True)

@@ -47,7 +47,7 @@ class GenericView(View):
 class NetworkView(View):
     def get(self, request):
         templates = NetworkTemp.objects.all()
-        types = [x['temp_type'] for x in templates.order_by('temp_type').values('temp_type').distinct()]
+        types = [x['type'] for x in templates.order_by('type').values('type').distinct()]
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 
     def post(self, request):
