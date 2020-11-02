@@ -65,7 +65,7 @@ class NetworkView(View):
                 # return json_response(error="template name same")
             try:
                 num = NetworkTemp.objects.create(name=all_info.get("template_name"),
-                                          temp_type=all_info.get("template_type"),
+                                          type=all_info.get("template_type"),
                                           parameter=effective_parm,
                                           config_lines="\n".join(all_lines),
                                           desc=all_info.get("template_description"),
