@@ -1,7 +1,6 @@
 
 import React from 'react';
-import {Statistic, Card, Row, Col} from 'antd';
-import { http } from 'libs';
+import {Card, Row, Col} from 'antd';
 import Hostinfo from './Hostinfo';
 import Taskinfo from './Taskinfo';
 import Templateinfo from './Templateinfo';

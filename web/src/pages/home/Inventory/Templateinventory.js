@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
-import { Pie } from '@ant-design/charts';
 import { http } from 'libs';
 
 const Templateinventory: React.FC = () => {
