@@ -5,6 +5,7 @@ import { Table, Divider, Modal, message } from 'antd';
 import http from 'libs/http';
 import store from './store';
 import { LinkButton } from "components";
+import showInfo from "./detaile";
 
 @observer
 class ComTable extends React.Component {
@@ -30,7 +31,7 @@ class ComTable extends React.Component {
     title: '操作',
     render: info => (
       <span>
-        <LinkButton auth="exec.template.edit" onClick={() => store.showForm(info)}>编辑</LinkButton>
+        <LinkButton auth="exec.template.edit" onClick={() => showInfo(info.id)}>详情</LinkButton>
         <Divider type="vertical"/>
         <LinkButton auth="exec.template.del" onClick={() => this.handleDelete(info)}>删除</LinkButton>
       </span>

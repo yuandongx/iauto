@@ -7,7 +7,7 @@ class Store {
   @observable types = [];
   @observable record = {};
   @observable isFetching = false;
-  @observable formFlag = null;
+  @observable showDetileForm = null;
   @observable f_name;
   @observable f_type;
   @observable result_data = null;
@@ -22,8 +22,8 @@ class Store {
       .finally(() => this.isFetching = false)
   };
 
-  showForm = (key) => {
-    this.formFlag = key;
+  showDetaileForm = (key) => {
+    this.showDetileFlag = key;
   }
   saveData = (ob) => {
     this.result_data = ob;
