@@ -1,7 +1,16 @@
 import React, {useState} from 'react';
 import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
-import { Collapse, Modal, Input, Select, Button, Tabs, Divider, Form, Space } from 'antd';
+import { Collapse,
+         Modal,
+         Input,
+         Select,
+         Button,
+         Tabs,
+         Divider,
+         Form,
+         message,
+         Space } from 'antd';
 import { http } from 'libs';
 import { SearchForm } from "components"
 import store from './store';
@@ -16,28 +25,29 @@ import TopsecFWPolicy from "./topsec_fwplicy";
 const { TabPane } = Tabs;
 
 /****/
-const SubTabPane = observer(({platform, form}) => {
-  // eslint-disable-next-line
-  const [allFields, setAllFields] = useState();
-  const onChange = () => {
-    setAllFields(form.getFieldsValue());
+@observer
+class SubTabPane extends React.Component {
+  constructor (props){
+    super(props);
   }
-  return (
-    <Tabs tabPosition='left' onChange={onChange}>
-    {platform.features.map((item)=>(
-      <TabPane tab={item.description} key={platform.platform + item.name}>
-        {item.name === "address" && <Address.Address form={form} platform={platform.platform} />}
-        {item.name === "address-group" && <Address.AddressGroup form={form} platform={platform.platform} />}
-        {item.name === "service" && <Service.Service form={form} platform={platform.platform} />}
-        {item.name === "service-group" && <Service.ServiceGroup form={form} platform={platform.platform} />}
-        {item.name === "time-range" && <TimeRange form={form} platform={platform.platform} />}
-        {item.name === "asa-acl" && <AsaAcl form={form} platform="asa"/>}
-        {item.name === "topsec-fw-policy" && <TopsecFWPolicy form={form}/>}
-      </TabPane>
-    ))}
-    </Tabs>
-  );
-});
+  render (){
+    return (
+      <Tabs tabPosition='left'>
+      {this.props.platform.features.map((item)=>(
+        <TabPane tab={item.description} key={this.props.platform.platform + item.name + this.props.tag}>
+          {item.name === "address" && <Address.Address {...this.props} platform={this.props.platform.platform} />}
+          {item.name === "address-group" && <Address.AddressGroup {...this.props} platform={this.props.platform.platform} />}
+          {item.name === "service" && <Service.Service {...this.props} platform={this.props.platform.platform} />}
+          {item.name === "service-group" && <Service.ServiceGroup {...this.props} platform={this.props.platform.platform} />}
+          {item.name === "time-range" && <TimeRange {...this.props} platform={this.props.platform.platform} />}
+          {item.name === "asa-acl" && <AsaAcl {...this.props} platform="asa"/>}
+          {item.name === "topsec-fw-policy" && <TopsecFWPolicy {...this.props}/>}
+        </TabPane>
+      ))}
+      </Tabs>
+    );
+  }
+}
 
 const ListView = observer(() => {
   const renderData = () => {
@@ -67,10 +77,10 @@ const ListView = observer(() => {
             key={entry[0]}>
               {entry[1].map((line, index) => (
                 <div style={{marginRight: 2}} key={line + index}>
-				{!line.startsWith(" ") && <p>{line}</p>}
-				{line.startsWith(" ") && <p style={{marginLeft: 15}}>{line}</p>}
-				</div>
-				))
+        {!line.startsWith(" ") && <p>{line}</p>}
+        {line.startsWith(" ") && <p style={{marginLeft: 15}}>{line}</p>}
+        </div>
+        ))
               }
           </Collapse.Panel>
         ))}
@@ -130,10 +140,13 @@ export default observer(()=>{
     const [activeKey, setActiveKey] = useState("all");
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [tag, setTag] = useState(0);
     const [form] = Form.useForm();
+
     const tabChange = (activeKey) => {
       setActiveKey(activeKey);
     }
+
     const handleSubmit1 = (e) => {
       let data = form.getFieldsValue();
       data.save = false;
@@ -158,13 +171,16 @@ export default observer(()=>{
       data.save = true;
       data.platform = activeKey;
       http.post("/api/template/network/", data).then((result) => {
-        console.log(result);
+        form.resetFields();
+        setActiveKey("all");
+        setTag(tag + 1);
+        message.success("保存成功！");
       });
       setLoading(false);
     }
     return(
         <>
-        <Tabs onChange={tabChange} size="large">
+        <Tabs onChange={tabChange} size="large" activeKey={activeKey}>
           <TabPane tab="模板汇总" key="all">
             <SearchForm>
               <SearchForm.Item span={8} title="平台类型">
@@ -184,7 +200,7 @@ export default observer(()=>{
           </TabPane>
           {platforms.map((item) => (
             <TabPane tab={item.description} key={item.platform}>
-              <SubTabPane platform={item} form={form}/>
+              <SubTabPane tag={tag} platform={item} form={form}/>
             </TabPane>
           ))}
         </Tabs>

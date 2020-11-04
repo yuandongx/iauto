@@ -110,9 +110,14 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
                 onChange={onSelectHostIpChange}/>
               </Form.Item></Col>);
     } else {
-      return (<Col span={8}><Form.Item label="主机IP" hasFeedback validateStatus={validateIP.validateStatus} help={validateIP.errorMsg}>
+      return (<Col span={8}>
+                <Form.Item
+                  label="主机IP"
+                  hasFeedback
+                  validateStatus={validateIP.validateStatus}
+                  help={validateIP.errorMsg}>
                 <Input
-				  placeholder="主机IP地址"
+                  placeholder="主机IP地址"
                   value={value.hostIp||hostIp}
                   onChange={onHostIpChange}/>
               </Form.Item></Col>);
@@ -123,7 +128,7 @@ const AddressEntry = ({ value = {}, onChange, add, remove, platform }) => {
     <Row align="middle">
       <Col>
         <Card style={{width: "800px"}}>
-		<Row>
+        <Row>
           <Col span={6}>
             <Form.Item label="名称">
               <Input
