@@ -27,9 +27,7 @@ const { TabPane } = Tabs;
 /****/
 @observer
 class SubTabPane extends React.Component {
-  constructor (props){
-    super(props);
-  }
+
   render (){
     return (
       <Tabs tabPosition='left'>

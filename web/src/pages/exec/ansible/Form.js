@@ -59,14 +59,10 @@ class ComForm extends React.Component {
 
   handleSubmit = () => {
     const formData = this.props.form.getFieldsValue();
-    if (formData['trigger'] === 'date' && this.state.args['date'] <= moment()) {
-      return message.error('任务执行时间不能早于当前时间')
-    }
     this.setState({loading: true});
     formData['id'] = store.record.id;
-    formData['playbooks'] = this.state.playbooks.map((item) =>(item.id));
-    formData['targets'] = store.targets.filter(x => x);
-    formData['trigger_args'] = this._parse_args(formData['trigger']);
+    formData['playbooks'] = this.state.playbooks.map((item) =>({id:item.id, type:item.label}));
+    console.log(formData);
     http.post('/api/exec/ansible/', formData)
       .then(res => {
         message.success('操作成功');
@@ -170,7 +166,7 @@ class ComForm extends React.Component {
     const {getFieldDecorator, getFieldValue} = this.props.form;
     const {page, playbooks, loading, showTmp, } = this.state;
     const [b1, b2] = this.verifyButtonStatus();
-    const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.id}));
+    const tags = playbooks.map((item) => this.forMap({name:item.name, id:item.key}));
     return (
       <Modal
         visible

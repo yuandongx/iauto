@@ -59,6 +59,7 @@ class TemplateSelector extends React.Component {
                  key: "g" + value.id,
                  type: value.type,
                  name: value.name,
+                 label: "generic",
                  content: value.content,
                  desc: value.desc,});
     });
@@ -67,6 +68,7 @@ class TemplateSelector extends React.Component {
                  key: "n" + value.id,
                  type: value.type,
                  name: value.name,
+                 label: "network",
                  content: value.config_lines,
                  desc: value.desc,});
     });
