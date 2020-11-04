@@ -13,7 +13,7 @@ from apps.template.networks import Hander
 class GenericView(View):
     def get(self, request):
         templates = Template.objects.all()
-        types = [x['label'] for x in templates.order_by('label').values('label').distinct()]
+        types = [x['type'] for x in templates.order_by('type').values('type').distinct()]
         print([x.to_dict() for x in templates])  
         return json_response({'types': types, 'templates': [x.to_dict() for x in templates]})
 

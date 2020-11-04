@@ -17,7 +17,7 @@ const Hostinfo: React.FC = () => {
   const config = {
     appendPadding: 10,
     data,
-	height: 260,
+  height: 260,
     angleField: 'value',
     colorField: 'type',
 	color: ['#73b9a2', '#005344', '#78cdd1', '#2b6447', '#78a355', '#4d4f36', '#bed742', '#74905d'],

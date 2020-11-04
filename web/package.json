@@ -22,6 +22,7 @@
     "react": "^16.11.0",
     "react-ace": "^8.0.0",
     "react-dom": "^16.11.0",
+    "react-json-view": "^1.19.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "xterm": "^4.6.0",

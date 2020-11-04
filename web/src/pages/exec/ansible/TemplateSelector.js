@@ -3,7 +3,8 @@ import { observer } from 'mobx-react';
 import { SyncOutlined } from '@ant-design/icons';
 import { Modal, Table, Input, Button, Select } from 'antd';
 import { SearchForm } from 'components';
-import store from '../../template/generic/store';
+import gstore from '../../template/generic/store';
+import nstore from '../../template/network/store';
 
 @observer
 class TemplateSelector extends React.Component {
@@ -12,12 +13,17 @@ class TemplateSelector extends React.Component {
 
     this.state = {
       selectedRows: [],
+      f_name: null,
+      f_type: null,
     }
   }
 
   componentDidMount() {
-    if (store.records.length === 0) {
-      store.fetchRecords()
+    if (gstore.records.length === 0) {
+      gstore.fetchRecords()
+    }
+    if (nstore.records.length === 0) {
+      nstore.fetchRecords()
     }
   }
 
@@ -30,7 +36,7 @@ class TemplateSelector extends React.Component {
 
   columns = [{
     title: '类型',
-    dataIndex: 'label',
+    dataIndex: 'type',
   }, {
     title: '名称',
     dataIndex: 'name',
@@ -45,14 +51,42 @@ class TemplateSelector extends React.Component {
     ellipsis: true
   }];
 
+  renderData = () => {
+    let data = [];
+    let types = [];
+    gstore.records.forEach(function(value){
+      data.push({id: value.id,
+                 key: "g" + value.id,
+                 type: value.type,
+                 name: value.name,
+                 content: value.content,
+                 desc: value.desc,});
+    });
+    nstore.records.forEach(function(value){
+      data.push({id: value.id,
+                 key: "n" + value.id,
+                 type: value.type,
+                 name: value.name,
+                 content: value.config_lines,
+                 desc: value.desc,});
+    });
+    gstore.types.forEach(function(value){
+      types.push(value);
+    });
+    nstore.types.forEach(function(value){
+      types.push(value);
+    });
+    return [data, types];
+  }
+
   render() {
     const {selectedRows} = this.state;
-    let data = store.records;
-    if (store.f_name) {
-      data = data.filter(item => item['name'].toLowerCase().includes(store.f_name.toLowerCase()))
+    let [data, types] = this.renderData();
+    if (this.state.f_name) {
+      data = data.filter(item => item.name.toLowerCase().includes(this.state.f_name.toLowerCase()));
     }
-    if (store.f_type) {
-      data = data.filter(item => item['label'].toLowerCase().includes(store.f_type.toLowerCase()))
+    if (this.state.f_type) {
+      data = data.filter(item => item.type.toLowerCase().includes(this.state.f_type.toLowerCase()));
     }
     return (
       <Modal
@@ -64,27 +98,30 @@ class TemplateSelector extends React.Component {
         maskClosable={false}>
         <SearchForm>
           <SearchForm.Item span={8} title="模板类别">
-            <Select allowClear placeholder="请选择" value={store.f_type} onChange={v => store.f_type = v}>
-              {store.types.map(item => (
+            <Select allowClear placeholder="请选择" value={this.state.f_type} onChange={v => this.setState({f_type: v})}>
+              {types.map(item => (
                 <Select.Option value={item} key={item}>{item}</Select.Option>
               ))}
             </Select>
           </SearchForm.Item>
           <SearchForm.Item span={8} title="模板名称">
-            <Input allowClear value={store.f_name} onChange={e => store.f_name = e.target.value} placeholder="请输入"/>
+            <Input allowClear value={this.state.f_name} onChange={e => this.setState({f_name: e.target.value})} placeholder="请输入"/>
           </SearchForm.Item>
           <SearchForm.Item span={8}>
-            <Button type="primary" icon={<SyncOutlined />} onClick={store.fetchRecords}>刷新</Button>
+            <Button
+              type="primary"
+              icon={<SyncOutlined />}
+              onClick={() => {nstore.fetchRecords();gstore.fetchRecords();}}>刷新</Button>
           </SearchForm.Item>
         </SearchForm>
         <Table
-          rowKey="id"
+          rowKey="key"
           rowSelection={{
-            selectedRowKeys: selectedRows.map(item => item.id),
+            selectedRowKeys: selectedRows.map(item => item.key),
             onChange: (selectedRowKeys, selectedRows) => this.setState({selectedRows})
           }}
           dataSource={data}
-          loading={store.isFetching}
+          loading={nstore.isFetching || gstore.isFetching}
           columns={this.columns}/>
       </Modal>
     );

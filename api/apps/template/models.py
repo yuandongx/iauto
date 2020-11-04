@@ -6,7 +6,7 @@ from apps.account.models import User
 
 class Template(models.Model, ModelMixin):
     name = models.CharField(max_length=50)
-    label = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
     content = models.TextField()
     desc = models.CharField(max_length=255, null=True)
     created_at = models.CharField(max_length=20, default=human_datetime)
