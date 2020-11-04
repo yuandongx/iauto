@@ -8,7 +8,6 @@ def asa_parse(type, data):
     return list()
 
 
-
 class Parse(object):
     def __init__(self, type, data):
         self.parse_type = type
