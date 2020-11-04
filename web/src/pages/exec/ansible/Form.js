@@ -62,7 +62,7 @@ class ComForm extends React.Component {
     this.setState({loading: true});
     formData['id'] = store.record.id;
     formData['playbooks'] = this.state.playbooks.map((item) =>({id:item.id, type:item.label}));
-    console.log(formData);
+    formData['targets'] = store.targets.filter(x => x);
     http.post('/api/exec/ansible/', formData)
       .then(res => {
         message.success('操作成功');
