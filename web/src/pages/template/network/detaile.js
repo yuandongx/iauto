@@ -1,12 +1,7 @@
 import React from "react";
-import { observer } from 'mobx-react';
 import ReactJson from 'react-json-view'
-import { Descriptions,
-         Modal,
-         Collapse,
-         List,
-         Card,
-         Space } from 'antd';
+import { Modal,
+         Collapse } from 'antd';
 import { http } from 'libs';
 const { Panel } = Collapse;
 

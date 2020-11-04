@@ -6,7 +6,7 @@ export default [
     icon: 'code', title: '任务执行', auth: 'exec.task.do|exec.template.view', child: [
       {title: '实时任务', auth: 'exec.task.do', path: '/exec/task'},
       {title: '计划任务', auth: 'exec.task.do', path: '/exec/schedule'},
-      {title: 'ansible任务', auth: 'exec.task.do', path: '/exec/ansible'},
+      {title: '模板任务', auth: 'exec.task.do', path: '/exec/ansible'},
 
     ]
   },
