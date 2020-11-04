@@ -31,7 +31,6 @@ class StartButton extends React.Component {
   };
 
   render(){
-    console.log(this.props.state);
     return (
       <Tooltip placement="top" title={this.props.state === RUNNING ? '停止执行' : '开始任务'}>
        <LinkButton onClick={() => this.handleExecute()}>
