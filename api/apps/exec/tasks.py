@@ -6,7 +6,7 @@ from main.settings import ANSIBLE_LOG_DIR
 from apps.exec.models import Task, History
 from apps.config.models import Credential
 from apps.host.models import Host
-from apps.template.models import Template
+from apps.template.models import Template, NetworkTemp
 import subprocess
 import re
 import shutil
@@ -46,17 +46,24 @@ def run_ansible(execinfo):
                         if preid == "local":
                             host_dict["hostname"] = "localhost"
                     if host_dict:
-                        host_list.append(host_dict)
+                        host_list.append(host_dict)       
                 if isinstance(eval(playbook_ids), list):
                     for prepb in eval(playbook_ids):
-                        if isinstance(prepb, int):
-                            pb_info = Template.objects.filter(pk=prepb).first()
-                            pb_name = pb_info.name
-                            pb_content = pb_info.content
-                            if pb_content and pb_name:
-                                playbook_content.append(pb_content)
-                                playbook_name.append(pb_name)
-
+                        if prepb.get("type") == "generic":
+                            generic_info = Template.objects.filter(pk=prepb.get("id")).first()
+                            generic_name = generic_info.name
+                            generic_content = generic_info.content
+                            if generic_content and generic_name:
+                                playbook_content.append(generic_content)
+                                playbook_name.append(generic_name)
+                        if prepb.get("type") == "network":
+                            network_info = NetworkTemp.objects.filter(pk=prepb.get("id")).first()
+                            network_name = network_info.name
+                            network_lines = network_info.config_lines
+                            if network_lines and network_name:
+                                network_content = parse_network_playbook(network_lines)
+                                playbook_content.append(network_content)
+                                playbook_name.append(network_name)
     if host_list and playbook_content:
         ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_content)
         try:
@@ -69,7 +76,6 @@ def run_ansible(execinfo):
             )
             host_path, playbook_path_list = ansible_handle.create_tmp()
             results = list()
-            print(playbook_path_list)
             if host_path and playbook_path_list:
                 for index, pre_p in enumerate(playbook_path_list):
                     starttime = datetime.now().astimezone(timezone(timedelta(hours=8)))
@@ -95,11 +101,6 @@ def run_ansible(execinfo):
                         get_results = re_err.findall(outs)
                         if get_results:
                             error = True
-                            # pre_errors = dict()
-                            # for result in get_results:
-                            #     pre_errors[result[0]] = json.loads(result[2])
-                            # if pre_errors:
-                            #     errors["ansible_err"] = pre_errors
                     if error:
                         status = 1
                         result.append(status)
@@ -119,63 +120,8 @@ def run_ansible(execinfo):
             taskinfo.update(latest_id=history.id)
             ansible_handle.remove_tmp()
 
-    # if host_list and playbook_list:
-    #     ansible_handle = AnsibleHandle(host_list=host_list, playbook_list=playbook_list)
-    #     try:
-    #         status = 1
-    #         starttime = datetime.datetime.now()
-    #         history = History.objects.create(
-    #             task_id=task_id,
-    #             celery_id=run_ansible.request.id,
-    #             run_time=human_datetime(),
-    #             status=2,
-    #         )
-    #         host_path, playbook_path_list = ansible_handle.create_tmp()
-    #         results = dict()
-    #         if host_path and playbook_path_list:
-    #             log_file = result_log(ANSIBLE_LOG_DIR)
-    #             with open(log_file, 'a') as file:
-    #                 for index,pre_p in enumerate(playbook_path_list):
-    #                     cmd = "ansible-playbook %s -i %s" % (pre_p, host_path)
-    #                     p = subprocess.Popen(
-    #                         cmd,
-    #                         shell=True,
-    #                         stdin=subprocess.PIPE,
-    #                         stdout=subprocess.PIPE,
-    #                         stderr=subprocess.PIPE,
-    #                         text=True,
-    #                     )
-    #                     outs, err = p.communicate()
-    #                     errors = dict()
-    #                     if err != "" and not err.strip().startswith("[WARNING]"):
-    #                         file.write(str(err) + "\n")
-    #                         errors["exec_err"] = err
-    #                     else:
-    #                         file.write(str(outs) + "\n")
-    #                         re_err = re.compile(r'fatal:\s+\[(.*)\]:\s+(\S*)\s+=>\s+(.*)')
-    #                         get_results = re_err.findall(outs)
-    #                         if get_results:
-    #                             pre_errors = dict()
-    #                             for result in get_results:
-    #                                 pre_errors[result[0]] = json.loads(result[2])
-    #                             if pre_errors:
-    #                                 errors["ansible_err"] = pre_errors
-    #                     if errors:
-    #                         status = 1
-    #                         results[eval(playbook_ids)[index]] = errors
-    #                     else:
-    #                         status = 0
-    #                         results[eval(playbook_ids)[index]] = "ok"
-    #     finally:
-    #         endtime = datetime.datetime.now()
-    #
-    #         runtime = endtime - starttime
-    #         History.objects.filter(id=history.id).update(
-    #             status=status,
-    #             output=json.dumps(results)
-    #         )
-    #         ansible_handle.remove_tmp()
-
+def parse_network_playbook(cmd):
+    return "123"
 
 # def result_log(log_dir):
 #     date_tag = datetime.datetime.now().strftime("%Y%m%d%H%M%s")

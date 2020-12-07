@@ -7,7 +7,7 @@ from django.views.generic import View
 from libs import json_response, JsonParser, Argument, human_datetime
 from .tasks import run_ansible
 from apps.exec.models import Task, History
-from apps.template.models import Template
+from apps.template.models import Template, NetworkTemp
 from libs import Runner
 from threading import Thread
 
@@ -21,15 +21,22 @@ class ShowAnsibleview(View):
             historys[d["celery_id"]] = d
         types = [x['type'] for x in tasks.order_by('type').values('type').distinct()]
         new_tasks = []
+        playbooks = []
         for x in tasks:
             d = x.to_dict()
-            tmpid = json.loads(d['playbooks'])
-            tmps = Template.objects.filter(id__in=tmpid)
-            d['playbooks'] = [{"name": t.name, "id": t.id} for t in tmps]
-            state = History.objects.filter(task_id=d["id"]).first()
-            if state:
-                d["status"] = state.status
-            new_tasks.append(d)
+            task_info = eval(d['playbooks'])
+            for pre in task_info:
+                if pre["type"] == "generic":
+                    temp = Template.objects.filter(id=pre["id"]).first()
+                    playbooks.append({"name": temp.name, "id": temp.id, "label": "generic"})
+                else:
+                    temp = NetworkTemp.objects.filter(id=pre["id"]).first()
+                    playbooks.append({"name": temp.name, "id": temp.id, "label": "network"})
+        d['playbooks'] = playbooks
+        state = History.objects.filter(task_id=d["id"]).first()
+        if state:
+            d["status"] = state.status
+        new_tasks.append(d)
 
         return json_response({'types': types, 'tasks': new_tasks})
 
