@@ -1,8 +1,4 @@
-/**
- * Copyright (c) OpenSpug Organization. https://github.com/openspug/spug
- * Copyright (c) <spug.dev@gmail.com>
- * Released under the AGPL-3.0 License.
- */
+
 import { makeRoute } from 'libs/router';
 import Alarm from './alarm';
 import Contact from './contact';
@@ -10,7 +6,7 @@ import Group from './group';
 
 
 export default [
-  makeRoute('/alarm', Alarm),
-  makeRoute('/contact', Contact),
+  makeRoute('/db', Alarm),
+  makeRoute('/file', Contact),
   makeRoute('/group', Group),
 ]

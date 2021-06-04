@@ -22,6 +22,7 @@ export default [
   makeModuleRoute('/template', templateRoutes),
   makeModuleRoute('/monitor', monitorRoutes),
   makeModuleRoute('/alarm', alarmRoutes),
+  makeModuleRoute('/migrate', monitorRoutes),
   makeModuleRoute('/config', configRoutes),
   makeModuleRoute('/deploy', deployRoutes),
 ]
