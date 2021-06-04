@@ -95,7 +95,7 @@ class ComTable extends React.Component {
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='开始任务'>
-        <StartButton state={info.status} taskId={info.id} onClick={() => this.handleExecute(info)}/>
+			<StartButton state={info.status} taskId={info.id} onClick={() => this.handleExecute(info)}/>
         </Tooltip>
         <Divider type="vertical"/>
         <Tooltip placement="top" title='删除任务'>

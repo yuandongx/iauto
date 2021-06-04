@@ -1,7 +1,16 @@
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Table, Divider, Modal, message } from 'antd';
+import { Table,
+		 Divider,
+		 Modal,
+		 Tooltip,
+		 message } from 'antd';
+import { DeleteFilled,
+         EditFilled,
+         EyeTwoTone,
+         PlayCircleTwoTone,
+         RocketFilled } from '@ant-design/icons';
 import http from 'libs/http';
 import store from './store';
 import { LinkButton } from "components";
@@ -31,12 +40,22 @@ class ComTable extends React.Component {
     title: '操作',
     render: info => (
       <span>
-        <LinkButton auth="exec.template.edit" onClick={() => showInfo(info.id)}>详情</LinkButton>
+		<Tooltip placement="top" title='详情'>
+			<LinkButton auth="exec.template.edit" onClick={() => showInfo(info.id)}><EyeTwoTone /></LinkButton>
+		</Tooltip>
         <Divider type="vertical"/>
-        <LinkButton auth="exec.template.del" onClick={() => this.handleDelete(info)}>删除</LinkButton>
+		<Tooltip placement="top" title='创建任务'>
+			<LinkButton auth="exec.template.del" onClick={() => this.createTask(info.id)}><RocketFilled /></LinkButton>
+		</Tooltip>
+        <Divider type="vertical"/>
+		<Tooltip placement="top" title='删除'>
+			<LinkButton auth="exec.template.del" onClick={() => this.handleDelete(info)}><DeleteFilled /></LinkButton>
+		</Tooltip>
       </span>
     )
   }];
+
+  createTask = info => {}
 
   handleDelete = (text) => {
     Modal.confirm({

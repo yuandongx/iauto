@@ -16,7 +16,7 @@ moment.locale('zh-cn');
 ReactDOM.render(
   <Router history={history}>
     <ConfigProvider locale={zhCN}>
-      <App/>
+      //<App/>
     </ConfigProvider>
   </Router>,
   document.getElementById('root')

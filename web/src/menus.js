@@ -37,6 +37,7 @@ export default [
       {title: '报警联系组', auth: 'alarm.group.view', path: '/alarm/group'},
     ]
   },
+  {icon: 'monitor', title: '监控中心', auth: 'monitor.monitor.view', path: '/data-migrate'},
   {
     icon: 'setting', title: '系统管理', auth: "system.account.view|system.role.view|system.setting.view", child: [
       {title: '账户管理', auth: 'system.account.view', path: '/system/account'},

@@ -74,28 +74,31 @@ class ComForm extends React.Component {
       this.setState({becomeChecked: e.target.checked});
       console.log(this.state.becomeChecked);
   }
+
   confirmForm = () => {
     let data = toJS(store.pwdRecords).map(item => {return {key: item.id, name: item.name, decription: item.desc}});
     return (<Tabs defaultActiveKey="1" >
               <TabPane tab="新输入密码" key="1">
-                  <Form>
-                    <Form.Item label="授权密码">
+                  <Form labelAlign="right">
+                    <Form.Item required label="授权密码">
                       <Input.Password onChange={val => this.setState({password: {password: val.target.value}})}/>
                     </Form.Item>
-                    <Form.Item label="特殊权限">
-                      <Checkbox onChange={this.onCheckboxChange} />
+                    <Form.Item name="become_method" label="特权命令">
+                      <Select
+                        placeholder="Select a option and "
+                        allowClear
+                      >
+                        <Select.Option value="male">male</Select.Option>
+                        <Select.Option value="female">female</Select.Option>
+                        <Select.Option value="other">other</Select.Option>
+                      </Select>
                     </Form.Item>
-                    { this.state.becomeChecked ?<>
-                    <Form.Item name="become_method" label="加权命令">
+                    <Form.Item name="become_user" label="特权用户名">
                       <Input/>
                     </Form.Item>
-                    <Form.Item name="become_user" label="加权用户名">
+                    <Form.Item name="become_password" label="特权密码">
                       <Input/>
                     </Form.Item>
-                    <Form.Item name="become_password" label="加权密码">
-                      <Input/>
-                    </Form.Item></>:<></>
-                    }
                   </Form>
               </TabPane>
               <TabPane tab="已有访问凭证" key="2">
