@@ -7,9 +7,7 @@ import { Table,
 		 Tooltip,
 		 message } from 'antd';
 import { DeleteFilled,
-         EditFilled,
          EyeTwoTone,
-         PlayCircleTwoTone,
          RocketFilled } from '@ant-design/icons';
 import http from 'libs/http';
 import store from './store';

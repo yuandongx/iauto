@@ -5,7 +5,7 @@ import { toJS } from "mobx";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Modal, Input, Select, Row, Col, Button, message, Tabs, Table, Checkbox } from 'antd';
+import { Modal, Input, Select, Row, Col, Button, message, Tabs, Table } from 'antd';
 import http from 'libs/http';
 import store from './store';
 

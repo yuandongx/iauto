@@ -8,6 +8,7 @@ import systemRoutes from './pages/system/routes';
 import execRoutes from './pages/exec/routes';
 import templateRoutes from './pages/template/routes';
 import monitorRoutes from './pages/monitor/routes';
+import migrateRoutes from './pages/migrate/routes';
 import alarmRoutes from './pages/alarm/routes';
 import configRoutes from './pages/config/routes';
 import deployRoutes from './pages/deploy/routes';
@@ -22,7 +23,7 @@ export default [
   makeModuleRoute('/template', templateRoutes),
   makeModuleRoute('/monitor', monitorRoutes),
   makeModuleRoute('/alarm', alarmRoutes),
-  makeModuleRoute('/migrate', monitorRoutes),
+  makeModuleRoute('/migrate', migrateRoutes),
   makeModuleRoute('/config', configRoutes),
   makeModuleRoute('/deploy', deployRoutes),
 ]

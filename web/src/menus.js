@@ -2,8 +2,6 @@
 export default [
   {icon: 'desktop', title: '工作台', auth: 'home.home.view', path: '/home'},
   {icon: 'cloud-server', title: '主机管理', auth: 'host.host.view', path: '/host'},
-  {icon: 'migrate', title: '数据迁移', auth: 'monitor.monitor.view', path: '/migrate'},
-  {icon: 'monitor', title: '监控中心', auth: 'monitor.monitor.view', path: '/monitor'},
   {
     icon: 'code', title: '任务执行', auth: 'exec.task.do|exec.template.view', child: [
       {title: '实时任务', auth: 'exec.task.do', path: '/exec/task'},
@@ -24,6 +22,12 @@ export default [
     ]
   },
   {
+    icon: 'flag', title: '数据迁移', auth: 'deploy.app.view|deploy.request.view', child: [
+      {title: '数据库迁移', auth: 'deploy.app.view', path: '/migrate/database'},
+      {title: '文件迁移', auth: 'deploy.request.view', path: '/migrate/file'},
+    ]
+  },
+  {
     icon: 'deployment-unit', title: '配置中心', auth: 'config.env.view|config.src.view|config.app.view', child: [
       {title: '访问凭证', auth: 'config.env.view', path: '/config/credentials'},
       {title: '环境管理', auth: 'config.env.view', path: '/config/environment'},
@@ -31,6 +35,7 @@ export default [
       {title: '应用配置', auth: 'config.app.view', path: '/config/app'},
     ]
   },
+  {icon: 'monitor', title: '监控中心', auth: 'monitor.monitor.view', path: '/monitor'},
   {
     icon: 'alert', title: '报警中心', auth: 'alarm.alarm.view|alarm.contact.view|alarm.group.view', child: [
       {title: '报警历史', auth: 'alarm.alarm.view', path: '/alarm/alarm'},
